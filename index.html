@@ -12,6 +12,66 @@
     min-height: 100vh;
     color: #333;
   }
+
+  /* --- LOGIN SCREEN --- */
+  #loginScreen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .login-box {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+  }
+  .login-box h1 {
+    color: #1e3c72;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+  .login-box h1 span { color: #e74c3c; }
+  .login-box p { color: #888; margin-bottom: 25px; font-size: 14px; }
+  .login-box input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .login-box input:focus {
+    outline: none;
+    border-color: #1e3c72;
+    box-shadow: 0 0 0 3px rgba(30,60,114,0.15);
+  }
+  .login-box button {
+    width: 100%;
+    padding: 12px;
+    background: #1e3c72;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .login-box button:hover { background: #15294f; }
+  .login-error {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 10px;
+    min-height: 18px;
+  }
+
+  /* --- APP UI --- */
   header {
     background: #fff;
     padding: 20px 40px;
@@ -20,13 +80,9 @@
     justify-content: space-between;
     align-items: center;
   }
-  header h1 {
-    color: #1e3c72;
-    font-size: 28px;
-    letter-spacing: 2px;
-  }
+  header h1 { color: #1e3c72; font-size: 28px; letter-spacing: 2px; }
   header h1 span { color: #e74c3c; }
-  .nav { display: flex; gap: 10px; }
+  .nav { display: flex; gap: 10px; align-items: center; }
   .nav button {
     padding: 10px 18px;
     border: none;
@@ -36,15 +92,11 @@
     font-weight: 600;
     transition: all 0.2s;
   }
-  .nav button.active, .nav button:hover {
-    background: #1e3c72;
-    color: #fff;
-  }
-  .container {
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 0 20px;
-  }
+  .nav button.active, .nav button:hover { background: #1e3c72; color: #fff; }
+  .logout-btn { background: #e74c3c !important; color: #fff !important; }
+  .logout-btn:hover { background: #c0392b !important; }
+
+  .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
   .card {
     background: #fff;
     border-radius: 12px;
@@ -100,16 +152,9 @@
   .btn-success:hover { background: #1e8449; }
   .btn-secondary { background: #95a5a6; color: #fff; }
   .btn-secondary:hover { background: #7f8c8d; }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-  }
-  th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+  th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
   th {
     background: #1e3c72;
     color: #fff;
@@ -118,7 +163,7 @@
   }
   tr:hover { background: #f9f9f9; }
   .cost-input {
-    width: 90px;
+    width: 100px;
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -188,98 +233,113 @@
 </head>
 <body>
 
-<header>
-  <h1>RAHA <span>LABELS</span></h1>
-  <div class="nav">
-    <button class="tab-btn active" data-tab="labels">📋 Labels</button>
-    <button class="tab-btn" data-tab="departments">🏢 Departments</button>
-    <button class="tab-btn" data-tab="stats">📊 Stats</button>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>RAHA <span>LABELS</span></h1>
+    <p>🔒 Enter password to continue</p>
+    <input type="password" id="passwordInput" placeholder="Password" autofocus />
+    <button onclick="attemptLogin()">Login</button>
+    <div class="login-error" id="loginError"></div>
   </div>
-</header>
+</div>
 
-<div class="container">
+<!-- MAIN APP -->
+<div id="appContent" style="display:none;">
+  <header>
+    <h1>RAHA <span>LABELS</span></h1>
+    <div class="nav">
+      <button class="tab-btn active" data-tab="labels">📋 Labels</button>
+      <button class="tab-btn" data-tab="departments">🏢 Departments</button>
+      <button class="tab-btn" data-tab="stats">📊 Stats</button>
+      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+  </header>
 
-  <!-- LABELS SECTION -->
-  <div id="labels" class="section active">
-    <div class="card">
-      <h2>➕ Add New Sticker Label</h2>
-      <form id="labelForm">
-        <div class="form-grid">
-          <label>Item Description
-            <input type="text" id="description" required placeholder="e.g. Widget A"/>
-          </label>
-          <label>Size
-            <input type="text" id="size" required placeholder="e.g. 50x30mm"/>
-          </label>
-          <label>Cost (USD)
-            <input type="number" id="cost" step="0.01" min="0" required placeholder="0.00"/>
-          </label>
-          <label>Department
-            <select id="department" required></select>
-          </label>
+  <div class="container">
+
+    <!-- LABELS SECTION -->
+    <div id="labels" class="section active">
+      <div class="card">
+        <h2>➕ Add New Sticker Label</h2>
+        <form id="labelForm">
+          <div class="form-grid">
+            <label>Item Description
+              <input type="text" id="description" required placeholder="e.g. Widget A"/>
+            </label>
+            <label>Size
+              <input type="text" id="size" required placeholder="e.g. 50x30mm"/>
+            </label>
+            <label>Cost (Rands - R)
+              <input type="number" id="cost" step="0.01" min="0" required placeholder="0.00"/>
+            </label>
+            <label>Department
+              <select id="department" required></select>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary">💾 Save Label</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>📦 All Labels</h2>
+        <div class="toolbar no-print">
+          <input type="text" id="searchBox" placeholder="🔍 Search labels..." style="flex:1; padding:10px; border:1px solid #ccc; border-radius:6px;"/>
+          <button class="btn btn-success" onclick="exportCSV()">📥 Export CSV</button>
+          <button class="btn btn-secondary" onclick="printLabels()">🖨️ Print / PDF</button>
         </div>
-        <button type="submit" class="btn btn-primary">💾 Save Label</button>
-      </form>
+        <div style="overflow-x:auto;">
+          <table id="labelsTable">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Size</th>
+                <th>Cost (R)</th>
+                <th>Department</th>
+                <th>Created</th>
+                <th class="no-print">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="labelsBody"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
-    <div class="card">
-      <h2>📦 All Labels</h2>
-      <div class="toolbar no-print">
-        <input type="text" id="searchBox" placeholder="🔍 Search labels..." style="flex:1; padding:10px; border:1px solid #ccc; border-radius:6px;"/>
-        <button class="btn btn-success" onclick="exportCSV()">📥 Export CSV</button>
-        <button class="btn btn-secondary" onclick="printLabels()">🖨️ Print / PDF</button>
+    <!-- DEPARTMENTS SECTION -->
+    <div id="departments" class="section">
+      <div class="card">
+        <h2>🏢 Manage Departments</h2>
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+          <input type="text" id="deptInput" placeholder="New department name..." style="flex:1; padding:10px; border:1px solid #ccc; border-radius:6px;"/>
+          <button class="btn btn-primary" onclick="addDepartment()">+ Add Department</button>
+        </div>
+        <div id="deptList"></div>
       </div>
-      <div style="overflow-x:auto;">
-        <table id="labelsTable">
+    </div>
+
+    <!-- STATS SECTION -->
+    <div id="stats" class="section">
+      <div class="card">
+        <h2>📊 Statistics Dashboard</h2>
+        <div class="stats-grid" id="statsGrid"></div>
+      </div>
+      <div class="card">
+        <h2>📈 Breakdown by Department</h2>
+        <table>
           <thead>
-            <tr>
-              <th>Description</th>
-              <th>Size</th>
-              <th>Cost</th>
-              <th>Department</th>
-              <th>Created</th>
-              <th class="no-print">Actions</th>
-            </tr>
+            <tr><th>Department</th><th>Labels</th><th>Total Cost (R)</th><th>Avg Cost (R)</th></tr>
           </thead>
-          <tbody id="labelsBody"></tbody>
+          <tbody id="deptStatsBody"></tbody>
         </table>
       </div>
     </div>
+
   </div>
 
-  <!-- DEPARTMENTS SECTION -->
-  <div id="departments" class="section">
-    <div class="card">
-      <h2>🏢 Manage Departments</h2>
-      <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <input type="text" id="deptInput" placeholder="New department name..." style="flex:1; padding:10px; border:1px solid #ccc; border-radius:6px;"/>
-        <button class="btn btn-primary" onclick="addDepartment()">+ Add Department</button>
-      </div>
-      <div id="deptList"></div>
-    </div>
-  </div>
-
-  <!-- STATS SECTION -->
-  <div id="stats" class="section">
-    <div class="card">
-      <h2>📊 Statistics Dashboard</h2>
-      <div class="stats-grid" id="statsGrid"></div>
-    </div>
-    <div class="card">
-      <h2>📈 Breakdown by Department</h2>
-      <table>
-        <thead>
-          <tr><th>Department</th><th>Labels</th><th>Total Cost</th><th>Avg Cost</th></tr>
-        </thead>
-        <tbody id="deptStatsBody"></tbody>
-      </table>
-    </div>
-  </div>
-
+  <div id="printArea"></div>
+  <div id="toast" class="toast"></div>
 </div>
-
-<div id="printArea"></div>
-<div id="toast" class="toast"></div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
@@ -306,16 +366,58 @@
   let labelsCache = [];
   let departmentsCache = [];
 
-  // --- TABS ---
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(btn.dataset.tab).classList.add('active');
-      if (btn.dataset.tab === 'stats') renderStats();
-    });
+  // --- AUTH ---
+  const CORRECT_PASSWORD = "Raha@123";
+
+  window.attemptLogin = function() {
+    const input = document.getElementById('passwordInput');
+    const err = document.getElementById('loginError');
+    if (input.value === CORRECT_PASSWORD) {
+      sessionStorage.setItem('raha_auth', '1');
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appContent').style.display = 'block';
+      initApp();
+    } else {
+      err.textContent = '❌ Incorrect password. Try again.';
+      input.value = '';
+      input.focus();
+    }
+  };
+
+  document.getElementById('passwordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') window.attemptLogin();
   });
+
+  window.logout = function() {
+    sessionStorage.removeItem('raha_auth');
+    location.reload();
+  };
+
+  // Check existing session
+  if (sessionStorage.getItem('raha_auth') === '1') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appContent').style.display = 'block';
+    initApp();
+  }
+
+  function initApp() {
+    loadDepartments();
+    loadLabels();
+    setupTabs();
+  }
+
+  // --- TABS ---
+  function setupTabs() {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+        if (btn.dataset.tab === 'stats') renderStats();
+      });
+    });
+  }
 
   // --- TOAST ---
   function toast(msg, color='#27ae60') {
@@ -348,7 +450,7 @@
       return;
     }
     list.innerHTML = departmentsCache.map(d =>
-      `<span class="dept-chip">${d.name} <button onclick="deleteDepartment('${d.id}')">×</button></span>`
+      `<span class="dept-chip">${escapeHtml(d.name)} <button onclick="deleteDepartment('${d.id}')">×</button></span>`
     ).join('');
   }
 
@@ -392,10 +494,12 @@
       <tr>
         <td>${escapeHtml(l.description)}</td>
         <td>${escapeHtml(l.size)}</td>
-        <td><input type="number" step="0.01" class="cost-input" value="${l.cost}" onchange="updateCost('${l.id}', this.value)"/></td>
+        <td>R <input type="number" step="0.01" class="cost-input" value="${l.cost}" onchange="updateCost('${l.id}', this.value)"/></td>
         <td>${escapeHtml(l.department)}</td>
         <td>${new Date(l.createdAt).toLocaleDateString()}</td>
-        <td class="no-print"><button class="btn btn-danger" onclick="deleteLabel('${l.id}')">🗑️</button></td>
+        <td class="no-print">
+          <button class="btn btn-danger" onclick="deleteLabel('${l.id}')">🗑️ Delete</button>
+        </td>
       </tr>
     `).join('');
   }
@@ -424,9 +528,13 @@
   };
 
   window.deleteLabel = async function(id) {
-    if (!confirm('Delete this label?')) return;
-    await deleteDoc(doc(db, 'labels', id));
-    toast('Label deleted');
+    if (!confirm('Are you sure you want to DELETE this label? This cannot be undone.')) return;
+    try {
+      await deleteDoc(doc(db, 'labels', id));
+      toast('Label deleted');
+    } catch (err) {
+      toast('Error deleting: ' + err.message, '#e74c3c');
+    }
   };
 
   document.getElementById('searchBox').addEventListener('input', e => renderLabels(e.target.value));
@@ -440,8 +548,8 @@
 
     document.getElementById('statsGrid').innerHTML = `
       <div class="stat-box"><h3>Total Labels</h3><div class="value">${total}</div></div>
-      <div class="stat-box"><h3>Total Cost</h3><div class="value">$${totalCost.toFixed(2)}</div></div>
-      <div class="stat-box"><h3>Average Cost</h3><div class="value">$${avgCost.toFixed(2)}</div></div>
+      <div class="stat-box"><h3>Total Cost</h3><div class="value">R ${totalCost.toFixed(2)}</div></div>
+      <div class="stat-box"><h3>Average Cost</h3><div class="value">R ${avgCost.toFixed(2)}</div></div>
       <div class="stat-box"><h3>Departments</h3><div class="value">${deptCount}</div></div>
     `;
 
@@ -452,14 +560,14 @@
       byDept[l.department].total += l.cost || 0;
     });
     document.getElementById('deptStatsBody').innerHTML = Object.entries(byDept).map(([d, v]) =>
-      `<tr><td>${escapeHtml(d)}</td><td>${v.count}</td><td>$${v.total.toFixed(2)}</td><td>$${(v.total/v.count).toFixed(2)}</td></tr>`
+      `<tr><td>${escapeHtml(d)}</td><td>${v.count}</td><td>R ${v.total.toFixed(2)}</td><td>R ${(v.total/v.count).toFixed(2)}</td></tr>`
     ).join('') || '<tr><td colspan="4" style="text-align:center; color:#888;">No data</td></tr>';
   }
 
   // --- EXPORT CSV ---
   window.exportCSV = function() {
     if (labelsCache.length === 0) return toast('No data to export', '#e74c3c');
-    const header = 'Description,Size,Cost,Department,Created\n';
+    const header = 'Description,Size,Cost (R),Department,Created\n';
     const rows = labelsCache.map(l =>
       `"${l.description}","${l.size}",${l.cost},"${l.department}","${new Date(l.createdAt).toLocaleString()}"`
     ).join('\n');
@@ -482,13 +590,13 @@
         <h2 style="text-align:center; color:#1e3c72;">RAHA LABELS - Report</h2>
         <p style="text-align:center; color:#888; margin-bottom:15px;">Generated: ${new Date().toLocaleString()}</p>
         <table>
-          <thead><tr><th>Description</th><th>Size</th><th>Cost</th><th>Department</th></tr></thead>
+          <thead><tr><th>Description</th><th>Size</th><th>Cost (R)</th><th>Department</th></tr></thead>
           <tbody>
             ${labelsCache.map(l => `
               <tr>
                 <td>${escapeHtml(l.description)}</td>
                 <td>${escapeHtml(l.size)}</td>
-                <td>$${l.cost.toFixed(2)}</td>
+                <td>R ${l.cost.toFixed(2)}</td>
                 <td>${escapeHtml(l.department)}</td>
               </tr>
             `).join('')}
@@ -499,10 +607,6 @@
     window.print();
     setTimeout(() => printArea.innerHTML = '', 1000);
   };
-
-  // --- INIT ---
-  loadDepartments();
-  loadLabels();
 </script>
 
 </body>
