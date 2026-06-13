@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>RAHA LABELS | Stock History & User Tracking</title>
+<title>RAHA LABELS | Size-Aware Analytics & Stock History</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -39,15 +40,12 @@
     overflow-x: hidden;
   }
 
-  /* LOGIN */
   #loginScreen {
     position: fixed; inset: 0; z-index: 9999;
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 60%, #3a6fd8 100%);
     display: flex; align-items: center; justify-content: center;
   }
-  .login-scene { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
   .login-card {
-    position: relative; z-index: 1;
     background: rgba(255,255,255,.97);
     backdrop-filter: blur(20px);
     padding: 52px 44px 44px;
@@ -72,10 +70,8 @@
   }
   .login-error { color: var(--red); font-size: 13px; margin-top: 12px; }
 
-  /* APP SHELL */
   #appContent { display: none; min-height: 100vh; }
 
-  /* SIDEBAR */
   .sidebar {
     position: fixed; top: 0; left: 0; bottom: 0;
     width: var(--sidebar-w);
@@ -129,7 +125,6 @@
     font-weight: 500; cursor: pointer;
   }
 
-  /* MAIN */
   .main { margin-left: var(--sidebar-w); min-height: 100vh; }
   .topbar {
     background: rgba(255,255,255,.9);
@@ -144,7 +139,6 @@
   .section { display: none; }
   .section.active { display: block; }
 
-  /* CARDS */
   .card {
     background: var(--surface);
     border-radius: var(--radius);
@@ -156,11 +150,11 @@
   .card-header {
     padding: 20px 24px 0;
     display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap;
   }
   .card-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700; color: var(--navy); display: flex; gap: 8px; align-items: center; }
   .card-body { padding: 20px 24px 24px; }
 
-  /* FORMS */
   .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -188,12 +182,10 @@
     cursor: pointer; font-weight: 600; font-size: 13.5px;
   }
   .btn-primary { background: linear-gradient(135deg, var(--navy), var(--navy-light)); color: #fff; }
-  .btn-danger { background: linear-gradient(135deg, var(--red-dark), var(--red)); color: #fff; }
   .btn-success { background: linear-gradient(135deg, var(--green-dark), var(--green)); color: #fff; }
   .btn-ghost { background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border); }
   .btn-sm { padding: 7px 13px; font-size: 12.5px; }
 
-  /* TABLE */
   .table-wrapper { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }
   thead { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); }
@@ -210,13 +202,6 @@
     font-size: 14px;
   }
 
-  /* QUANTITY CONTROL + USER FIELD */
-  .qty-modern {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
   .qty-modern-balance {
     background: #f1f5f9;
     padding: 5px 12px;
@@ -226,7 +211,6 @@
     color: var(--navy);
     min-width: 70px;
     text-align: center;
-    border: 1px solid var(--border);
   }
   .qty-modern-control {
     display: flex;
@@ -236,44 +220,22 @@
     border: 1.5px solid var(--border);
     border-radius: 40px;
     padding: 3px 8px 3px 12px;
-    box-shadow: var(--shadow-sm);
     flex-wrap: wrap;
   }
-  .qty-modern-control input[type="number"] {
-    width: 80px;
-    padding: 6px 4px;
-    border: none;
-    font-size: 15px;
-    font-weight: 600;
-    text-align: center;
-    background: transparent;
-    outline: none;
-  }
-  .user-field {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: #f8fafc;
-    border-radius: 30px;
-    padding: 2px 8px;
-    border-left: 1px solid #e2e8f0;
-  }
   .user-field input {
-    width: 110px;
+    width: 100px;
     border: none;
-    background: transparent;
-    padding: 5px 4px;
-    font-size: 12px;
+    background: #f8fafc;
+    padding: 5px 8px;
+    border-radius: 20px;
     outline: none;
   }
   .qty-action-btn {
     background: transparent;
     border: none;
     cursor: pointer;
-    font-size: 14px;
     padding: 6px 12px;
     border-radius: 30px;
-    transition: all 0.15s;
     font-weight: 600;
   }
   .qty-add { background: #e8f5e9; color: var(--green-dark); }
@@ -281,7 +243,6 @@
   .qty-deduct { background: #fce8e6; color: var(--red-dark); }
   .qty-deduct:hover { background: var(--red); color: white; }
   
-  /* HISTORY SECTION */
   .history-entry {
     border-left: 3px solid var(--navy-light);
     margin-bottom: 12px;
@@ -289,48 +250,57 @@
     background: #fafcff;
     border-radius: 12px;
   }
-  .history-meta {
-    display: flex;
-    gap: 16px;
-    font-size: 12px;
-    color: var(--slate);
-    margin-bottom: 6px;
-    flex-wrap: wrap;
-  }
-  .history-detail {
-    font-weight: 500;
-  }
-  .badge-user {
-    background: var(--navy-light);
-    color: white;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 11px;
-  }
-  .dept-tag, .size-tag {
-    display: inline-block;
-    padding: 3px 10px; border-radius: 20px;
-    font-size: 12px; font-weight: 600;
-  }
+  .history-meta { display: flex; gap: 16px; font-size: 12px; color: var(--slate); margin-bottom: 6px; flex-wrap: wrap; }
+  .badge-user { background: var(--navy-light); color: white; padding: 2px 8px; border-radius: 20px; font-size: 11px; }
+  .dept-tag, .size-tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
   .dept-tag { background: #eff6ff; color: var(--navy-light); }
   .size-tag { background: #fff7ed; color: #c2410c; }
-  .date-text { color: var(--text-muted); font-size: 12.5px; }
-  .section-intro {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-    border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px;
-    display: flex; align-items: center; gap: 20px;
-    color: rgba(255,255,255,.85);
+  
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
   }
+  .chart-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .chart-card h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+    color: var(--navy);
+    font-weight: 600;
+  }
+  canvas { max-height: 280px; width: 100%; }
   .stats-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 16px; margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
   }
   .stat-card {
-    background: var(--surface); border-radius: var(--radius);
+    background: var(--surface);
+    border-radius: var(--radius);
     border: 1px solid var(--border);
-    padding: 22px 22px 18px;
+    padding: 20px;
+    text-align: center;
   }
-  .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: var(--navy); }
+  .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 700; color: var(--navy); }
+  .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 5px; }
+  .section-intro {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    border-radius: var(--radius);
+    padding: 20px 28px;
+    margin-bottom: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
   @media print { .sidebar, .topbar, .btn, .no-print { display: none; } .main { margin-left: 0; } }
   #toast {
     position: fixed; bottom: 28px; right: 28px;
@@ -340,16 +310,19 @@
     opacity: 0; transition: opacity .3s;
   }
   #toast.show { opacity: 1; }
+  .dept-chip-del { background: none; border: none; color: var(--red); cursor: pointer; margin-left: 6px; font-size: 15px; }
+  .dept-add-row { display: flex; gap: 10px; margin-bottom: 20px; }
+  .dept-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .dept-chip { background: #f0f4ff; border: 1px solid rgba(42,82,152,.15); padding: 7px 12px; border-radius: 20px; font-size: 13px; font-weight: 500; color: var(--navy); }
 </style>
 </head>
 <body>
 
 <div id="loginScreen">
-  <div class="login-scene"></div>
   <div class="login-card">
     <h1>RAHA <span>LABELS</span></h1>
-    <p class="subtitle" style="margin-bottom:24px;">Label management · Full audit trail</p>
-    <div class="login-field"><input type="password" id="passwordInput" placeholder="Enter your password" autofocus/></div>
+    <p style="margin-bottom:24px;">Size-Aware Inventory Analytics</p>
+    <div class="login-field"><input type="password" id="passwordInput" placeholder="Enter password" autofocus/></div>
     <button class="login-btn" onclick="attemptLogin()">Sign In</button>
     <div class="login-error" id="loginError"></div>
   </div>
@@ -368,26 +341,38 @@
   </aside>
 
   <div class="main">
-    <div class="topbar"><div><div class="topbar-title" id="topbarTitle">📋 Labels</div><div class="topbar-meta">Track every addition/deduction with user & timestamp</div></div></div>
+    <div class="topbar"><div><div class="topbar-title" id="topbarTitle">📋 Labels</div><div class="topbar-meta">Track size + description + operator history</div></div></div>
     <div class="content">
-      <!-- Labels Section -->
       <div id="labels" class="section active">
-        <div class="section-intro"><div>🏷️</div><div><h2>Manage Stock</h2><p>Adjust quantity — each change records who & when</p></div></div>
-        <div class="card"><div class="card-body"><form id="labelForm"><div class="form-grid"><div class="field"><label>Item Description</label><input type="text" id="description" required/><div id="descSuggestions"></div></div><div class="field"><label>Size</label><input type="text" id="size" required/><div><span class="suggestion-chip" onclick="fillField('size','50×30mm')">50×30mm</span><span class="suggestion-chip" onclick="fillField('size','100×50mm')">100×50mm</span></div></div><div class="field"><label>Cost (R)</label><input type="number" id="cost" step="0.01" required/></div><div class="field"><label>Department</label><select id="department" required></select></div></div><button type="submit" class="btn btn-primary">➕ Create Label (0 stock)</button></form></div></div>
+        <div class="section-intro"><div>🏷️</div><div><h2>Inventory Control</h2><p>Each label includes size and description</p></div></div>
+        <div class="card"><div class="card-body"><form id="labelForm"><div class="form-grid"><div class="field"><label>Item Description</label><input type="text" id="description" required/><div id="descSuggestions"></div></div><div class="field"><label>Size</label><input type="text" id="size" required/><div><span class="suggestion-chip" onclick="fillField('size','50×30mm')">50×30mm</span><span class="suggestion-chip" onclick="fillField('size','100×50mm')">100×50mm</span><span class="suggestion-chip" onclick="fillField('size','75×25mm')">75×25mm</span><span class="suggestion-chip" onclick="fillField('size','150×75mm')">150×75mm</span></div></div><div class="field"><label>Cost (R)</label><input type="number" id="cost" step="0.01" required/></div><div class="field"><label>Department</label><select id="department" required></select></div></div><button type="submit" class="btn btn-primary">➕ Create Label</button></form></div></div>
         
-        <div class="card"><div class="card-header"><h2>📦 Inventory & Quick Adjust</h2></div><div class="card-body"><div class="toolbar no-print" style="display:flex; gap:10px; margin-bottom:18px;"><input type="text" id="searchBox" placeholder="Search labels..." style="flex:1; padding:10px;"/><button class="btn btn-success" onclick="exportCSV()">📥 CSV</button><button class="btn btn-ghost" onclick="printLabels()">🖨️ Print</button></div><div class="table-wrapper"><table id="labelsTable"><thead><tr><th>Description</th><th>Size</th><th>Cost (R)</th><th>Stock Balance</th><th>Department</th><th>Added</th><th class="no-print">Adjust Stock</th></tr></thead><tbody id="labelsBody"></tbody></table></div></div></div>
+        <div class="card"><div class="card-header"><h2>📦 All Labels</h2></div><div class="card-body"><div class="toolbar no-print" style="display:flex; gap:10px; margin-bottom:18px;"><input type="text" id="searchBox" placeholder="Search by description or size..." style="flex:1; padding:10px;"/><button class="btn btn-success" onclick="exportCSV()">📥 CSV</button><button class="btn btn-ghost" onclick="printLabels()">🖨️ Print</button></div><div class="table-wrapper"><table><thead><tr><th>Description</th><th>Size</th><th>Cost (R)</th><th>Stock</th><th>Dept</th><th>Added</th><th>Adjust</th></tr></thead><tbody id="labelsBody"></tbody></table></div></div></div>
       </div>
 
-      <!-- HISTORY SECTION (NEW) -->
       <div id="history" class="section">
-        <div class="section-intro"><div>📜</div><div><h2>Stock Movement History</h2><p>Every add/deduct recorded with operator name & timestamp</p></div></div>
+        <div class="section-intro"><div>📜</div><div><h2>Stock Movement History</h2><p>Every adjustment logged with user & timestamp</p></div></div>
         <div class="card"><div class="card-header"><h2>🕒 Transaction Log</h2><button class="btn btn-ghost btn-sm" onclick="clearHistoryConfirm()">Clear History</button></div><div class="card-body"><div id="historyList" style="max-height: 500px; overflow-y: auto;"></div></div></div>
       </div>
 
-      <!-- Departments & Stats unchanged but enhanced -->
-      <div id="departments" class="section"><div class="section-intro"><div>🏢</div><div><h2>Departments</h2></div></div><div class="card"><div class="card-body"><div class="dept-add-row"><input type="text" id="deptInput" placeholder="New department"/><button class="btn btn-primary" onclick="addDepartment()">+ Add</button></div><div id="deptList" class="dept-chips"></div></div></div></div>
+      <div id="departments" class="section">
+        <div class="section-intro"><div>🏢</div><div><h2>Manage Departments</h2></div></div>
+        <div class="card"><div class="card-body"><div class="dept-add-row"><input type="text" id="deptInput" placeholder="New department"/><button class="btn btn-primary" onclick="addDepartment()">+ Add</button></div><div id="deptList" class="dept-chips"></div></div></div>
+      </div>
 
-      <div id="stats" class="section"><div class="section-intro"><div>📊</div><div><h2>Analytics</h2></div></div><div class="stats-grid" id="statsGrid"></div><div class="card"><div class="card-header"><h2>📈 Department Breakdown</h2></div><div class="card-body"><div class="table-wrapper"><table><thead><tr><th>Department</th><th>Labels</th><th>Total Value</th><th>Avg Cost</th></tr></thead><tbody id="deptStatsBody"></tbody></table></div></div></div></div>
+      <div id="stats" class="section">
+        <div class="section-intro"><div>📊</div><div><h2>Analytics Dashboard</h2><p>Size + description level insights</p></div></div>
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="charts-grid">
+          <div class="chart-card"><h3>📊 Inventory Value by Department</h3><canvas id="deptValueChart" width="400" height="250"></canvas></div>
+          <div class="chart-card"><h3>📦 Stock Quantity by Department</h3><canvas id="deptQuantityChart" width="400" height="250"></canvas></div>
+          <div class="chart-card"><h3>💰 Top 5 Most Valuable (Description + Size)</h3><canvas id="topValueChart" width="400" height="250"></canvas></div>
+          <div class="chart-card"><h3>⚠️ Low Stock Items (≤10) - with Size</h3><canvas id="lowStockChart" width="400" height="250"></canvas></div>
+          <div class="chart-card"><h3>📏 Stock Distribution by Size</h3><canvas id="sizeDistributionChart" width="400" height="250"></canvas></div>
+          <div class="chart-card"><h3>🏷️ Top Items by Quantity (with Size)</h3><canvas id="topQuantityChart" width="400" height="250"></canvas></div>
+        </div>
+        <div class="card"><div class="card-header"><h2>📋 Department Breakdown</h2></div><div class="card-body"><div class="table-wrapper"><table><thead><tr><th>Department</th><th>Labels</th><th>Total Stock</th><th>Total Value (R)</th><th>Avg Cost</th></tr></thead><tbody id="deptStatsBody"></tbody></table></div></div></div>
+      </div>
     </div>
   </div>
   <div id="printArea"></div>
@@ -399,7 +384,16 @@
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
   import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
-  const firebaseConfig = { apiKey: "AIzaSyCfqgg6IDazhG6q2aMsDjRWlh4NGtw2l1Q", authDomain: "raha-stickers.firebaseapp.com", projectId: "raha-stickers", storageBucket: "raha-stickers.firebasestorage.app", messagingSenderId: "79232949228", appId: "1:79232949228:web:3263145e488a888e037ec9", measurementId: "G-71TK4JGZJZ" };
+  const firebaseConfig = {
+    apiKey: "AIzaSyCfqgg6IDazhG6q2aMsDjRWlh4NGtw2l1Q",
+    authDomain: "raha-stickers.firebaseapp.com",
+    projectId: "raha-stickers",
+    storageBucket: "raha-stickers.firebasestorage.app",
+    messagingSenderId: "79232949228",
+    appId: "1:79232949228:web:3263145e488a888e037ec9",
+    measurementId: "G-71TK4JGZJZ"
+  };
+  
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const db = getFirestore(app);
@@ -407,136 +401,152 @@
   let labelsCache = [];
   let departmentsCache = [];
   let historyCache = [];
+  let charts = {};
 
   const CORRECT_PASSWORD = "Raha@123";
+  
   window.attemptLogin = function() {
     const input = document.getElementById('passwordInput');
+    const err = document.getElementById('loginError');
     if (input.value === CORRECT_PASSWORD) {
       sessionStorage.setItem('raha_auth', '1');
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('appContent').style.display = 'block';
       initApp();
-    } else { document.getElementById('loginError').textContent = '❌ Wrong password.'; input.value = ''; }
+    } else {
+      err.textContent = '❌ Incorrect password.';
+      input.value = '';
+    }
   };
-  document.getElementById('passwordInput')?.addEventListener('keydown', e => { if(e.key === 'Enter') window.attemptLogin(); });
-  window.logout = () => { sessionStorage.removeItem('raha_auth'); location.reload(); };
+  
+  document.getElementById('passwordInput')?.addEventListener('keydown', e => {
+    if(e.key === 'Enter') window.attemptLogin();
+  });
+  
   if (sessionStorage.getItem('raha_auth') === '1') {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('appContent').style.display = 'block';
     initApp();
   }
 
-  function toast(msg, type = 'success') {
+  function toast(msg) {
     const t = document.getElementById('toast');
-    t.innerHTML = `${type === 'error' ? '❌' : '✅'} ${msg}`;
-    t.style.background = type === 'error' ? 'var(--red)' : 'var(--green-dark)';
+    t.innerHTML = `✅ ${msg}`;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2500);
   }
-  function escapeHtml(str) { return String(str || '').replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
+  
+  function escapeHtml(str) {
+    return String(str || '').replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '&gt;': '&gt;' }[m]));
+  }
 
-  // --- HISTORY LOGGING ---
-  async function logStockMovement(labelId, labelName, changeAmount, newQuantity, operatorName, operationType) {
-    if (!operatorName || operatorName.trim() === "") operatorName = "System";
-    const entry = {
-      labelId, labelName, changeAmount, newQuantity, operatorName: operatorName.trim(),
-      operationType, // "add" or "deduct"
-      timestamp: Date.now(),
+  function getLabelDisplayName(label) {
+    return `${label.description || '?'} (${label.size || 'no size'})`;
+  }
+
+  async function logStockMovement(labelId, labelName, labelSize, changeAmount, newQuantity, operatorName, operationType) {
+    if (!operatorName?.trim()) operatorName = "System";
+    await addDoc(collection(db, 'stockHistory'), {
+      labelId, 
+      labelName: `${labelName} (${labelSize})`, 
+      changeAmount, 
+      newQuantity, 
+      operatorName: operatorName.trim(),
+      operationType, 
+      timestamp: Date.now(), 
       dateStr: new Date().toLocaleString('en-ZA')
-    };
-    await addDoc(collection(db, 'stockHistory'), entry);
-    toast(`${operationType.toUpperCase()}: ${Math.abs(changeAmount)} pcs by ${operatorName} → new balance ${newQuantity}`);
+    });
   }
 
   async function loadHistory() {
-    const q = query(collection(db, 'stockHistory'), orderBy('timestamp', 'desc'));
-    onSnapshot(q, snap => {
+    onSnapshot(query(collection(db, 'stockHistory'), orderBy('timestamp', 'desc')), snap => {
       historyCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderHistory();
+      const container = document.getElementById('historyList');
+      if (!historyCache.length) {
+        container.innerHTML = '<div class="empty-state" style="padding:32px; text-align:center;">📭 No movements yet.</div>';
+      } else {
+        container.innerHTML = historyCache.map(h => `
+          <div class="history-entry">
+            <div class="history-meta">
+              <span>🕒 ${escapeHtml(h.dateStr)}</span>
+              <span class="badge-user">👤 ${escapeHtml(h.operatorName)}</span>
+              <span style="background:${h.operationType==='add'?'#e0f2e9':'#fee2e2'};padding:2px 8px;border-radius:16px;">${h.operationType==='add'?'➕ ADD':'➖ DEDUCT'}</span>
+            </div>
+            <div><strong>${escapeHtml(h.labelName)}</strong> — ${h.operationType==='add'?'+':'-'}${Math.abs(h.changeAmount)} → Balance: ${h.newQuantity}</div>
+          </div>
+        `).join('');
+      }
       document.getElementById('historyBadge').textContent = historyCache.length;
     });
   }
 
-  function renderHistory() {
-    const container = document.getElementById('historyList');
-    if (!historyCache.length) { container.innerHTML = '<div class="empty-state" style="padding:32px; text-align:center;">📭 No stock movements yet.</div>'; return; }
-    container.innerHTML = historyCache.map(h => `
-      <div class="history-entry">
-        <div class="history-meta">
-          <span>🕒 ${escapeHtml(h.dateStr || new Date(h.timestamp).toLocaleString('en-ZA'))}</span>
-          <span class="badge-user">👤 ${escapeHtml(h.operatorName)}</span>
-          <span style="background:${h.operationType === 'add' ? '#e0f2e9' : '#fee2e2'}; padding:2px 8px; border-radius:16px;">${h.operationType === 'add' ? '➕ ADD' : '➖ DEDUCT'}</span>
-        </div>
-        <div class="history-detail">📦 <strong>${escapeHtml(h.labelName)}</strong> — ${h.operationType === 'add' ? '+' : '-'}${Math.abs(h.changeAmount)} pcs → Balance: ${h.newQuantity}</div>
-      </div>
-    `).join('');
-  }
-
   window.clearHistoryConfirm = async function() {
-    if (confirm("⚠️ Permanently delete entire stock movement history?")) {
-      const snap = await getDocs(collection(db, 'stockHistory'));
-      snap.forEach(async (docSnap) => { await deleteDoc(doc(db, 'stockHistory', docSnap.id)); });
+    if(confirm("Delete all history?")) {
+      const snap = await getDocs(collection(db,'stockHistory'));
+      snap.forEach(async d => { await deleteDoc(doc(db,'stockHistory',d.id)); });
       toast("History cleared");
     }
   };
 
-  // --- DEPARTMENTS ---
   async function loadDepartments() {
     onSnapshot(collection(db, 'departments'), snap => {
       departmentsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       const sel = document.getElementById('department');
       sel.innerHTML = '<option value="">— Select —</option>' + departmentsCache.map(d => `<option value="${escapeHtml(d.name)}">${escapeHtml(d.name)}</option>`).join('');
-      document.getElementById('deptList').innerHTML = departmentsCache.map(d => `<span class="dept-chip">${escapeHtml(d.name)}<button class="dept-chip-del" onclick="deleteDepartment('${d.id}')">×</button></span>`).join('');
+      const deptList = document.getElementById('deptList');
+      deptList.innerHTML = departmentsCache.map(d => `<span class="dept-chip">${escapeHtml(d.name)}<button class="dept-chip-del" onclick="deleteDepartment('${d.id}')">×</button></span>`).join('');
       document.getElementById('deptBadge').textContent = departmentsCache.length;
     });
   }
+  
   window.addDepartment = async function() {
     const name = document.getElementById('deptInput').value.trim();
-    if (!name) return toast('Enter name', 'error');
-    if (departmentsCache.some(d => d.name.toLowerCase() === name.toLowerCase())) return toast('Exists', 'error');
-    await addDoc(collection(db, 'departments'), { name, createdAt: Date.now() });
+    if(!name) return toast('Enter name');
+    if(departmentsCache.some(d => d.name.toLowerCase() === name.toLowerCase())) return toast('Exists');
+    await addDoc(collection(db,'departments'), { name, createdAt: Date.now() });
     document.getElementById('deptInput').value = '';
     toast('Department added');
   };
-  window.deleteDepartment = async function(id) { if(confirm('Delete department?')){ await deleteDoc(doc(db, 'departments', id)); toast('Removed'); } };
+  
+  window.deleteDepartment = async function(id) {
+    if(confirm('Delete department?')) {
+      await deleteDoc(doc(db,'departments',id));
+      toast('Removed');
+    }
+  };
 
-  // --- LABELS WITH USER FIELD PER ROW ---
   async function loadLabels() {
-    const q = query(collection(db, 'labels'), orderBy('createdAt', 'desc'));
-    onSnapshot(q, snap => {
+    onSnapshot(query(collection(db,'labels'), orderBy('createdAt','desc')), snap => {
       labelsCache = snap.docs.map(d => ({ id: d.id, ...d.data(), quantity: d.data().quantity ?? 0 }));
       renderLabelsTable();
       updateDescSuggestions();
       document.getElementById('labelsBadge').textContent = labelsCache.length;
-      if(document.querySelector('.nav-item.active')?.dataset.tab === 'stats') renderStats();
+      if(document.querySelector('.nav-item.active')?.dataset.tab === 'stats') renderAnalytics();
     });
   }
 
   function renderLabelsTable() {
     const search = document.getElementById('searchBox')?.value.toLowerCase() || '';
-    const filtered = labelsCache.filter(l => !search || l.description?.toLowerCase().includes(search) || l.department?.toLowerCase().includes(search));
+    const filtered = labelsCache.filter(l => !search || l.description?.toLowerCase().includes(search) || l.size?.toLowerCase().includes(search));
     const body = document.getElementById('labelsBody');
-    if(filtered.length === 0) { body.innerHTML = `<tr><td colspan="7"><div class="empty-state">🏷️ No labels</div></td></tr>`; return; }
+    if(filtered.length === 0) {
+      body.innerHTML = `<tr><td colspan="7"><div class="empty-state">🏷️ No labels</div></td></tr>`;
+      return;
+    }
     body.innerHTML = filtered.map(l => `
       <tr>
         <td><strong>${escapeHtml(l.description)}</strong></td>
         <td><span class="size-tag">${escapeHtml(l.size)}</span></td>
-        <td>R <input type="number" step="0.01" class="cost-input" value="${l.cost || 0}" onchange="updateCost('${l.id}', this.value)"/></td>
-        <td><div class="qty-modern-balance">${l.quantity || 0} pcs</div></td>
+        <td>R <input type="number" step="0.01" class="cost-input" value="${l.cost||0}" onchange="updateCost('${l.id}', this.value)"/></td>
+        <td><div class="qty-modern-balance">${l.quantity||0}</div></td>
         <td><span class="dept-tag">${escapeHtml(l.department)}</span></td>
-        <td><span class="date-text">${new Date(l.createdAt).toLocaleDateString('en-ZA')}</span></td>
+        <td><span class="date-text">${new Date(l.createdAt).toLocaleDateString()}</span></td>
         <td class="no-print">
           <div class="qty-modern-control">
-            <div class="qty-custom-group" style="display:flex; gap:6px; align-items:center;">
-              <span class="qty-modern-label">Qty</span>
-              <input type="number" id="adj_${l.id}" value="1" min="1" step="1" style="width:70px;" />
-            </div>
-            <div class="user-field">
-              <span>👤</span>
-              <input type="text" id="user_${l.id}" placeholder="Your name" style="width:100px;" />
-            </div>
-            <button class="qty-action-btn qty-add" onclick="processAdjust('${l.id}', 'add')">+ Add</button>
-            <button class="qty-action-btn qty-deduct" onclick="processAdjust('${l.id}', 'deduct')">− Deduct</button>
+            <input type="number" id="adj_${l.id}" value="1" min="1" style="width:70px;"/>
+            <input type="text" id="user_${l.id}" placeholder="Your name" style="width:100px;"/>
+            <button class="qty-action-btn qty-add" onclick="processAdjust('${l.id}','add')">+ Add</button>
+            <button class="qty-action-btn qty-deduct" onclick="processAdjust('${l.id}','deduct')">− Deduct</button>
           </div>
         </td>
       </tr>
@@ -544,72 +554,145 @@
   }
 
   window.processAdjust = async function(labelId, mode) {
-    const inputField = document.getElementById(`adj_${labelId}`);
-    const userField = document.getElementById(`user_${labelId}`);
-    if (!inputField) return toast("Control error", "error");
-    let delta = parseInt(inputField.value, 10);
-    if (isNaN(delta) || delta <= 0) { toast("Enter positive number", "error"); return; }
-    let operator = userField ? userField.value.trim() : "";
-    if (!operator) { toast("⚠️ Please enter your name before adjusting stock", "error"); return; }
+    const delta = parseInt(document.getElementById(`adj_${labelId}`).value, 10);
+    const operator = document.getElementById(`user_${labelId}`).value.trim();
+    if (isNaN(delta) || delta <= 0) return toast("Enter positive number");
+    if (!operator) return toast("Enter your name");
     const label = labelsCache.find(l => l.id === labelId);
     if (!label) return;
-    let currentQty = label.quantity ?? 0;
-    let newQty = mode === 'add' ? currentQty + delta : currentQty - delta;
-    if (newQty < 0) { toast(`Insufficient stock (Current: ${currentQty})`, "error"); return; }
-    // Update label quantity
-    await updateDoc(doc(db, 'labels', labelId), { quantity: newQty });
-    // Log into history
-    await logStockMovement(labelId, label.description, delta, newQty, operator, mode);
+    let newQty = label.quantity + (mode === 'add' ? delta : -delta);
+    if (newQty < 0) return toast(`Insufficient stock (${label.quantity})`);
+    await updateDoc(doc(db,'labels',labelId), { quantity: newQty });
+    await logStockMovement(labelId, label.description, label.size, delta, newQty, operator, mode);
+    toast(`${mode.toUpperCase()} ${delta} by ${operator} → ${newQty}`);
   };
 
-  window.updateCost = async function(id, val) { await updateDoc(doc(db, 'labels', id), { cost: parseFloat(val) || 0 }); toast('Cost updated'); };
+  window.updateCost = async function(id, val) {
+    await updateDoc(doc(db,'labels',id), { cost: parseFloat(val) || 0 });
+    toast('Cost updated');
+  };
   
   document.getElementById('labelForm')?.addEventListener('submit', async e => {
     e.preventDefault();
-    const label = { description: document.getElementById('description').value.trim(), size: document.getElementById('size').value.trim(), cost: parseFloat(document.getElementById('cost').value), department: document.getElementById('department').value, quantity: 0, createdAt: Date.now() };
-    if (!label.department) return toast('Select department', 'error');
-    await addDoc(collection(db, 'labels'), label);
-    toast('Label created (initial stock 0)');
+    const description = document.getElementById('description').value.trim();
+    const size = document.getElementById('size').value.trim();
+    const cost = parseFloat(document.getElementById('cost').value);
+    const department = document.getElementById('department').value;
+    if (!department) return toast('Select department');
+    await addDoc(collection(db,'labels'), { description, size, cost, department, quantity: 0, createdAt: Date.now() });
+    toast('Label created');
     e.target.reset();
   });
-
+  
   document.getElementById('searchBox')?.addEventListener('input', () => renderLabelsTable());
+  
   function updateDescSuggestions() {
-    const container = document.getElementById('descSuggestions');
     const recent = [...new Set(labelsCache.map(l => l.description))].slice(0,5);
+    const container = document.getElementById('descSuggestions');
     container.innerHTML = recent.length ? recent.map(d => `<span class="suggestion-chip" onclick="fillField('description','${escapeHtml(d)}')">${escapeHtml(d)}</span>`).join('') : '';
   }
-  window.fillField = function(id, val) { document.getElementById(id).value = val; };
+  
+  window.fillField = function(id, val) {
+    document.getElementById(id).value = val;
+  };
 
-  function renderStats() {
-    const total = labelsCache.length;
-    const totalCost = labelsCache.reduce((s,l)=> s + (l.cost||0),0);
-    const avgCost = total ? totalCost/total : 0;
-    const deptCount = new Set(labelsCache.map(l=>l.department)).size;
+  function renderAnalytics() {
+    const totalItems = labelsCache.length;
+    const totalStock = labelsCache.reduce((s,l) => s + (l.quantity||0), 0);
+    const totalValue = labelsCache.reduce((s,l) => s + ((l.quantity||0) * (l.cost||0)), 0);
+    const lowStockItems = labelsCache.filter(l => (l.quantity||0) <= 10).length;
+    
     document.getElementById('statsGrid').innerHTML = `
-      <div class="stat-card"><div class="stat-label">Total Labels</div><div class="stat-value">${total}</div></div>
-      <div class="stat-card"><div class="stat-label">Total Value</div><div class="stat-value">R ${totalCost.toFixed(2)}</div></div>
-      <div class="stat-card"><div class="stat-label">Avg Cost</div><div class="stat-value">R ${avgCost.toFixed(2)}</div></div>
-      <div class="stat-card"><div class="stat-label">Departments</div><div class="stat-value">${deptCount}</div></div>
+      <div class="stat-card"><div class="stat-value">${totalItems}</div><div class="stat-label">Total Labels</div></div>
+      <div class="stat-card"><div class="stat-value">${totalStock}</div><div class="stat-label">Total Units</div></div>
+      <div class="stat-card"><div class="stat-value">R ${totalValue.toFixed(2)}</div><div class="stat-label">Inventory Value</div></div>
+      <div class="stat-card"><div class="stat-value">${lowStockItems}</div><div class="stat-label">Low Stock Items (≤10)</div></div>
     `;
-    const byDept = {};
-    labelsCache.forEach(l => { if(!byDept[l.department]) byDept[l.department] = { count:0, total:0 }; byDept[l.department].count++; byDept[l.department].total += l.cost||0; });
-    document.getElementById('deptStatsBody').innerHTML = Object.entries(byDept).map(([d,v]) => `<tr><td>${escapeHtml(d)}</td><td>${v.count}</td><td>R ${v.total.toFixed(2)}</td><td>R ${(v.total/v.count).toFixed(2)}</td>`).join('') || '<tr><td colspan="4">No data</td></tr>';
+    
+    const deptMap = new Map();
+    labelsCache.forEach(l => {
+      const d = l.department || 'Unassigned';
+      if(!deptMap.has(d)) deptMap.set(d, { totalValue: 0, totalQty: 0, count: 0 });
+      const entry = deptMap.get(d);
+      entry.totalValue += (l.quantity||0) * (l.cost||0);
+      entry.totalQty += (l.quantity||0);
+      entry.count++;
+    });
+    
+    const depts = Array.from(deptMap.keys());
+    const deptValues = depts.map(d => deptMap.get(d).totalValue);
+    const deptQtys = depts.map(d => deptMap.get(d).totalQty);
+    
+    if (charts.deptValue) charts.deptValue.destroy();
+    if (charts.deptQuantity) charts.deptQuantity.destroy();
+    
+    charts.deptValue = new Chart(document.getElementById('deptValueChart'), {
+      type: 'bar',
+      data: { labels: depts, datasets: [{ label: 'Stock Value (R)', data: deptValues, backgroundColor: '#2a5298' }] },
+      options: { responsive: true, maintainAspectRatio: true }
+    });
+    
+    charts.deptQuantity = new Chart(document.getElementById('deptQuantityChart'), {
+      type: 'pie',
+      data: { labels: depts, datasets: [{ data: deptQtys, backgroundColor: ['#1e3c72','#2a5298','#3a6fd8','#4a8ef0','#5a9ef8','#6aaef8'] }] },
+      options: { responsive: true }
+    });
+    
+    const topByValue = [...labelsCache].sort((a,b) => ((b.quantity||0)*(b.cost||0)) - ((a.quantity||0)*(a.cost||0))).slice(0,5);
+    if (charts.topValue) charts.topValue.destroy();
+    charts.topValue = new Chart(document.getElementById('topValueChart'), {
+      type: 'bar',
+      data: { labels: topByValue.map(l => getLabelDisplayName(l)), datasets: [{ label: 'Total Value (R)', data: topByValue.map(l => (l.quantity||0)*(l.cost||0)), backgroundColor: '#27ae60' }] },
+      options: { responsive: true }
+    });
+    
+    const lowStock = labelsCache.filter(l => (l.quantity||0) <= 10);
+    if (charts.lowStock) charts.lowStock.destroy();
+    charts.lowStock = new Chart(document.getElementById('lowStockChart'), {
+      type: 'doughnut',
+      data: { labels: lowStock.map(l => getLabelDisplayName(l)), datasets: [{ data: lowStock.map(l => l.quantity||0), backgroundColor: '#e74c3c' }] },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+    
+    const sizeMap = new Map();
+    labelsCache.forEach(l => {
+      const sz = l.size || 'unknown';
+      sizeMap.set(sz, (sizeMap.get(sz) || 0) + (l.quantity||0));
+    });
+    const sizes = Array.from(sizeMap.keys());
+    const sizeQtys = sizes.map(s => sizeMap.get(s));
+    if (charts.sizeDistribution) charts.sizeDistribution.destroy();
+    charts.sizeDistribution = new Chart(document.getElementById('sizeDistributionChart'), {
+      type: 'bar',
+      data: { labels: sizes, datasets: [{ label: 'Total Stock Units', data: sizeQtys, backgroundColor: '#3a6fd8' }] },
+      options: { responsive: true }
+    });
+    
+    const topByQty = [...labelsCache].sort((a,b) => (b.quantity||0) - (a.quantity||0)).slice(0,5);
+    if (charts.topQuantity) charts.topQuantity.destroy();
+    charts.topQuantity = new Chart(document.getElementById('topQuantityChart'), {
+      type: 'bar',
+      data: { labels: topByQty.map(l => getLabelDisplayName(l)), datasets: [{ label: 'Stock Quantity (pcs)', data: topByQty.map(l => l.quantity||0), backgroundColor: '#f39c12' }] },
+      options: { responsive: true }
+    });
+    
+    document.getElementById('deptStatsBody').innerHTML = Array.from(deptMap.entries()).map(([d, data]) => `
+      <tr><td class="dept-tag">${escapeHtml(d)}</td><td>${data.count}</td><td>${data.totalQty}</td><td>R ${data.totalValue.toFixed(2)}</td><td>R ${(data.totalValue/data.totalQty || 0).toFixed(2)}</td></tr>
+    `).join('');
   }
 
   window.exportCSV = function() {
-    if(!labelsCache.length) return toast('No data','error');
-    const header = 'Description,Size,Cost,Quantity,Department,Created\n';
-    const rows = labelsCache.map(l => `"${l.description}","${l.size}",${l.cost},${l.quantity},"${l.department}","${new Date(l.createdAt).toLocaleString()}"`).join('\n');
-    const blob = new Blob([header+rows], {type:'text/csv'});
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `raha-labels.csv`; a.click(); toast('CSV ready');
+    if(!labelsCache.length) return toast('No data');
+    const rows = labelsCache.map(l => `"${l.description}","${l.size}",${l.cost},${l.quantity},"${l.department}"`).join('\n');
+    const blob = new Blob(["Description,Size,Cost,Quantity,Department\n" + rows], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'raha-inventory.csv';
+    a.click();
+    toast('CSV ready');
   };
-  window.printLabels = function() {
-    if(!labelsCache.length) return toast('Nothing to print');
-    const printArea = document.getElementById('printArea');
-    printArea.innerHTML = `<div style="padding:20px;"><h2>RAHA LABELS Report</h2><p>${new Date().toLocaleString()}</p><table border="1">${labelsCache.map(l => `<tr><td>${l.description}</td><td>${l.size}</td><td>R ${l.cost}</td><td>${l.quantity}</td><td>${l.department}</td>`).join('')}一顿</div>`;
-    window.print(); setTimeout(()=> printArea.innerHTML='',1000);
-  };
+  
+  window.printLabels = function() { window.print(); };
 
   function setupTabs() {
     document.querySelectorAll('.nav-item[data-tab]').forEach(btn => {
@@ -619,9 +702,9 @@
         btn.classList.add('active');
         const tab = btn.dataset.tab;
         document.getElementById(tab).classList.add('active');
-        const titles = { labels:'📋 Labels & Adjustments', history:'📜 Stock History', departments:'🏢 Departments', stats:'📊 Analytics' };
+        const titles = { labels:'📋 Labels', history:'📜 Stock History', departments:'🏢 Departments', stats:'📊 Analytics' };
         document.getElementById('topbarTitle').innerHTML = titles[tab] || 'RAHA';
-        if(tab === 'stats') renderStats();
+        if(tab === 'stats') renderAnalytics();
         if(tab === 'labels') renderLabelsTable();
       });
     });
@@ -633,6 +716,11 @@
     loadHistory();
     setupTabs();
   }
+  
+  window.logout = function() {
+    sessionStorage.removeItem('raha_auth');
+    location.reload();
+  };
 </script>
 </body>
 </html>
