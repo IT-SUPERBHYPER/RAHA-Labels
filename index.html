@@ -4,348 +4,804 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>RAHA LABELS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:       #1e3c72;
+    --navy-dark:  #152d57;
+    --navy-light: #2a5298;
+    --red:        #e74c3c;
+    --red-dark:   #c0392b;
+    --green:      #27ae60;
+    --green-dark: #1e8449;
+    --slate:      #64748b;
+    --slate-light:#94a3b8;
+    --bg:         #f0f4ff;
+    --surface:    #ffffff;
+    --border:     #e2e8f0;
+    --text:       #0f172a;
+    --text-muted: #64748b;
+    --radius:     14px;
+    --radius-sm:  8px;
+    --shadow-sm:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+    --shadow:     0 4px 16px rgba(30,60,114,.10);
+    --shadow-lg:  0 10px 40px rgba(30,60,114,.18);
+    --sidebar-w:  240px;
+  }
+
   body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
-    color: #333;
+    overflow-x: hidden;
   }
 
-  /* --- LOGIN SCREEN --- */
+  /* ─── LOGIN ─────────────────────────────────── */
   #loginScreen {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
+    position: fixed; inset: 0; z-index: 9999;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 60%, #3a6fd8 100%);
+    display: flex; align-items: center; justify-content: center;
   }
-  .login-box {
-    background: #fff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    width: 100%;
-    max-width: 380px;
+  .login-scene {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  }
+  .login-scene::before {
+    content: '';
+    position: absolute;
+    top: -30%; left: -20%;
+    width: 60vw; height: 60vw;
+    border-radius: 50%;
+    background: rgba(255,255,255,.04);
+  }
+  .login-scene::after {
+    content: '';
+    position: absolute;
+    bottom: -20%; right: -15%;
+    width: 50vw; height: 50vw;
+    border-radius: 50%;
+    background: rgba(231,76,60,.12);
+  }
+  .login-card {
+    position: relative; z-index: 1;
+    background: rgba(255,255,255,.97);
+    backdrop-filter: blur(20px);
+    padding: 52px 44px 44px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,.15);
+    width: 100%; max-width: 400px;
     text-align: center;
   }
-  .login-box h1 {
-    color: #1e3c72;
-    margin-bottom: 8px;
-    letter-spacing: 2px;
+  .login-logo {
+    display: inline-flex; align-items: center; gap: 6px; margin-bottom: 6px;
   }
-  .login-box h1 span { color: #e74c3c; }
-  .login-box p { color: #888; margin-bottom: 25px; font-size: 14px; }
-  .login-box input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 15px;
-    margin-bottom: 12px;
-  }
-  .login-box input:focus {
-    outline: none;
-    border-color: #1e3c72;
-    box-shadow: 0 0 0 3px rgba(30,60,114,0.15);
-  }
-  .login-box button {
-    width: 100%;
-    padding: 12px;
-    background: #1e3c72;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .login-box button:hover { background: #15294f; }
-  .login-error {
-    color: #e74c3c;
-    font-size: 13px;
-    margin-top: 10px;
-    min-height: 18px;
-  }
-
-  /* --- APP UI --- */
-  header {
-    background: #fff;
-    padding: 20px 40px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  header h1 { color: #1e3c72; font-size: 28px; letter-spacing: 2px; }
-  header h1 span { color: #e74c3c; }
-  .nav { display: flex; gap: 10px; align-items: center; }
-  .nav button {
-    padding: 10px 18px;
-    border: none;
-    background: #f0f0f0;
-    cursor: pointer;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: all 0.2s;
-  }
-  .nav button.active, .nav button:hover { background: #1e3c72; color: #fff; }
-  .logout-btn { background: #e74c3c !important; color: #fff !important; }
-  .logout-btn:hover { background: #c0392b !important; }
-
-  .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-  .card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-  }
-  .card h2 {
-    color: #1e3c72;
-    margin-bottom: 18px;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-  }
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 15px;
-  }
-  .form-grid label {
-    display: flex;
-    flex-direction: column;
-    font-size: 13px;
-    font-weight: 600;
-    color: #555;
-  }
-  .form-grid input, .form-grid select {
-    margin-top: 5px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-  }
-  .form-grid input:focus, .form-grid select:focus {
-    outline: none;
-    border-color: #1e3c72;
-    box-shadow: 0 0 0 3px rgba(30,60,114,0.15);
-  }
-  .btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s;
-    font-size: 14px;
-  }
-  .btn-primary { background: #1e3c72; color: #fff; }
-  .btn-primary:hover { background: #15294f; }
-  .btn-danger { background: #e74c3c; color: #fff; }
-  .btn-danger:hover { background: #c0392b; }
-  .btn-success { background: #27ae60; color: #fff; }
-  .btn-success:hover { background: #1e8449; }
-  .btn-secondary { background: #95a5a6; color: #fff; }
-  .btn-secondary:hover { background: #7f8c8d; }
-
-  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-  th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-  th {
-    background: #1e3c72;
-    color: #fff;
-    font-size: 13px;
-    text-transform: uppercase;
-  }
-  tr:hover { background: #f9f9f9; }
-  .cost-input {
-    width: 100px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-  }
-  .stat-box {
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    color: #fff;
-    padding: 20px;
+  .login-logo-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
     border-radius: 10px;
-    text-align: center;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 20px;
   }
-  .stat-box h3 { font-size: 13px; opacity: 0.9; margin-bottom: 8px; }
-  .stat-box .value { font-size: 32px; font-weight: bold; }
+  .login-card h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px; letter-spacing: 3px;
+    color: var(--navy); margin-bottom: 4px;
+  }
+  .login-card h1 span { color: var(--red); }
+  .login-card .subtitle {
+    font-size: 13px; color: var(--text-muted); margin-bottom: 32px;
+  }
+  .login-field {
+    position: relative; margin-bottom: 14px;
+  }
+  .login-field input {
+    width: 100%; padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px; font-family: 'Inter', sans-serif;
+    background: #f8fafc;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .login-field input:focus {
+    outline: none;
+    border-color: var(--navy-light);
+    box-shadow: 0 0 0 4px rgba(30,60,114,.12);
+    background: #fff;
+  }
+  .login-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: #fff; border: none; border-radius: var(--radius-sm);
+    font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif;
+    cursor: pointer; letter-spacing: .5px;
+    transition: opacity .2s, transform .1s;
+  }
+  .login-btn:hover { opacity: .92; }
+  .login-btn:active { transform: scale(.99); }
+  .login-error {
+    color: var(--red); font-size: 13px; margin-top: 12px; min-height: 18px;
+    font-weight: 500;
+  }
+
+  /* ─── APP SHELL ──────────────────────────────── */
+  #appContent { display: none; min-height: 100vh; }
+
+  /* ─── SIDEBAR ────────────────────────────────── */
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%);
+    display: flex; flex-direction: column;
+    z-index: 100;
+    box-shadow: 4px 0 24px rgba(30,60,114,.2);
+  }
+  .sidebar-brand {
+    padding: 28px 24px 24px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .brand-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .brand-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--red) 0%, #ff6b5b 100%);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .brand-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px; letter-spacing: 2px;
+    color: #fff; font-weight: 700;
+  }
+  .brand-text span { color: #ff8a7a; }
+  .brand-tagline {
+    font-size: 11px; color: rgba(255,255,255,.4);
+    margin-top: 6px; letter-spacing: .5px;
+  }
+
+  .sidebar-nav {
+    flex: 1; padding: 16px 12px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer; border: none;
+    background: transparent; color: rgba(255,255,255,.55);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; font-weight: 500;
+    text-align: left; width: 100%;
+    transition: all .2s;
+  }
+  .nav-item .nav-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    background: rgba(255,255,255,.07);
+    flex-shrink: 0;
+    transition: background .2s;
+  }
+  .nav-item:hover {
+    color: #fff;
+    background: rgba(255,255,255,.08);
+  }
+  .nav-item:hover .nav-icon { background: rgba(255,255,255,.14); }
+  .nav-item.active {
+    color: #fff;
+    background: rgba(255,255,255,.13);
+  }
+  .nav-item.active .nav-icon {
+    background: linear-gradient(135deg, var(--red), #ff6b5b);
+    box-shadow: 0 4px 12px rgba(231,76,60,.4);
+  }
+  .nav-badge {
+    margin-left: auto;
+    background: rgba(255,255,255,.15);
+    border-radius: 10px;
+    padding: 2px 8px; font-size: 11px; font-weight: 600;
+  }
+  .nav-item.active .nav-badge {
+    background: rgba(231,76,60,.4);
+  }
+
+  .sidebar-footer {
+    padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
+  .logout-btn {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; border-radius: var(--radius-sm);
+    width: 100%; border: none; cursor: pointer;
+    background: rgba(231,76,60,.12); color: #ff8a7a;
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+    transition: background .2s;
+  }
+  .logout-btn:hover { background: rgba(231,76,60,.22); }
+  .logout-btn .nav-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(231,76,60,.2); font-size: 15px;
+  }
+
+  /* ─── MAIN CONTENT ───────────────────────────── */
+  .main {
+    margin-left: var(--sidebar-w);
+    min-height: 100vh;
+  }
+  .topbar {
+    background: rgba(255,255,255,.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px; font-weight: 700; color: var(--navy);
+  }
+  .topbar-title .page-icon { margin-right: 8px; }
+  .topbar-meta { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .topbar-pill {
+    background: #f1f5f9; border-radius: 20px;
+    padding: 6px 14px; font-size: 12px; font-weight: 600;
+    color: var(--slate); display: flex; align-items: center; gap: 6px;
+  }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 2px rgba(39,174,96,.2);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(39,174,96,.2); }
+    50% { box-shadow: 0 0 0 5px rgba(39,174,96,.1); }
+  }
+
+  .content { padding: 28px 32px; }
+
+  /* ─── SECTIONS ───────────────────────────────── */
   .section { display: none; }
   .section.active { display: block; }
-  .dept-chip {
-    display: inline-block;
-    background: #ecf0f1;
-    padding: 5px 12px;
-    border-radius: 20px;
-    margin: 4px;
-    font-size: 13px;
-  }
-  .dept-chip button {
-    background: none;
-    border: none;
-    color: #e74c3c;
-    cursor: pointer;
-    margin-left: 6px;
-    font-weight: bold;
-  }
-  .toolbar {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 15px;
-  }
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: #27ae60;
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    z-index: 1000;
-    display: none;
-  }
-  .toast.show { display: block; animation: slideIn 0.3s; }
-  @keyframes slideIn { from { transform: translateX(100%);} to { transform: translateX(0);} }
 
+  /* ─── CARDS ──────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 20px 24px 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 17px; font-weight: 700;
+    color: var(--navy); display: flex; align-items: center; gap: 8px;
+  }
+  .card-header h2 .card-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .card-body { padding: 20px 24px 24px; }
+
+  /* ─── FORM ───────────────────────────────────── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 16px; margin-bottom: 16px;
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 12px; font-weight: 600;
+    color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase;
+  }
+  .field input, .field select {
+    padding: 11px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px; font-family: 'Inter', sans-serif;
+    background: #f8fafc; color: var(--text);
+    transition: border-color .2s, box-shadow .2s, background .2s;
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--navy-light);
+    box-shadow: 0 0 0 3px rgba(42,82,152,.12);
+    background: #fff;
+  }
+  .field input::placeholder { color: var(--slate-light); }
+
+  /* ─── SUGGESTIONS ────────────────────────────── */
+  .suggestions-row {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;
+  }
+  .suggestion-chip {
+    padding: 4px 10px; border-radius: 20px;
+    background: #e8f0fe; color: var(--navy-light);
+    font-size: 12px; font-weight: 500;
+    cursor: pointer; border: 1px solid rgba(42,82,152,.15);
+    transition: background .15s, transform .1s;
+    white-space: nowrap;
+  }
+  .suggestion-chip:hover {
+    background: var(--navy); color: #fff;
+    transform: translateY(-1px);
+  }
+  .suggestion-chip.size { background: #fce8e6; color: #b52a1c; border-color: rgba(231,76,60,.15); }
+  .suggestion-chip.size:hover { background: var(--red); color: #fff; }
+
+  /* ─── BUTTONS ────────────────────────────────── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 18px; border: none; border-radius: var(--radius-sm);
+    cursor: pointer; font-family: 'Inter', sans-serif;
+    font-size: 13.5px; font-weight: 600;
+    transition: all .2s; white-space: nowrap;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: #fff; box-shadow: 0 2px 8px rgba(30,60,114,.3);
+  }
+  .btn-primary:hover { box-shadow: 0 4px 14px rgba(30,60,114,.4); opacity: .93; }
+  .btn-danger {
+    background: linear-gradient(135deg, var(--red-dark), var(--red));
+    color: #fff; box-shadow: 0 2px 8px rgba(231,76,60,.25);
+  }
+  .btn-danger:hover { opacity: .9; }
+  .btn-success {
+    background: linear-gradient(135deg, var(--green-dark), var(--green));
+    color: #fff; box-shadow: 0 2px 8px rgba(39,174,96,.25);
+  }
+  .btn-success:hover { opacity: .9; }
+  .btn-ghost {
+    background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: #e2e8f0; color: var(--text); }
+  .btn-sm { padding: 7px 13px; font-size: 12.5px; }
+
+  /* ─── TABLE ──────────────────────────────────── */
+  .table-wrapper { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  thead { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); }
+  th {
+    padding: 12px 16px;
+    text-align: left; color: rgba(255,255,255,.9);
+    font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+  }
+  th:first-child { border-radius: 0; }
+  th:last-child { border-radius: 0; }
+  td {
+    padding: 14px 16px; border-bottom: 1px solid #f1f5f9;
+    font-size: 14px; color: var(--text);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr { transition: background .15s; }
+  tbody tr:hover { background: #f8faff; }
+  .cost-input {
+    width: 110px; padding: 7px 10px;
+    border: 1.5px solid var(--border); border-radius: 6px;
+    font-size: 14px; font-family: 'Inter', sans-serif;
+    background: #f8fafc;
+    transition: border-color .2s;
+  }
+  .cost-input:focus { outline: none; border-color: var(--navy-light); background: #fff; }
+
+  /* ─── SEARCH + TOOLBAR ───────────────────────── */
+  .toolbar {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px;
+    align-items: center;
+  }
+  .search-wrap {
+    flex: 1; position: relative; min-width: 180px;
+  }
+  .search-wrap input {
+    width: 100%; padding: 11px 13px 11px 40px;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 14px; font-family: 'Inter', sans-serif;
+    background: #f8fafc;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .search-wrap input:focus {
+    outline: none; border-color: var(--navy-light);
+    box-shadow: 0 0 0 3px rgba(42,82,152,.12); background: #fff;
+  }
+  .search-icon {
+    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+    color: var(--slate-light); font-size: 15px; pointer-events: none;
+  }
+
+  /* ─── STAT CARDS ─────────────────────────────── */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 16px; margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--surface); border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 22px 22px 18px;
+    display: flex; flex-direction: column; gap: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow .2s, transform .2s;
+    position: relative; overflow: hidden;
+  }
+  .stat-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--navy), var(--navy-light));
+  }
+  .stat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--red-dark), var(--red)); }
+  .stat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--green-dark), var(--green)); }
+  .stat-card:nth-child(4)::before { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+  .stat-label { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; }
+  .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: var(--navy); line-height: 1; }
+  .stat-card:nth-child(2) .stat-value { color: var(--red); }
+  .stat-card:nth-child(3) .stat-value { color: var(--green-dark); }
+  .stat-card:nth-child(4) .stat-value { color: #7c3aed; }
+  .stat-sub { font-size: 12px; color: var(--text-muted); }
+
+  /* ─── DEPT CHIPS ─────────────────────────────── */
+  .dept-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .dept-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #f0f4ff; border: 1px solid rgba(42,82,152,.15);
+    padding: 7px 12px; border-radius: 20px;
+    font-size: 13px; font-weight: 500; color: var(--navy);
+  }
+  .dept-chip-del {
+    background: none; border: none;
+    color: var(--red); cursor: pointer;
+    font-size: 15px; line-height: 1; padding: 0;
+    opacity: .6; transition: opacity .15s;
+    display: flex; align-items: center;
+  }
+  .dept-chip-del:hover { opacity: 1; }
+
+  /* ─── DEPT INPUT ROW ─────────────────────────── */
+  .dept-add-row { display: flex; gap: 10px; margin-bottom: 20px; }
+  .dept-add-row input {
+    flex: 1; padding: 11px 14px;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 14px; font-family: 'Inter', sans-serif;
+    background: #f8fafc; transition: border-color .2s, box-shadow .2s;
+  }
+  .dept-add-row input:focus {
+    outline: none; border-color: var(--navy-light);
+    box-shadow: 0 0 0 3px rgba(42,82,152,.12); background: #fff;
+  }
+
+  /* ─── EMPTY STATE ────────────────────────────── */
+  .empty-state {
+    text-align: center; padding: 48px 24px;
+  }
+  .empty-icon { font-size: 42px; margin-bottom: 12px; }
+  .empty-state h3 { font-size: 16px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+  .empty-state p { font-size: 13.5px; color: var(--text-muted); }
+
+  /* ─── TOAST ──────────────────────────────────── */
+  #toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: var(--navy); color: #fff;
+    padding: 14px 20px; border-radius: var(--radius-sm);
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    z-index: 9999; font-size: 14px; font-weight: 500;
+    display: flex; align-items: center; gap: 10px;
+    opacity: 0; pointer-events: none;
+    transform: translateY(12px);
+    transition: opacity .3s, transform .3s;
+  }
+  #toast.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+  /* ─── TABLE TAGS ─────────────────────────────── */
+  .dept-tag {
+    display: inline-block;
+    background: #eff6ff; color: var(--navy-light);
+    border: 1px solid rgba(42,82,152,.15);
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+  }
+  .size-tag {
+    display: inline-block;
+    background: #fff7ed; color: #c2410c;
+    border: 1px solid rgba(194,65,12,.12);
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+    font-family: monospace;
+  }
+  .date-text { color: var(--text-muted); font-size: 12.5px; }
+
+  /* ─── SECTION BANNER ─────────────────────────── */
+  .section-intro {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 20px;
+    color: rgba(255,255,255,.85);
+    position: relative; overflow: hidden;
+  }
+  .section-intro::after {
+    content: ''; position: absolute; right: -30px; top: -30px;
+    width: 140px; height: 140px; border-radius: 50%;
+    background: rgba(255,255,255,.05);
+  }
+  .section-intro h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px; color: #fff; margin-bottom: 4px;
+  }
+  .section-intro p { font-size: 13.5px; }
+  .intro-icon { font-size: 36px; flex-shrink: 0; }
+
+  /* ─── PRINT ──────────────────────────────────── */
   @media print {
     body { background: #fff; }
-    header, .nav, .toolbar, .btn, .no-print { display: none !important; }
+    .sidebar, .topbar, .toolbar, .btn, .no-print { display: none !important; }
+    .main { margin-left: 0; }
+    .content { padding: 0; }
     .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
     .section { display: block !important; }
     #printArea { display: block !important; }
   }
   #printArea { display: none; }
+
+  /* ─── RESPONSIVE ─────────────────────────────── */
+  @media (max-width: 768px) {
+    :root { --sidebar-w: 60px; }
+    .brand-text, .nav-item span, .brand-tagline, .logout-btn span { display: none; }
+    .nav-item { justify-content: center; padding: 10px; }
+    .nav-item .nav-icon { margin: 0; }
+    .topbar, .content { padding-left: 16px; padding-right: 16px; }
+    .nav-badge { display: none; }
+  }
 </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- ═══ LOGIN ═════════════════════════════════════════════════════ -->
 <div id="loginScreen">
-  <div class="login-box">
+  <div class="login-scene"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">🏷️</div>
+    </div>
     <h1>RAHA <span>LABELS</span></h1>
-    <p>🔒 Enter password to continue</p>
-    <input type="password" id="passwordInput" placeholder="Password" autofocus />
-    <button onclick="attemptLogin()">Login</button>
+    <p class="subtitle">Label management system · Sign in to continue</p>
+    <div class="login-field">
+      <input type="password" id="passwordInput" placeholder="Enter your password" autofocus/>
+    </div>
+    <button class="login-btn" onclick="attemptLogin()">Sign In</button>
     <div class="login-error" id="loginError"></div>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="appContent" style="display:none;">
-  <header>
-    <h1>RAHA <span>LABELS</span></h1>
-    <div class="nav">
-      <button class="tab-btn active" data-tab="labels">📋 Labels</button>
-      <button class="tab-btn" data-tab="departments">🏢 Departments</button>
-      <button class="tab-btn" data-tab="stats">📊 Stats</button>
-      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+<!-- ═══ APP ════════════════════════════════════════════════════════ -->
+<div id="appContent">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-badge">
+        <div class="brand-icon">🏷️</div>
+        <div>
+          <div class="brand-text">RAHA <span>LABELS</span></div>
+          <div class="brand-tagline">Label Management</div>
+        </div>
+      </div>
     </div>
-  </header>
 
-  <div class="container">
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="labels">
+        <div class="nav-icon">📋</div>
+        <span>Labels</span>
+        <span class="nav-badge" id="labelsBadge">0</span>
+      </button>
+      <button class="nav-item" data-tab="departments">
+        <div class="nav-icon">🏢</div>
+        <span>Departments</span>
+        <span class="nav-badge" id="deptBadge">0</span>
+      </button>
+      <button class="nav-item" data-tab="stats">
+        <div class="nav-icon">📊</div>
+        <span>Analytics</span>
+      </button>
+    </nav>
 
-    <!-- LABELS SECTION -->
-    <div id="labels" class="section active">
-      <div class="card">
-        <h2>➕ Add New Sticker Label</h2>
-        <form id="labelForm">
-          <div class="form-grid">
-            <label>Item Description
-              <input type="text" id="description" required placeholder="e.g. Widget A"/>
-            </label>
-            <label>Size
-              <input type="text" id="size" required placeholder="e.g. 50x30mm"/>
-            </label>
-            <label>Cost (Rands - R)
-              <input type="number" id="cost" step="0.01" min="0" required placeholder="0.00"/>
-            </label>
-            <label>Department
-              <select id="department" required></select>
-            </label>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="logout()">
+        <div class="nav-icon">🚪</div>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="topbarTitle">📋 Labels</div>
+        <div class="topbar-meta" id="topbarMeta">Manage all your sticker labels</div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-pill">
+          <div class="status-dot"></div>
+          Live sync
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ LABELS SECTION ══════════════════════════ -->
+      <div id="labels" class="section active">
+
+        <div class="section-intro">
+          <div class="intro-icon">🏷️</div>
+          <div>
+            <h2>Add a New Label</h2>
+            <p>Fill in the details below. Use suggestions to fill fields quickly.</p>
           </div>
-          <button type="submit" class="btn btn-primary">💾 Save Label</button>
-        </form>
+        </div>
+
+        <div class="card">
+          <div class="card-body" style="padding-top:24px;">
+            <form id="labelForm">
+              <div class="form-grid">
+                <div class="field">
+                  <label>Item Description</label>
+                  <input type="text" id="description" required placeholder="e.g. Widget A — Batch 12"/>
+                  <div class="suggestions-row" id="descSuggestions"></div>
+                </div>
+                <div class="field">
+                  <label>Size</label>
+                  <input type="text" id="size" required placeholder="e.g. 50×30mm"/>
+                  <div class="suggestions-row" id="sizeSuggestions">
+                    <span class="suggestion-chip size" onclick="fillField('size','50×30mm')">50×30mm</span>
+                    <span class="suggestion-chip size" onclick="fillField('size','100×50mm')">100×50mm</span>
+                    <span class="suggestion-chip size" onclick="fillField('size','75×25mm')">75×25mm</span>
+                    <span class="suggestion-chip size" onclick="fillField('size','A6')">A6</span>
+                    <span class="suggestion-chip size" onclick="fillField('size','A5')">A5</span>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Cost (R)</label>
+                  <input type="number" id="cost" step="0.01" min="0" required placeholder="0.00"/>
+                  <div class="suggestions-row" id="costSuggestions">
+                    <span class="suggestion-chip" onclick="fillField('cost','0.50')">R 0.50</span>
+                    <span class="suggestion-chip" onclick="fillField('cost','1.00')">R 1.00</span>
+                    <span class="suggestion-chip" onclick="fillField('cost','2.50')">R 2.50</span>
+                    <span class="suggestion-chip" onclick="fillField('cost','5.00')">R 5.00</span>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Department</label>
+                  <select id="department" required></select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">💾 Save Label</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2><div class="card-icon">📦</div> All Labels</h2>
+          </div>
+          <div class="card-body">
+            <div class="toolbar no-print">
+              <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchBox" placeholder="Search by description or department…"/>
+              </div>
+              <button class="btn btn-success" onclick="exportCSV()">📥 Export CSV</button>
+              <button class="btn btn-ghost" onclick="printLabels()">🖨️ Print / PDF</button>
+            </div>
+            <div class="table-wrapper">
+              <table id="labelsTable">
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>Size</th>
+                    <th>Cost (R)</th>
+                    <th>Department</th>
+                    <th>Added</th>
+                    <th class="no-print">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="labelsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
-        <h2>📦 All Labels</h2>
-        <div class="toolbar no-print">
-          <input type="text" id="searchBox" placeholder="🔍 Search labels..." style="flex:1; padding:10px; border:1px solid #ccc; border-radius:6px;"/>
-          <button class="btn btn-success" onclick="exportCSV()">📥 Export CSV</button>
-          <button class="btn btn-secondary" onclick="printLabels()">🖨️ Print / PDF</button>
+      <!-- ══ DEPARTMENTS SECTION ═════════════════════ -->
+      <div id="departments" class="section">
+
+        <div class="section-intro">
+          <div class="intro-icon">🏢</div>
+          <div>
+            <h2>Manage Departments</h2>
+            <p>Add or remove departments that labels can be assigned to.</p>
+          </div>
         </div>
-        <div style="overflow-x:auto;">
-          <table id="labelsTable">
-            <thead>
-              <tr>
-                <th>Description</th>
-                <th>Size</th>
-                <th>Cost (R)</th>
-                <th>Department</th>
-                <th>Created</th>
-                <th class="no-print">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="labelsBody"></tbody>
-          </table>
+
+        <div class="card">
+          <div class="card-header"><h2><div class="card-icon">➕</div> Add Department</h2></div>
+          <div class="card-body">
+            <div class="dept-add-row">
+              <input type="text" id="deptInput" placeholder="e.g. Quality Control, Dispatch, Warehouse…"/>
+              <button class="btn btn-primary" onclick="addDepartment()">+ Add</button>
+            </div>
+            <div class="suggestions-row" style="margin-bottom:20px;">
+              <strong style="font-size:12px;color:var(--text-muted);margin-right:4px;">Quick add:</strong>
+              <span class="suggestion-chip" onclick="fillDept('Warehouse')">Warehouse</span>
+              <span class="suggestion-chip" onclick="fillDept('Dispatch')">Dispatch</span>
+              <span class="suggestion-chip" onclick="fillDept('Production')">Production</span>
+              <span class="suggestion-chip" onclick="fillDept('Quality Control')">Quality Control</span>
+              <span class="suggestion-chip" onclick="fillDept('Admin')">Admin</span>
+              <span class="suggestion-chip" onclick="fillDept('Receiving')">Receiving</span>
+            </div>
+            <div id="deptList" class="dept-chips">
+              <p style="color:var(--text-muted);font-size:14px;">No departments yet. Add one above.</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- DEPARTMENTS SECTION -->
-    <div id="departments" class="section">
-      <div class="card">
-        <h2>🏢 Manage Departments</h2>
-        <div style="display:flex; gap:10px; margin-bottom:15px;">
-          <input type="text" id="deptInput" placeholder="New department name..." style="flex:1; padding:10px; border:1px solid #ccc; border-radius:6px;"/>
-          <button class="btn btn-primary" onclick="addDepartment()">+ Add Department</button>
+      <!-- ══ STATS SECTION ═══════════════════════════ -->
+      <div id="stats" class="section">
+
+        <div class="section-intro">
+          <div class="intro-icon">📊</div>
+          <div>
+            <h2>Analytics Overview</h2>
+            <p>Live summary of all labels and costs across departments.</p>
+          </div>
         </div>
-        <div id="deptList"></div>
-      </div>
-    </div>
 
-    <!-- STATS SECTION -->
-    <div id="stats" class="section">
-      <div class="card">
-        <h2>📊 Statistics Dashboard</h2>
         <div class="stats-grid" id="statsGrid"></div>
-      </div>
-      <div class="card">
-        <h2>📈 Breakdown by Department</h2>
-        <table>
-          <thead>
-            <tr><th>Department</th><th>Labels</th><th>Total Cost (R)</th><th>Avg Cost (R)</th></tr>
-          </thead>
-          <tbody id="deptStatsBody"></tbody>
-        </table>
-      </div>
-    </div>
 
-  </div>
+        <div class="card">
+          <div class="card-header"><h2><div class="card-icon">📈</div> Breakdown by Department</h2></div>
+          <div class="card-body" style="padding-top:0;">
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Department</th><th>Labels</th><th>Total Cost (R)</th><th>Avg Cost (R)</th></tr>
+                </thead>
+                <tbody id="deptStatsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /stats -->
+
+    </div><!-- /content -->
+  </div><!-- /main -->
 
   <div id="printArea"></div>
-  <div id="toast" class="toast"></div>
-</div>
+  <div id="toast">✅ <span id="toastMsg"></span></div>
+
+</div><!-- /appContent -->
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
   import {
-    getFirestore, collection, addDoc, getDocs, doc,
+    getFirestore, collection, addDoc, doc,
     updateDoc, deleteDoc, onSnapshot, query, orderBy
   } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
@@ -366,7 +822,7 @@
   let labelsCache = [];
   let departmentsCache = [];
 
-  // --- AUTH ---
+  // ─── AUTH ────────────────────────────────────────
   const CORRECT_PASSWORD = "Raha@123";
 
   window.attemptLogin = function() {
@@ -393,73 +849,89 @@
     location.reload();
   };
 
-  // Check existing session
   if (sessionStorage.getItem('raha_auth') === '1') {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('appContent').style.display = 'block';
     initApp();
   }
 
+  // ─── INIT ─────────────────────────────────────────
   function initApp() {
     loadDepartments();
     loadLabels();
     setupTabs();
   }
 
-  // --- TABS ---
+  // ─── TABS ─────────────────────────────────────────
+  const TAB_META = {
+    labels:      { icon: '📋', title: 'Labels',     meta: 'Manage all your sticker labels' },
+    departments: { icon: '🏢', title: 'Departments', meta: 'Organise labels by department' },
+    stats:       { icon: '📊', title: 'Analytics',  meta: 'Live cost and label statistics' },
+  };
+
   function setupTabs() {
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    document.querySelectorAll('.nav-item[data-tab]').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         btn.classList.add('active');
-        document.getElementById(btn.dataset.tab).classList.add('active');
-        if (btn.dataset.tab === 'stats') renderStats();
+        const tab = btn.dataset.tab;
+        document.getElementById(tab).classList.add('active');
+        const m = TAB_META[tab] || {};
+        document.getElementById('topbarTitle').textContent = (m.icon || '') + ' ' + (m.title || tab);
+        document.getElementById('topbarMeta').textContent = m.meta || '';
+        if (tab === 'stats') renderStats();
       });
     });
   }
 
-  // --- TOAST ---
-  function toast(msg, color='#27ae60') {
+  // ─── TOAST ────────────────────────────────────────
+  function toast(msg, type = 'success') {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.style.background = color;
+    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    t.innerHTML = `${icons[type] || '✅'} ${escapeHtml(msg)}`;
+    t.style.background = type === 'error' ? 'var(--red)' : type === 'info' ? 'var(--navy-light)' : 'var(--green-dark)';
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
+    setTimeout(() => t.classList.remove('show'), 2800);
   }
 
-  // --- DEPARTMENTS ---
+  // ─── DEPARTMENTS ──────────────────────────────────
   async function loadDepartments() {
     onSnapshot(collection(db, 'departments'), snap => {
       departmentsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderDepartments();
       renderDeptDropdown();
+      updateDescSuggestions();
+      document.getElementById('deptBadge').textContent = departmentsCache.length;
     });
   }
 
   function renderDeptDropdown() {
     const sel = document.getElementById('department');
-    sel.innerHTML = '<option value="">-- Select Department --</option>' +
-      departmentsCache.map(d => `<option value="${d.name}">${d.name}</option>`).join('');
+    sel.innerHTML = '<option value="">— Select department —</option>' +
+      departmentsCache.map(d => `<option value="${escapeHtml(d.name)}">${escapeHtml(d.name)}</option>`).join('');
   }
 
   function renderDepartments() {
     const list = document.getElementById('deptList');
     if (departmentsCache.length === 0) {
-      list.innerHTML = '<p style="color:#888;">No departments yet. Add one above.</p>';
+      list.innerHTML = '<p style="color:var(--text-muted);font-size:14px;">No departments yet. Add one above.</p>';
       return;
     }
     list.innerHTML = departmentsCache.map(d =>
-      `<span class="dept-chip">${escapeHtml(d.name)} <button onclick="deleteDepartment('${d.id}')">×</button></span>`
+      `<span class="dept-chip">
+        ${escapeHtml(d.name)}
+        <button class="dept-chip-del" title="Remove" onclick="deleteDepartment('${d.id}')">×</button>
+       </span>`
     ).join('');
   }
 
   window.addDepartment = async function() {
     const input = document.getElementById('deptInput');
     const name = input.value.trim();
-    if (!name) return toast('Enter a department name', '#e74c3c');
+    if (!name) return toast('Enter a department name', 'error');
     if (departmentsCache.some(d => d.name.toLowerCase() === name.toLowerCase()))
-      return toast('Department already exists', '#e74c3c');
+      return toast('Department already exists', 'error');
     await addDoc(collection(db, 'departments'), { name, createdAt: Date.now() });
     input.value = '';
     toast('Department added!');
@@ -468,55 +940,76 @@
   window.deleteDepartment = async function(id) {
     if (!confirm('Delete this department?')) return;
     await deleteDoc(doc(db, 'departments', id));
-    toast('Department deleted');
+    toast('Department removed');
   };
 
-  // --- LABELS ---
+  // Quick-fill for dept suggestions
+  window.fillDept = function(name) {
+    document.getElementById('deptInput').value = name;
+    document.getElementById('deptInput').focus();
+  };
+
+  // ─── LABELS ───────────────────────────────────────
   async function loadLabels() {
     const q = query(collection(db, 'labels'), orderBy('createdAt', 'desc'));
     onSnapshot(q, snap => {
       labelsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderLabels();
+      updateDescSuggestions();
+      document.getElementById('labelsBadge').textContent = labelsCache.length;
     });
   }
 
   function renderLabels(filter = '') {
     const body = document.getElementById('labelsBody');
+    const lc = filter.toLowerCase();
     const filtered = labelsCache.filter(l =>
-      !filter || l.description.toLowerCase().includes(filter.toLowerCase()) ||
-      l.department.toLowerCase().includes(filter.toLowerCase())
+      !filter ||
+      (l.description || '').toLowerCase().includes(lc) ||
+      (l.department || '').toLowerCase().includes(lc) ||
+      (l.size || '').toLowerCase().includes(lc)
     );
     if (filtered.length === 0) {
-      body.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888; padding:30px;">No labels yet. Add one above!</td></tr>';
+      body.innerHTML = `
+        <tr><td colspan="6">
+          <div class="empty-state">
+            <div class="empty-icon">${filter ? '🔍' : '🏷️'}</div>
+            <h3>${filter ? 'No matching labels' : 'No labels yet'}</h3>
+            <p>${filter ? 'Try a different search term.' : 'Add your first label using the form above.'}</p>
+          </div>
+        </td></tr>`;
       return;
     }
     body.innerHTML = filtered.map(l => `
       <tr>
-        <td>${escapeHtml(l.description)}</td>
-        <td>${escapeHtml(l.size)}</td>
+        <td><strong style="color:var(--text)">${escapeHtml(l.description)}</strong></td>
+        <td><span class="size-tag">${escapeHtml(l.size)}</span></td>
         <td>R <input type="number" step="0.01" class="cost-input" value="${l.cost}" onchange="updateCost('${l.id}', this.value)"/></td>
-        <td>${escapeHtml(l.department)}</td>
-        <td>${new Date(l.createdAt).toLocaleDateString()}</td>
+        <td><span class="dept-tag">${escapeHtml(l.department)}</span></td>
+        <td><span class="date-text">${new Date(l.createdAt).toLocaleDateString('en-ZA')}</span></td>
         <td class="no-print">
-          <button class="btn btn-danger" onclick="deleteLabel('${l.id}')">🗑️ Delete</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteLabel('${l.id}')">🗑️ Delete</button>
         </td>
       </tr>
     `).join('');
   }
 
   function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    return String(str || '').replace(/[&<>"']/g, c =>
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])
+    );
   }
 
   document.getElementById('labelForm').addEventListener('submit', async e => {
     e.preventDefault();
     const label = {
       description: document.getElementById('description').value.trim(),
-      size: document.getElementById('size').value.trim(),
-      cost: parseFloat(document.getElementById('cost').value),
-      department: document.getElementById('department').value,
-      createdAt: Date.now()
+      size:        document.getElementById('size').value.trim(),
+      cost:        parseFloat(document.getElementById('cost').value),
+      department:  document.getElementById('department').value,
+      createdAt:   Date.now()
     };
+    if (!label.department) return toast('Please select a department', 'error');
     await addDoc(collection(db, 'labels'), label);
     e.target.reset();
     toast('Label saved!');
@@ -524,33 +1017,68 @@
 
   window.updateCost = async function(id, value) {
     await updateDoc(doc(db, 'labels', id), { cost: parseFloat(value) || 0 });
-    toast('Cost updated');
+    toast('Cost updated', 'info');
   };
 
   window.deleteLabel = async function(id) {
-    if (!confirm('Are you sure you want to DELETE this label? This cannot be undone.')) return;
+    if (!confirm('Delete this label? This cannot be undone.')) return;
     try {
       await deleteDoc(doc(db, 'labels', id));
       toast('Label deleted');
     } catch (err) {
-      toast('Error deleting: ' + err.message, '#e74c3c');
+      toast('Error: ' + err.message, 'error');
     }
   };
 
   document.getElementById('searchBox').addEventListener('input', e => renderLabels(e.target.value));
 
-  // --- STATS ---
+  // ─── SUGGESTIONS ──────────────────────────────────
+  // Fill field helpers
+  window.fillField = function(id, value) {
+    document.getElementById(id).value = value;
+    document.getElementById(id).focus();
+  };
+
+  // Dynamic description suggestions from existing labels
+  function updateDescSuggestions() {
+    const container = document.getElementById('descSuggestions');
+    const recent = [...new Set(labelsCache.map(l => l.description))].slice(0, 5);
+    container.innerHTML = recent.length
+      ? recent.map(d =>
+          `<span class="suggestion-chip" onclick="fillField('description','${escapeHtml(d)}')">${escapeHtml(d)}</span>`
+        ).join('')
+      : '';
+  }
+
+  // ─── STATS ────────────────────────────────────────
   function renderStats() {
-    const total = labelsCache.length;
+    const total     = labelsCache.length;
     const totalCost = labelsCache.reduce((s, l) => s + (l.cost || 0), 0);
-    const avgCost = total ? totalCost / total : 0;
+    const avgCost   = total ? totalCost / total : 0;
     const deptCount = new Set(labelsCache.map(l => l.department)).size;
+    const mostExp   = labelsCache.reduce((best, l) => (!best || l.cost > best.cost ? l : best), null);
 
     document.getElementById('statsGrid').innerHTML = `
-      <div class="stat-box"><h3>Total Labels</h3><div class="value">${total}</div></div>
-      <div class="stat-box"><h3>Total Cost</h3><div class="value">R ${totalCost.toFixed(2)}</div></div>
-      <div class="stat-box"><h3>Average Cost</h3><div class="value">R ${avgCost.toFixed(2)}</div></div>
-      <div class="stat-box"><h3>Departments</h3><div class="value">${deptCount}</div></div>
+      <div class="stat-card">
+        <div class="stat-label">Total Labels</div>
+        <div class="stat-value">${total}</div>
+        <div class="stat-sub">Across all departments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Cost</div>
+        <div class="stat-value">R ${totalCost.toFixed(2)}</div>
+        <div class="stat-sub">Sum of all label costs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Average Cost</div>
+        <div class="stat-value">R ${avgCost.toFixed(2)}</div>
+        <div class="stat-sub">Per label average</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Departments</div>
+        <div class="stat-value">${deptCount}</div>
+        <div class="stat-sub">${mostExp ? 'Highest: ' + escapeHtml(mostExp.description) : 'No labels yet'}</div>
+      </div>
     `;
 
     const byDept = {};
@@ -559,45 +1087,52 @@
       byDept[l.department].count++;
       byDept[l.department].total += l.cost || 0;
     });
-    document.getElementById('deptStatsBody').innerHTML = Object.entries(byDept).map(([d, v]) =>
-      `<tr><td>${escapeHtml(d)}</td><td>${v.count}</td><td>R ${v.total.toFixed(2)}</td><td>R ${(v.total/v.count).toFixed(2)}</td></tr>`
-    ).join('') || '<tr><td colspan="4" style="text-align:center; color:#888;">No data</td></tr>';
+
+    const sorted = Object.entries(byDept).sort((a, b) => b[1].total - a[1].total);
+
+    document.getElementById('deptStatsBody').innerHTML = sorted.map(([d, v]) =>
+      `<tr>
+        <td><span class="dept-tag">${escapeHtml(d)}</span></td>
+        <td><strong>${v.count}</strong></td>
+        <td>R ${v.total.toFixed(2)}</td>
+        <td>R ${(v.total / v.count).toFixed(2)}</td>
+       </tr>`
+    ).join('') || '<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">📊</div><h3>No data yet</h3><p>Add some labels to see analytics.</p></div></td></tr>';
   }
 
-  // --- EXPORT CSV ---
+  // ─── EXPORT CSV ───────────────────────────────────
   window.exportCSV = function() {
-    if (labelsCache.length === 0) return toast('No data to export', '#e74c3c');
+    if (labelsCache.length === 0) return toast('No data to export', 'error');
     const header = 'Description,Size,Cost (R),Department,Created\n';
     const rows = labelsCache.map(l =>
-      `"${l.description}","${l.size}",${l.cost},"${l.department}","${new Date(l.createdAt).toLocaleString()}"`
+      `"${l.description}","${l.size}",${l.cost},"${l.department}","${new Date(l.createdAt).toLocaleString('en-ZA')}"`
     ).join('\n');
     const blob = new Blob([header + rows], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `raha-labels-${Date.now()}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = `raha-labels-${Date.now()}.csv`;
+    a.click(); URL.revokeObjectURL(url);
     toast('CSV exported!');
   };
 
-  // --- PRINT / PDF ---
+  // ─── PRINT ────────────────────────────────────────
   window.printLabels = function() {
-    if (labelsCache.length === 0) return toast('No labels to print', '#e74c3c');
+    if (labelsCache.length === 0) return toast('No labels to print', 'error');
     const printArea = document.getElementById('printArea');
     printArea.innerHTML = `
       <div class="card" style="display:block;">
-        <h2 style="text-align:center; color:#1e3c72;">RAHA LABELS - Report</h2>
-        <p style="text-align:center; color:#888; margin-bottom:15px;">Generated: ${new Date().toLocaleString()}</p>
+        <h2 style="text-align:center; color:#1e3c72; font-size:22px; margin-bottom:6px;">RAHA LABELS — Report</h2>
+        <p style="text-align:center; color:#888; margin-bottom:16px; font-size:13px;">Generated: ${new Date().toLocaleString('en-ZA')}</p>
         <table>
-          <thead><tr><th>Description</th><th>Size</th><th>Cost (R)</th><th>Department</th></tr></thead>
+          <thead><tr><th>Description</th><th>Size</th><th>Cost (R)</th><th>Department</th><th>Added</th></tr></thead>
           <tbody>
             ${labelsCache.map(l => `
               <tr>
                 <td>${escapeHtml(l.description)}</td>
                 <td>${escapeHtml(l.size)}</td>
-                <td>R ${l.cost.toFixed(2)}</td>
+                <td>R ${(l.cost || 0).toFixed(2)}</td>
                 <td>${escapeHtml(l.department)}</td>
+                <td>${new Date(l.createdAt).toLocaleDateString('en-ZA')}</td>
               </tr>
             `).join('')}
           </tbody>
@@ -607,7 +1142,7 @@
     window.print();
     setTimeout(() => printArea.innerHTML = '', 1000);
   };
-</script>
 
+</script>
 </body>
 </html>
