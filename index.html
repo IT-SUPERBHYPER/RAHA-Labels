@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RAHA LABELS</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    min-height: 100vh;
+    color: #333;
+  }
+  header {
+    background: #fff;
+    padding: 20px 40px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 {
+    color: #1e3c72;
+    font-size: 28px;
+    letter-spacing: 2px;
+  }
+  header h1 span { color: #e74c3c; }
+  .nav { display: flex; gap: 10px; }
+  .nav button {
+    padding: 10px 18px;
+    border: none;
+    background: #f0f0f0;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav button.active, .nav button:hover {
+    background: #1e3c72;
+    color: #fff;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+  .card h2 {
+    color: #1e3c72;
+    margin-bottom: 18px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+  .form-grid label {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+  }
+  .form-grid input, .form-grid select {
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  .form-grid input:focus, .form-grid select:focus {
+    outline: none;
+    border-color: #1e3c72;
+    box-shadow: 0 0 0 3px rgba(30,60,114,0.15);
+  }
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-size: 14px;
+  }
+  .btn-primary { background: #1e3c72; color: #fff; }
+  .btn-primary:hover { background: #15294f; }
+  .btn-danger { background: #e74c3c; color: #fff; }
+  .btn-danger:hover { background: #c0392b; }
+  .btn-success { background: #27ae60; color: #fff; }
+  .btn-success:hover { background: #1e8449; }
+  .btn-secondary { background: #95a5a6; color: #fff; }
+  .btn-secondary:hover { background: #7f8c8d; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  th {
+    background: #1e3c72;
+    color: #fff;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+  tr:hover { background: #f9f9f9; }
+  .cost-input {
+    width: 90px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+  .stat-box {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .stat-box h3 { font-size: 13px; opacity: 0.9; margin-bottom: 8px; }
+  .stat-box .value { font-size: 32px; font-weight: bold; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .dept-chip {
+    display: inline-block;
+    background: #ecf0f1;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin: 4px;
+    font-size: 13px;
+  }
+  .dept-chip button {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    margin-left: 6px;
+    font-weight: bold;
+  }
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #27ae60;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 1000;
+    display: none;
+  }
+  .toast.show { display: block; animation: slideIn 0.3s; }
+  @keyframes slideIn { from { transform: translateX(100%);} to { transform: translateX(0);} }
+
+  @media print {
+    body { background: #fff; }
+    header, .nav, .toolbar, .btn, .no-print { display: none !important; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+    .section { display: block !important; }
+    #printArea { display: block !important; }
+  }
+  #printArea { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>RAHA <span>LABELS</span></h1>
+  <div class="nav">
+    <button class="tab-btn active" data-tab="labels">📋 Labels</button>
+    <button class="tab-btn" data-tab="departments">🏢 Departments</button>
+    <button class="tab-btn" data-tab="stats">📊 Stats</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- LABELS SECTION -->
+  <div id="labels" class="section active">
+    <div class="card">
+      <h2>➕ Add New Sticker Label</h2>
+      <form id="labelForm">
+        <div class="form-grid">
+          <label>Item Description
+            <input type="text" id="description" required placeholder="e.g. Widget A"/>
+          </label>
+          <label>Size
+            <input type="text" id="size" required placeholder="e.g. 50x30mm"/>
+          </label>
+          <label>Cost (USD)
+            <input type="number" id="cost" step="0.01" min="0" required placeholder="0.00"/>
+          </label>
+          <label>Department
+            <select id="department" required></select>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary">💾 Save Label</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>📦 All Labels</h2>
+      <div class="toolbar no-print">
+        <input type="text" id="searchBox" placeholder="🔍 Search labels..." style="flex:1; padding:10px; border:1px solid #ccc; border-radius:6px;"/>
+        <button class="btn btn-success" onclick="exportCSV()">📥 Export CSV</button>
+        <button class="btn btn-secondary" onclick="printLabels()">🖨️ Print / PDF</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table id="labelsTable">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Size</th>
+              <th>Cost</th>
+              <th>Department</th>
+              <th>Created</th>
+              <th class="no-print">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="labelsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEPARTMENTS SECTION -->
+  <div id="departments" class="section">
+    <div class="card">
+      <h2>🏢 Manage Departments</h2>
+      <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <input type="text" id="deptInput" placeholder="New department name..." style="flex:1; padding:10px; border:1px solid #ccc; border-radius:6px;"/>
+        <button class="btn btn-primary" onclick="addDepartment()">+ Add Department</button>
+      </div>
+      <div id="deptList"></div>
+    </div>
+  </div>
+
+  <!-- STATS SECTION -->
+  <div id="stats" class="section">
+    <div class="card">
+      <h2>📊 Statistics Dashboard</h2>
+      <div class="stats-grid" id="statsGrid"></div>
+    </div>
+    <div class="card">
+      <h2>📈 Breakdown by Department</h2>
+      <table>
+        <thead>
+          <tr><th>Department</th><th>Labels</th><th>Total Cost</th><th>Avg Cost</th></tr>
+        </thead>
+        <tbody id="deptStatsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div id="printArea"></div>
+<div id="toast" class="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+  import {
+    getFirestore, collection, addDoc, getDocs, doc,
+    updateDoc, deleteDoc, onSnapshot, query, orderBy
+  } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCfqgg6IDazhG6q2aMsDjRWlh4NGtw2l1Q",
+    authDomain: "raha-stickers.firebaseapp.com",
+    projectId: "raha-stickers",
+    storageBucket: "raha-stickers.firebasestorage.app",
+    messagingSenderId: "79232949228",
+    appId: "1:79232949228:web:3263145e488a888e037ec9",
+    measurementId: "G-71TK4JGZJZ"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+
+  let labelsCache = [];
+  let departmentsCache = [];
+
+  // --- TABS ---
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      if (btn.dataset.tab === 'stats') renderStats();
+    });
+  });
+
+  // --- TOAST ---
+  function toast(msg, color='#27ae60') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = color;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // --- DEPARTMENTS ---
+  async function loadDepartments() {
+    onSnapshot(collection(db, 'departments'), snap => {
+      departmentsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderDepartments();
+      renderDeptDropdown();
+    });
+  }
+
+  function renderDeptDropdown() {
+    const sel = document.getElementById('department');
+    sel.innerHTML = '<option value="">-- Select Department --</option>' +
+      departmentsCache.map(d => `<option value="${d.name}">${d.name}</option>`).join('');
+  }
+
+  function renderDepartments() {
+    const list = document.getElementById('deptList');
+    if (departmentsCache.length === 0) {
+      list.innerHTML = '<p style="color:#888;">No departments yet. Add one above.</p>';
+      return;
+    }
+    list.innerHTML = departmentsCache.map(d =>
+      `<span class="dept-chip">${d.name} <button onclick="deleteDepartment('${d.id}')">×</button></span>`
+    ).join('');
+  }
+
+  window.addDepartment = async function() {
+    const input = document.getElementById('deptInput');
+    const name = input.value.trim();
+    if (!name) return toast('Enter a department name', '#e74c3c');
+    if (departmentsCache.some(d => d.name.toLowerCase() === name.toLowerCase()))
+      return toast('Department already exists', '#e74c3c');
+    await addDoc(collection(db, 'departments'), { name, createdAt: Date.now() });
+    input.value = '';
+    toast('Department added!');
+  };
+
+  window.deleteDepartment = async function(id) {
+    if (!confirm('Delete this department?')) return;
+    await deleteDoc(doc(db, 'departments', id));
+    toast('Department deleted');
+  };
+
+  // --- LABELS ---
+  async function loadLabels() {
+    const q = query(collection(db, 'labels'), orderBy('createdAt', 'desc'));
+    onSnapshot(q, snap => {
+      labelsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderLabels();
+    });
+  }
+
+  function renderLabels(filter = '') {
+    const body = document.getElementById('labelsBody');
+    const filtered = labelsCache.filter(l =>
+      !filter || l.description.toLowerCase().includes(filter.toLowerCase()) ||
+      l.department.toLowerCase().includes(filter.toLowerCase())
+    );
+    if (filtered.length === 0) {
+      body.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888; padding:30px;">No labels yet. Add one above!</td></tr>';
+      return;
+    }
+    body.innerHTML = filtered.map(l => `
+      <tr>
+        <td>${escapeHtml(l.description)}</td>
+        <td>${escapeHtml(l.size)}</td>
+        <td><input type="number" step="0.01" class="cost-input" value="${l.cost}" onchange="updateCost('${l.id}', this.value)"/></td>
+        <td>${escapeHtml(l.department)}</td>
+        <td>${new Date(l.createdAt).toLocaleDateString()}</td>
+        <td class="no-print"><button class="btn btn-danger" onclick="deleteLabel('${l.id}')">🗑️</button></td>
+      </tr>
+    `).join('');
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  document.getElementById('labelForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const label = {
+      description: document.getElementById('description').value.trim(),
+      size: document.getElementById('size').value.trim(),
+      cost: parseFloat(document.getElementById('cost').value),
+      department: document.getElementById('department').value,
+      createdAt: Date.now()
+    };
+    await addDoc(collection(db, 'labels'), label);
+    e.target.reset();
+    toast('Label saved!');
+  });
+
+  window.updateCost = async function(id, value) {
+    await updateDoc(doc(db, 'labels', id), { cost: parseFloat(value) || 0 });
+    toast('Cost updated');
+  };
+
+  window.deleteLabel = async function(id) {
+    if (!confirm('Delete this label?')) return;
+    await deleteDoc(doc(db, 'labels', id));
+    toast('Label deleted');
+  };
+
+  document.getElementById('searchBox').addEventListener('input', e => renderLabels(e.target.value));
+
+  // --- STATS ---
+  function renderStats() {
+    const total = labelsCache.length;
+    const totalCost = labelsCache.reduce((s, l) => s + (l.cost || 0), 0);
+    const avgCost = total ? totalCost / total : 0;
+    const deptCount = new Set(labelsCache.map(l => l.department)).size;
+
+    document.getElementById('statsGrid').innerHTML = `
+      <div class="stat-box"><h3>Total Labels</h3><div class="value">${total}</div></div>
+      <div class="stat-box"><h3>Total Cost</h3><div class="value">$${totalCost.toFixed(2)}</div></div>
+      <div class="stat-box"><h3>Average Cost</h3><div class="value">$${avgCost.toFixed(2)}</div></div>
+      <div class="stat-box"><h3>Departments</h3><div class="value">${deptCount}</div></div>
+    `;
+
+    const byDept = {};
+    labelsCache.forEach(l => {
+      if (!byDept[l.department]) byDept[l.department] = { count: 0, total: 0 };
+      byDept[l.department].count++;
+      byDept[l.department].total += l.cost || 0;
+    });
+    document.getElementById('deptStatsBody').innerHTML = Object.entries(byDept).map(([d, v]) =>
+      `<tr><td>${escapeHtml(d)}</td><td>${v.count}</td><td>$${v.total.toFixed(2)}</td><td>$${(v.total/v.count).toFixed(2)}</td></tr>`
+    ).join('') || '<tr><td colspan="4" style="text-align:center; color:#888;">No data</td></tr>';
+  }
+
+  // --- EXPORT CSV ---
+  window.exportCSV = function() {
+    if (labelsCache.length === 0) return toast('No data to export', '#e74c3c');
+    const header = 'Description,Size,Cost,Department,Created\n';
+    const rows = labelsCache.map(l =>
+      `"${l.description}","${l.size}",${l.cost},"${l.department}","${new Date(l.createdAt).toLocaleString()}"`
+    ).join('\n');
+    const blob = new Blob([header + rows], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `raha-labels-${Date.now()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('CSV exported!');
+  };
+
+  // --- PRINT / PDF ---
+  window.printLabels = function() {
+    if (labelsCache.length === 0) return toast('No labels to print', '#e74c3c');
+    const printArea = document.getElementById('printArea');
+    printArea.innerHTML = `
+      <div class="card" style="display:block;">
+        <h2 style="text-align:center; color:#1e3c72;">RAHA LABELS - Report</h2>
+        <p style="text-align:center; color:#888; margin-bottom:15px;">Generated: ${new Date().toLocaleString()}</p>
+        <table>
+          <thead><tr><th>Description</th><th>Size</th><th>Cost</th><th>Department</th></tr></thead>
+          <tbody>
+            ${labelsCache.map(l => `
+              <tr>
+                <td>${escapeHtml(l.description)}</td>
+                <td>${escapeHtml(l.size)}</td>
+                <td>$${l.cost.toFixed(2)}</td>
+                <td>${escapeHtml(l.department)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+    window.print();
+    setTimeout(() => printArea.innerHTML = '', 1000);
+  };
+
+  // --- INIT ---
+  loadDepartments();
+  loadLabels();
+</script>
+
+</body>
+</html>
