@@ -361,19 +361,169 @@
 
   /* ===== HISTORY ===== */
   .history-entry {
-    border-left: 3px solid var(--navy-light);
-    margin-bottom: 10px;
-    padding: 12px 14px;
-    background: #fafcff;
-    border-radius: 0 12px 12px 0;
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(30,60,114,.06);
+    transition: all .2s;
   }
-  .history-meta { display: flex; gap: 8px; font-size: 11px; color: var(--slate); margin-bottom: 6px; flex-wrap: wrap; align-items: center; }
-  .badge-user { background: var(--navy-light); color: white; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; }
-  .badge-type { padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; }
-  .badge-add { background: #e0f2e9; color: var(--green-dark); }
-  .badge-deduct { background: #fee2e2; color: var(--red-dark); }
-  .history-detail { font-size: 13px; }
-  .history-detail strong { color: var(--navy); }
+  .history-entry:active { 
+    box-shadow: 0 4px 16px rgba(30,60,114,.12);
+    transform: translateY(-1px);
+  }
+  
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
+  
+  .history-info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .history-label-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  
+  .history-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .history-size-tag {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff7ed, #ffedd5);
+    color: #c2410c;
+    border: 1.5px solid #fed7aa;
+    letter-spacing: 0.3px;
+  }
+  
+  .history-dept-tag {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #eff6ff;
+    color: var(--navy-light);
+  }
+  
+  .history-type-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .history-type-badge.badge-add { 
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0); 
+    color: var(--green-dark);
+    border: 1.5px solid #6ee7b7;
+  }
+  .history-type-badge.badge-deduct { 
+    background: linear-gradient(135deg, #fee2e2, #fecaca); 
+    color: var(--red-dark);
+    border: 1.5px solid #fca5a5;
+  }
+  
+  .history-body {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .history-qty-change {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  
+  .change-amount {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .change-amount.text-add { color: var(--green); }
+  .change-amount.text-deduct { color: var(--red); }
+  
+  .change-arrow { 
+    color: var(--slate-light); 
+    font-size: 18px; 
+    font-weight: 600;
+  }
+  
+  .change-balance {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+  }
+  .change-balance-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .change-balance strong {
+    color: var(--navy);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  
+  .history-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+  }
+  
+  .history-user {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: var(--navy-light);
+    background: #eff6ff;
+    padding: 4px 10px;
+    border-radius: 16px;
+  }
+  
+  .history-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
 
   /* ===== DEPARTMENTS ===== */
   .dept-add-row { display: flex; gap: 8px; margin-bottom: 16px; }
@@ -618,27 +768,21 @@
 
   const app = initializeApp(firebaseConfig);
 
-  // Safely initialize analytics only if supported (avoids IndexedDB error in sandboxed iframes)
   try {
     const { isSupported, getAnalytics } = await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js");
     if (typeof isSupported === 'function' && await isSupported()) {
       getAnalytics(app);
     }
   } catch (e) {
-    // Analytics not available — continue without it
     console.warn('Firebase Analytics skipped:', e.message);
   }
 
   const db = getFirestore(app);
-
-  // In-memory auth state (replaces sessionStorage which is blocked in sandboxes)
   let isAuthenticated = false;
-
   let labelsCache = [];
   let departmentsCache = [];
   let historyCache = [];
   let charts = {};
-
   const CORRECT_PASSWORD = "Raha@123";
 
   /* ===== AUTH ===== */
@@ -661,7 +805,6 @@
     if (e.key === 'Enter') window.attemptLogin();
   });
 
-  // Check if already authenticated in this session
   if (isAuthenticated) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('appContent').style.display = 'flex';
@@ -682,6 +825,16 @@
 
   function getLabelDisplayName(label) {
     return `${label.description || '?'} (${label.size || '?'})`;
+  }
+
+  // Resolve size for a history entry: use stored labelSize first,
+  // then fall back to looking up the live label by ID, then empty.
+  function resolveSize(h) {
+    if (h.labelSize && h.labelSize.trim() !== '') return h.labelSize.trim();
+    // Try live cache lookup by labelId
+    const liveLabel = labelsCache.find(l => l.id === h.labelId);
+    if (liveLabel && liveLabel.size) return liveLabel.size;
+    return '';
   }
 
   function updateBadge(id, count) {
@@ -742,11 +895,15 @@
   });
 
   /* ===== STOCK MOVEMENT LOG ===== */
-  async function logStockMovement(labelId, labelName, labelSize, changeAmount, newQuantity, operatorName, operationType) {
+  async function logStockMovement(labelId, labelName, labelSize, changeAmount, newQuantity, operatorName, operationType, department) {
     if (!operatorName?.trim()) operatorName = 'System';
+    // Ensure size is always a clean string
+    const sizeToStore = (labelSize || '').trim();
     await addDoc(collection(db, 'stockHistory'), {
       labelId,
-      labelName: `${labelName} (${labelSize})`,
+      labelName: labelName || '',
+      labelSize: sizeToStore,
+      department: department || '',
       changeAmount,
       newQuantity,
       operatorName: operatorName.trim(),
@@ -757,24 +914,57 @@
   }
 
   /* ===== LOAD HISTORY ===== */
+  function renderHistoryList() {
+    const container = document.getElementById('historyList');
+    if (!historyCache.length) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No movements yet</p></div>';
+      return;
+    }
+    container.innerHTML = historyCache.map(h => {
+      // Cleanly resolve size — stored field first, then live label lookup
+      const labelSize = resolveSize(h);
+      const labelName = h.labelName || 'Unknown';
+      const department = h.department || '';
+
+      return `
+      <div class="history-entry">
+        <div class="history-header">
+          <div class="history-info">
+            <div class="history-label-name">${escapeHtml(labelName)}</div>
+            <div class="history-tags">
+              ${labelSize ? `<span class="history-size-tag">📏 ${escapeHtml(labelSize)}</span>` : ''}
+              ${department ? `<span class="history-dept-tag">${escapeHtml(department)}</span>` : ''}
+            </div>
+          </div>
+          <div class="history-type-badge ${h.operationType === 'add' ? 'badge-add' : 'badge-deduct'}">
+            ${h.operationType === 'add' ? '↑ Added' : '↓ Deducted'}
+          </div>
+        </div>
+        <div class="history-body">
+          <div class="history-qty-change">
+            <span class="change-amount ${h.operationType === 'add' ? 'text-add' : 'text-deduct'}">
+              ${h.operationType === 'add' ? '+' : '-'}${Math.abs(h.changeAmount)}
+            </span>
+            <span class="change-arrow">→</span>
+            <div class="change-balance">
+              <span class="change-balance-label">Balance</span>
+              <strong>${h.newQuantity}</strong>
+            </div>
+          </div>
+        </div>
+        <div class="history-footer">
+          <span class="history-user">👤 ${escapeHtml(h.operatorName)}</span>
+          <span class="history-date">🕒 ${escapeHtml(h.dateStr)}</span>
+        </div>
+      </div>
+      `;
+    }).join('');
+  }
+
   async function loadHistory() {
     onSnapshot(query(collection(db, 'stockHistory'), orderBy('timestamp', 'desc')), snap => {
       historyCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      const container = document.getElementById('historyList');
-      if (!historyCache.length) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No movements yet</p></div>';
-      } else {
-        container.innerHTML = historyCache.map(h => `
-          <div class="history-entry">
-            <div class="history-meta">
-              <span>${escapeHtml(h.dateStr)}</span>
-              <span class="badge-user">${escapeHtml(h.operatorName)}</span>
-              <span class="badge-type ${h.operationType === 'add' ? 'badge-add' : 'badge-deduct'}">${h.operationType === 'add' ? '+ ADD' : '- DEDUCT'}</span>
-            </div>
-            <div class="history-detail"><strong>${escapeHtml(h.labelName)}</strong> &mdash; ${h.operationType === 'add' ? '+' : '-'}${Math.abs(h.changeAmount)} &rarr; Balance: ${h.newQuantity}</div>
-          </div>
-        `).join('');
-      }
+      renderHistoryList();
       updateBadge('historyBadge', historyCache.length);
     });
   }
@@ -833,6 +1023,8 @@
       renderLabelsList();
       updateDescSuggestions();
       updateBadge('labelsBadge', labelsCache.length);
+      // Re-render history with updated cache so live lookups are fresh
+      if (historyCache.length) renderHistoryList();
       if (document.querySelector('.tab-item.active')?.dataset.tab === 'stats') renderAnalytics();
     });
   }
@@ -892,8 +1084,9 @@
     let newQty = label.quantity + (mode === 'add' ? delta : -delta);
     if (newQty < 0) return toast('Insufficient stock (' + label.quantity + ')');
     await updateDoc(doc(db, 'labels', labelId), { quantity: newQty });
-    await logStockMovement(labelId, label.description, label.size, delta, newQty, operator, mode);
-    toast(mode === 'add' ? 'Added ' + delta + ' \u2192 ' + newQty : 'Deducted ' + delta + ' \u2192 ' + newQty);
+    // Pass label.size explicitly so it is always stored in the history record
+    await logStockMovement(labelId, label.description, label.size, delta, newQty, operator, mode, label.department);
+    toast(mode === 'add' ? 'Added ' + delta + ' → ' + newQty : 'Deducted ' + delta + ' → ' + newQty);
   };
 
   window.updateCost = async function(id, val) {
