@@ -610,7 +610,7 @@
         <div class="header-subtitle" id="headerSubtitle">Track size + description + operator</div>
       </div>
       <div class="header-actions">
-        <button class="header-btn" onclick="exportCSV()" title="Export CSV">📥</button>
+        <button class="header-btn" onclick="openExportMenu()" title="Export Reports">📥</button>
         <button class="header-btn" onclick="logout()" title="Sign Out">🚪</button>
       </div>
     </div>
@@ -736,6 +736,32 @@
       </div>
       <button type="submit" class="btn btn-primary">Create Label</button>
     </form>
+  </div>
+</div>
+
+<!-- Export Menu Sheet -->
+<div class="sheet-overlay" id="exportOverlay" onclick="closeExportMenu()"></div>
+<div class="bottom-sheet" id="exportSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <h2>Export Reports</h2>
+    <button class="sheet-close" onclick="closeExportMenu()">✕</button>
+  </div>
+  <div class="sheet-body">
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <button class="btn btn-primary" onclick="exportCurrentInventory()">
+        📦 Current Inventory Report
+      </button>
+      <button class="btn btn-success" onclick="exportLastWeek()">
+        📅 Last Week Movements
+      </button>
+      <button class="btn btn-success" onclick="exportLastMonth()">
+        📆 Last Month Movements
+      </button>
+      <button class="btn btn-ghost" onclick="exportAllHistory()">
+        📜 Complete History
+      </button>
+    </div>
   </div>
 </div>
 
@@ -871,6 +897,16 @@
   window.closeAddSheet = function() {
     document.getElementById('sheetOverlay').classList.remove('open');
     document.getElementById('addSheet').classList.remove('open');
+  };
+
+  /* ===== EXPORT MENU ===== */
+  window.openExportMenu = function() {
+    document.getElementById('exportOverlay').classList.add('open');
+    document.getElementById('exportSheet').classList.add('open');
+  };
+  window.closeExportMenu = function() {
+    document.getElementById('exportOverlay').classList.remove('open');
+    document.getElementById('exportSheet').classList.remove('open');
   };
 
   /* ===== TABS ===== */
@@ -1214,16 +1250,162 @@
     `).join('');
   }
 
-  /* ===== EXPORT / PRINT ===== */
-  window.exportCSV = function() {
-    if (!labelsCache.length) return toast('No data to export');
-    const rows = labelsCache.map(l => `"${l.description}","${l.size}",${l.cost},${l.quantity},"${l.department}"`).join('\n');
-    const blob = new Blob(["Description,Size,Cost,Quantity,Department\n" + rows], { type: 'text/csv' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'raha-inventory.csv';
-    a.click();
-    toast('CSV downloaded');
+  /* ===== EXPORT FUNCTIONS ===== */
+  function downloadCSV(filename, csvContent) {
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  window.exportCurrentInventory = function() {
+    if (!labelsCache.length) return toast('No inventory data to export');
+    
+    const headers = [
+      'Description',
+      'Size',
+      'Unit Cost (R)',
+      'Current Quantity',
+      'Total Value (R)',
+      'Department',
+      'Created Date',
+      'Label ID'
+    ];
+    
+    const rows = labelsCache.map(l => {
+      const totalValue = (l.quantity || 0) * (l.cost || 0);
+      const createdDate = l.createdAt ? new Date(l.createdAt).toLocaleString('en-ZA') : 'N/A';
+      return [
+        `"${l.description || ''}"`,
+        `"${l.size || ''}"`,
+        (l.cost || 0).toFixed(2),
+        l.quantity || 0,
+        totalValue.toFixed(2),
+        `"${l.department || ''}"`,
+        `"${createdDate}"`,
+        l.id
+      ].join(',');
+    });
+    
+    const csv = headers.join(',') + '\n' + rows.join('\n');
+    downloadCSV(`raha-current-inventory-${new Date().toISOString().split('T')[0]}.csv`, csv);
+    closeExportMenu();
+    toast('Current inventory exported');
+  };
+
+  window.exportLastWeek = function() {
+    const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    const recentHistory = historyCache.filter(h => h.timestamp >= oneWeekAgo);
+    
+    if (!recentHistory.length) return toast('No movements in the last week');
+    
+    const headers = [
+      'Date/Time',
+      'Label Description',
+      'Size',
+      'Operation Type',
+      'Change Amount',
+      'New Balance',
+      'Operator Name',
+      'Department',
+      'Label ID'
+    ];
+    
+    const rows = recentHistory.map(h => {
+      const labelSize = resolveSize(h);
+      return [
+        `"${h.dateStr || ''}"`,
+        `"${h.labelName || ''}"`,
+        `"${labelSize}"`,
+        h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',
+        (h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),
+        h.newQuantity,
+        `"${h.operatorName || ''}"`,
+        `"${h.department || ''}"`,
+        h.labelId
+      ].join(',');
+    });
+    
+    const csv = headers.join(',') + '\n' + rows.join('\n');
+    downloadCSV(`raha-last-week-${new Date().toISOString().split('T')[0]}.csv`, csv);
+    closeExportMenu();
+    toast('Last week movements exported');
+  };
+
+  window.exportLastMonth = function() {
+    const oneMonthAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+    const recentHistory = historyCache.filter(h => h.timestamp >= oneMonthAgo);
+    
+    if (!recentHistory.length) return toast('No movements in the last month');
+    
+    const headers = [
+      'Date/Time',
+      'Label Description',
+      'Size',
+      'Operation Type',
+      'Change Amount',
+      'New Balance',
+      'Operator Name',
+      'Department',
+      'Label ID'
+    ];
+    
+    const rows = recentHistory.map(h => {
+      const labelSize = resolveSize(h);
+      return [
+        `"${h.dateStr || ''}"`,
+        `"${h.labelName || ''}"`,
+        `"${labelSize}"`,
+        h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',
+        (h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),
+        h.newQuantity,
+        `"${h.operatorName || ''}"`,
+        `"${h.department || ''}"`,
+        h.labelId
+      ].join(',');
+    });
+    
+    const csv = headers.join(',') + '\n' + rows.join('\n');
+    downloadCSV(`raha-last-month-${new Date().toISOString().split('T')[0]}.csv`, csv);
+    closeExportMenu();
+    toast('Last month movements exported');
+  };
+
+  window.exportAllHistory = function() {
+    if (!historyCache.length) return toast('No history data to export');
+    
+    const headers = [
+      'Date/Time',
+      'Label Description',
+      'Size',
+      'Operation Type',
+      'Change Amount',
+      'New Balance',
+      'Operator Name',
+      'Department',
+      'Label ID'
+    ];
+    
+    const rows = historyCache.map(h => {
+      const labelSize = resolveSize(h);
+      return [
+        `"${h.dateStr || ''}"`,
+        `"${h.labelName || ''}"`,
+        `"${labelSize}"`,
+        h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',
+        (h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),
+        h.newQuantity,
+        `"${h.operatorName || ''}"`,
+        `"${h.department || ''}"`,
+        h.labelId
+      ].join(',');
+    });
+    
+    const csv = headers.join(',') + '\n' + rows.join('\n');
+    downloadCSV(`raha-complete-history-${new Date().toISOString().split('T')[0]}.csv`, csv);
+    closeExportMenu();
+    toast('Complete history exported');
   };
 
   window.printLabels = function() { window.print(); };
