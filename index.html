@@ -32,6 +32,7 @@
     --safe-bottom: env(safe-area-inset-bottom, 0px);
     --safe-top: env(safe-area-inset-top, 0px);
     --tab-height: 64px;
+    --sidebar-width: 260px;
   }
 
   html, body {
@@ -110,20 +111,23 @@
   .login-btn:active { transform: scale(.97); box-shadow: 0 2px 8px rgba(30,60,114,.3); }
   .login-error { color: var(--red); font-size: 13px; margin-top: 12px; min-height: 20px; }
 
-  /* ===== APP SHELL ===== */
-  #appContent { display: none; height: 100%; flex-direction: column; }
+  /* ============================================ */
+  /* ===== MOBILE VIEW (default) ===== */
+  /* ============================================ */
+  body.mobile-view #appContent { display: none; height: 100%; flex-direction: column; }
+  body.mobile-view #desktopApp { display: none !important; }
 
-  .app-header {
+  body.mobile-view .app-header {
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
     padding: calc(var(--safe-top) + 12px) 20px 16px;
     position: relative; z-index: 50;
     flex-shrink: 0;
   }
-  .header-row { display: flex; align-items: center; justify-content: space-between; }
-  .header-brand { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 2px; }
-  .header-brand span { color: #ff8a7a; }
-  .header-actions { display: flex; gap: 8px; }
-  .header-btn {
+  body.mobile-view .header-row { display: flex; align-items: center; justify-content: space-between; }
+  body.mobile-view .header-brand { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 2px; }
+  body.mobile-view .header-brand span { color: #ff8a7a; }
+  body.mobile-view .header-actions { display: flex; gap: 8px; }
+  body.mobile-view .header-btn {
     width: 40px; height: 40px;
     border-radius: 12px;
     background: rgba(255,255,255,.12);
@@ -132,10 +136,10 @@
     font-size: 18px; cursor: pointer;
     transition: background .2s;
   }
-  .header-btn:active { background: rgba(255,255,255,.22); }
-  .header-subtitle { color: rgba(255,255,255,.6); font-size: 12px; margin-top: 4px; }
+  body.mobile-view .header-btn:active { background: rgba(255,255,255,.22); }
+  body.mobile-view .header-subtitle { color: rgba(255,255,255,.6); font-size: 12px; margin-top: 4px; }
 
-  .page-area {
+  body.mobile-view .page-area {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
@@ -143,15 +147,14 @@
     padding-bottom: calc(var(--tab-height) + var(--safe-bottom) + 16px);
   }
 
-  .page { display: none; padding: 20px 16px; animation: pageIn .3s ease; }
-  .page.active { display: block; }
+  body.mobile-view .page { display: none; padding: 20px 16px; animation: pageIn .3s ease; }
+  body.mobile-view .page.active { display: block; }
   @keyframes pageIn {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ===== TAB BAR ===== */
-  .tab-bar {
+  body.mobile-view .tab-bar {
     position: fixed; bottom: 0; left: 0; right: 0;
     height: calc(var(--tab-height) + var(--safe-bottom));
     padding-bottom: var(--safe-bottom);
@@ -162,7 +165,7 @@
     display: flex; align-items: stretch;
     z-index: 100;
   }
-  .tab-item {
+  body.mobile-view .tab-item {
     flex: 1;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 3px;
@@ -173,17 +176,17 @@
     transition: color .2s;
     position: relative;
   }
-  .tab-item .tab-icon { font-size: 22px; transition: transform .2s; }
-  .tab-item.active { color: var(--navy); }
-  .tab-item.active .tab-icon { transform: scale(1.1); }
-  .tab-item.active::before {
+  body.mobile-view .tab-item .tab-icon { font-size: 22px; transition: transform .2s; }
+  body.mobile-view .tab-item.active { color: var(--navy); }
+  body.mobile-view .tab-item.active .tab-icon { transform: scale(1.1); }
+  body.mobile-view .tab-item.active::before {
     content: '';
     position: absolute; top: 0; left: 50%; transform: translateX(-50%);
     width: 32px; height: 3px;
     background: var(--navy);
     border-radius: 0 0 4px 4px;
   }
-  .tab-badge {
+  body.mobile-view .tab-badge {
     position: absolute; top: 6px; right: calc(50% - 22px);
     background: var(--red);
     color: #fff; font-size: 9px; font-weight: 700;
@@ -193,11 +196,10 @@
     padding: 0 4px;
   }
 
-  /* ===== CARDS ===== */
-  .page-title { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-  .page-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+  body.mobile-view .page-title { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  body.mobile-view .page-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
 
-  .card {
+  body.mobile-view .card {
     background: var(--surface);
     border-radius: var(--radius);
     box-shadow: 0 2px 12px rgba(30,60,114,.06);
@@ -205,14 +207,13 @@
     margin-bottom: 16px;
     overflow: hidden;
   }
-  .card-header { padding: 16px 18px 0; display: flex; align-items: center; justify-content: space-between; }
-  .card-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: var(--navy); }
-  .card-body { padding: 16px 18px 18px; }
+  body.mobile-view .card-header { padding: 16px 18px 0; display: flex; align-items: center; justify-content: space-between; }
+  body.mobile-view .card-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: var(--navy); }
+  body.mobile-view .card-body { padding: 16px 18px 18px; }
 
-  /* ===== FORMS ===== */
-  .form-group { margin-bottom: 14px; }
-  .form-group label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; letter-spacing: .3px; }
-  .form-input {
+  body.mobile-view .form-group { margin-bottom: 14px; }
+  body.mobile-view .form-group label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; letter-spacing: .3px; }
+  body.mobile-view .form-input {
     width: 100%; padding: 13px 14px;
     border: 1.5px solid var(--border);
     border-radius: 12px;
@@ -222,20 +223,20 @@
     transition: border-color .2s;
     font-family: inherit;
   }
-  .form-input:focus { border-color: var(--navy-light); background: #fff; }
-  select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+  body.mobile-view .form-input:focus { border-color: var(--navy-light); background: #fff; }
+  body.mobile-view select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
 
-  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-  .suggestion-chip {
+  body.mobile-view .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  body.mobile-view .suggestion-chip {
     padding: 6px 12px; border-radius: 20px;
     background: #e8f0fe; color: var(--navy-light);
     font-size: 12px; font-weight: 500;
     cursor: pointer; white-space: nowrap;
     border: none; transition: background .15s;
   }
-  .suggestion-chip:active { background: #d0defa; }
+  body.mobile-view .suggestion-chip:active { background: #d0defa; }
 
-  .btn {
+  body.mobile-view .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 7px;
     padding: 13px 20px; border: none; border-radius: 12px;
     cursor: pointer; font-weight: 600; font-size: 14px;
@@ -243,19 +244,18 @@
     transition: transform .12s, box-shadow .12s;
     width: 100%;
   }
-  .btn:active { transform: scale(.97); }
-  .btn-primary { background: linear-gradient(135deg, var(--navy), var(--navy-light)); color: #fff; box-shadow: 0 4px 12px rgba(30,60,114,.25); }
-  .btn-success { background: linear-gradient(135deg, var(--green-dark), var(--green)); color: #fff; }
-  .btn-danger { background: linear-gradient(135deg, var(--red-dark), var(--red)); color: #fff; }
-  .btn-ghost { background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border); }
-  .btn-sm { padding: 9px 14px; font-size: 12.5px; width: auto; border-radius: 10px; }
+  body.mobile-view .btn:active { transform: scale(.97); }
+  body.mobile-view .btn-primary { background: linear-gradient(135deg, var(--navy), var(--navy-light)); color: #fff; box-shadow: 0 4px 12px rgba(30,60,114,.25); }
+  body.mobile-view .btn-success { background: linear-gradient(135deg, var(--green-dark), var(--green)); color: #fff; }
+  body.mobile-view .btn-danger { background: linear-gradient(135deg, var(--red-dark), var(--red)); color: #fff; }
+  body.mobile-view .btn-ghost { background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border); }
+  body.mobile-view .btn-sm { padding: 9px 14px; font-size: 12.5px; width: auto; border-radius: 10px; }
 
-  /* ===== LABEL CARDS ===== */
-  .search-bar { display: flex; gap: 10px; margin-bottom: 16px; }
-  .search-input { flex: 1; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 14px; background: #f8fafc; outline: none; }
-  .search-input:focus { border-color: var(--navy-light); }
-  .search-actions { display: flex; gap: 6px; }
-  .icon-btn {
+  body.mobile-view .search-bar { display: flex; gap: 10px; margin-bottom: 16px; }
+  body.mobile-view .search-input { flex: 1; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 14px; background: #f8fafc; outline: none; }
+  body.mobile-view .search-input:focus { border-color: var(--navy-light); }
+  body.mobile-view .search-actions { display: flex; gap: 6px; }
+  body.mobile-view .icon-btn {
     width: 44px; height: 44px;
     border-radius: 12px; border: 1px solid var(--border);
     background: #f8fafc; cursor: pointer;
@@ -263,9 +263,9 @@
     font-size: 18px; flex-shrink: 0;
     transition: background .15s;
   }
-  .icon-btn:active { background: #e2e8f0; }
+  body.mobile-view .icon-btn:active { background: #e2e8f0; }
 
-  .label-card {
+  body.mobile-view .label-card {
     background: var(--surface);
     border-radius: var(--radius);
     border: 1px solid var(--border);
@@ -274,48 +274,47 @@
     box-shadow: 0 1px 6px rgba(30,60,114,.04);
     transition: box-shadow .2s;
   }
-  .label-card:active { box-shadow: 0 2px 12px rgba(30,60,114,.1); }
-  .label-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-  .label-name { font-weight: 700; font-size: 15px; color: var(--text); flex: 1; margin-right: 8px; }
-  .label-dept { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #eff6ff; color: var(--navy-light); white-space: nowrap; }
-  .label-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
-  .size-tag { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #fff7ed; color: #c2410c; }
-  .cost-tag { font-size: 13px; color: var(--text-muted); }
-  .cost-tag b { color: var(--navy); }
+  body.mobile-view .label-card:active { box-shadow: 0 2px 12px rgba(30,60,114,.1); }
+  body.mobile-view .label-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  body.mobile-view .label-name { font-weight: 700; font-size: 15px; color: var(--text); flex: 1; margin-right: 8px; }
+  body.mobile-view .label-dept { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #eff6ff; color: var(--navy-light); white-space: nowrap; }
+  body.mobile-view .label-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  body.mobile-view .size-tag { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #fff7ed; color: #c2410c; }
+  body.mobile-view .cost-tag { font-size: 13px; color: var(--text-muted); }
+  body.mobile-view .cost-tag b { color: var(--navy); }
 
-  .label-qty-row {
+  body.mobile-view .label-qty-row {
     display: flex; align-items: center; justify-content: space-between;
     background: #f8fafc;
     border-radius: 12px;
     padding: 10px 12px;
     gap: 8px;
   }
-  .qty-display {
+  body.mobile-view .qty-display {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 28px; font-weight: 700; color: var(--navy);
     min-width: 50px; text-align: center;
   }
-  .qty-display.low { color: var(--red); }
-  .qty-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .qty-input-mini { width: 56px; padding: 8px 6px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; text-align: center; outline: none; background: #fff; }
-  .qty-input-mini:focus { border-color: var(--navy-light); }
-  .qty-user-mini { width: 90px; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; background: #fff; }
-  .qty-user-mini:focus { border-color: var(--navy-light); }
-  .qty-btn { padding: 8px 14px; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; transition: transform .12s; }
-  .qty-btn:active { transform: scale(.94); }
-  .qty-btn-add { background: #e8f5e9; color: var(--green-dark); }
-  .qty-btn-deduct { background: #fce8e6; color: var(--red-dark); }
-  .label-cost-edit { margin-top: 10px; display: flex; align-items: center; gap: 8px; }
-  .label-cost-edit span { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
-  .cost-edit-input { width: 100px; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: #fff; }
-  .cost-edit-input:focus { border-color: var(--navy-light); }
+  body.mobile-view .qty-display.low { color: var(--red); }
+  body.mobile-view .qty-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  body.mobile-view .qty-input-mini { width: 56px; padding: 8px 6px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; text-align: center; outline: none; background: #fff; }
+  body.mobile-view .qty-input-mini:focus { border-color: var(--navy-light); }
+  body.mobile-view .qty-user-mini { width: 90px; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; background: #fff; }
+  body.mobile-view .qty-user-mini:focus { border-color: var(--navy-light); }
+  body.mobile-view .qty-btn { padding: 8px 14px; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; transition: transform .12s; }
+  body.mobile-view .qty-btn:active { transform: scale(.94); }
+  body.mobile-view .qty-btn-add { background: #e8f5e9; color: var(--green-dark); }
+  body.mobile-view .qty-btn-deduct { background: #fce8e6; color: var(--red-dark); }
+  body.mobile-view .label-cost-edit { margin-top: 10px; display: flex; align-items: center; gap: 8px; }
+  body.mobile-view .label-cost-edit span { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  body.mobile-view .cost-edit-input { width: 100px; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: #fff; }
+  body.mobile-view .cost-edit-input:focus { border-color: var(--navy-light); }
 
-  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; }
+  body.mobile-view .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+  body.mobile-view .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  body.mobile-view .empty-state p { font-size: 14px; }
 
-  /* ===== FAB ===== */
-  .fab {
+  body.mobile-view .fab {
     position: fixed;
     bottom: calc(var(--tab-height) + var(--safe-bottom) + 16px);
     right: 16px;
@@ -329,19 +328,18 @@
     cursor: pointer; z-index: 60;
     transition: transform .2s, box-shadow .2s;
   }
-  .fab:active { transform: scale(.9); box-shadow: 0 3px 12px rgba(30,60,114,.3); }
-  .fab.hidden { display: none; }
+  body.mobile-view .fab:active { transform: scale(.9); box-shadow: 0 3px 12px rgba(30,60,114,.3); }
+  body.mobile-view .fab.hidden { display: none; }
 
-  /* ===== BOTTOM SHEET ===== */
-  .sheet-overlay {
+  body.mobile-view .sheet-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,.45);
     z-index: 200;
     opacity: 0; pointer-events: none;
     transition: opacity .3s;
   }
-  .sheet-overlay.open { opacity: 1; pointer-events: auto; }
-  .bottom-sheet {
+  body.mobile-view .sheet-overlay.open { opacity: 1; pointer-events: auto; }
+  body.mobile-view .bottom-sheet {
     position: fixed; bottom: 0; left: 0; right: 0;
     background: var(--surface);
     border-radius: 20px 20px 0 0;
@@ -352,15 +350,14 @@
     overflow-y: auto;
     padding-bottom: var(--safe-bottom);
   }
-  .bottom-sheet.open { transform: translateY(0); }
-  .sheet-handle { width: 36px; height: 4px; background: #d1d5db; border-radius: 2px; margin: 10px auto 0; }
-  .sheet-header { padding: 16px 20px 0; display: flex; align-items: center; justify-content: space-between; }
-  .sheet-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); }
-  .sheet-close { width: 32px; height: 32px; border-radius: 8px; border: none; background: #f1f5f9; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
-  .sheet-body { padding: 16px 20px 24px; }
+  body.mobile-view .bottom-sheet.open { transform: translateY(0); }
+  body.mobile-view .sheet-handle { width: 36px; height: 4px; background: #d1d5db; border-radius: 2px; margin: 10px auto 0; }
+  body.mobile-view .sheet-header { padding: 16px 20px 0; display: flex; align-items: center; justify-content: space-between; }
+  body.mobile-view .sheet-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); }
+  body.mobile-view .sheet-close { width: 32px; height: 32px; border-radius: 8px; border: none; background: #f1f5f9; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+  body.mobile-view .sheet-body { padding: 16px 20px 24px; }
 
-  /* ===== HISTORY ===== */
-  .history-entry {
+  body.mobile-view .history-entry {
     background: var(--surface);
     border-radius: var(--radius);
     border: 1px solid var(--border);
@@ -369,40 +366,32 @@
     box-shadow: 0 2px 8px rgba(30,60,114,.06);
     transition: all .2s;
   }
-  .history-entry:active { 
+  body.mobile-view .history-entry:active { 
     box-shadow: 0 4px 16px rgba(30,60,114,.12);
     transform: translateY(-1px);
   }
-  
-  .history-header {
+  body.mobile-view .history-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 14px;
     gap: 12px;
   }
-  
-  .history-info {
-    flex: 1;
-    min-width: 0;
-  }
-  
-  .history-label-name {
+  body.mobile-view .history-info { flex: 1; min-width: 0; }
+  body.mobile-view .history-label-name {
     font-weight: 700;
     font-size: 16px;
     color: var(--text);
     margin-bottom: 8px;
     line-height: 1.3;
   }
-  
-  .history-tags {
+  body.mobile-view .history-tags {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
     align-items: center;
   }
-  
-  .history-size-tag {
+  body.mobile-view .history-size-tag {
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 13px;
@@ -412,8 +401,7 @@
     border: 1.5px solid #fed7aa;
     letter-spacing: 0.3px;
   }
-  
-  .history-dept-tag {
+  body.mobile-view .history-dept-tag {
     padding: 4px 10px;
     border-radius: 20px;
     font-size: 11px;
@@ -421,8 +409,7 @@
     background: #eff6ff;
     color: var(--navy-light);
   }
-  
-  .history-type-badge {
+  body.mobile-view .history-type-badge {
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 12px;
@@ -432,33 +419,30 @@
     white-space: nowrap;
     flex-shrink: 0;
   }
-  .history-type-badge.badge-add { 
+  body.mobile-view .history-type-badge.badge-add { 
     background: linear-gradient(135deg, #d1fae5, #a7f3d0); 
     color: var(--green-dark);
     border: 1.5px solid #6ee7b7;
   }
-  .history-type-badge.badge-deduct { 
+  body.mobile-view .history-type-badge.badge-deduct { 
     background: linear-gradient(135deg, #fee2e2, #fecaca); 
     color: var(--red-dark);
     border: 1.5px solid #fca5a5;
   }
-  
-  .history-body {
+  body.mobile-view .history-body {
     background: linear-gradient(135deg, #f8fafc, #f1f5f9);
     border-radius: 14px;
     padding: 14px 16px;
     margin-bottom: 14px;
     border: 1px solid #e2e8f0;
   }
-  
-  .history-qty-change {
+  body.mobile-view .history-qty-change {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
   }
-  
-  .change-amount {
+  body.mobile-view .change-amount {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 24px;
     font-weight: 700;
@@ -466,36 +450,33 @@
     align-items: center;
     gap: 4px;
   }
-  .change-amount.text-add { color: var(--green); }
-  .change-amount.text-deduct { color: var(--red); }
-  
-  .change-arrow { 
+  body.mobile-view .change-amount.text-add { color: var(--green); }
+  body.mobile-view .change-amount.text-deduct { color: var(--red); }
+  body.mobile-view .change-arrow { 
     color: var(--slate-light); 
     font-size: 18px; 
     font-weight: 600;
   }
-  
-  .change-balance {
+  body.mobile-view .change-balance {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 2px;
   }
-  .change-balance-label {
+  body.mobile-view .change-balance-label {
     font-size: 11px;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: 600;
   }
-  .change-balance strong {
+  body.mobile-view .change-balance strong {
     color: var(--navy);
     font-family: 'Space Grotesk', sans-serif;
     font-size: 22px;
     font-weight: 700;
   }
-  
-  .history-footer {
+  body.mobile-view .history-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -506,8 +487,7 @@
     padding-top: 12px;
     border-top: 1px solid #f1f5f9;
   }
-  
-  .history-user {
+  body.mobile-view .history-user {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -517,19 +497,17 @@
     padding: 4px 10px;
     border-radius: 16px;
   }
-  
-  .history-date {
+  body.mobile-view .history-date {
     display: flex;
     align-items: center;
     gap: 6px;
     font-weight: 500;
   }
 
-  /* ===== DEPARTMENTS ===== */
-  .dept-add-row { display: flex; gap: 8px; margin-bottom: 16px; }
-  .dept-add-row input { flex: 1; }
-  .dept-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .dept-chip {
+  body.mobile-view .dept-add-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  body.mobile-view .dept-add-row input { flex: 1; }
+  body.mobile-view .dept-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  body.mobile-view .dept-chip {
     background: #f0f4ff;
     border: 1px solid rgba(42,82,152,.12);
     padding: 8px 12px;
@@ -538,25 +516,23 @@
     color: var(--navy);
     display: flex; align-items: center; gap: 6px;
   }
-  .dept-chip-del { background: none; border: none; color: var(--red); cursor: pointer; font-size: 16px; font-weight: 700; padding: 0 2px; line-height: 1; }
+  body.mobile-view .dept-chip-del { background: none; border: none; color: var(--red); cursor: pointer; font-size: 16px; font-weight: 700; padding: 0 2px; line-height: 1; }
 
-  /* ===== STATS ===== */
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-  .stat-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 16px; text-align: center; }
-  .stat-icon { font-size: 24px; margin-bottom: 6px; }
-  .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: var(--navy); }
-  .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-  .chart-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 6px rgba(30,60,114,.04); }
-  .chart-card h3 { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 12px; }
-  canvas { max-height: 220px; width: 100% !important; }
-  .dept-stats-table { width: 100%; border-collapse: collapse; }
-  .dept-stats-table th { padding: 10px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,.9); background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
-  .dept-stats-table th:first-child { border-radius: 10px 0 0 0; }
-  .dept-stats-table th:last-child { border-radius: 0 10px 0 0; }
-  .dept-stats-table td { padding: 10px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+  body.mobile-view .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  body.mobile-view .stat-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 16px; text-align: center; }
+  body.mobile-view .stat-icon { font-size: 24px; margin-bottom: 6px; }
+  body.mobile-view .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: var(--navy); }
+  body.mobile-view .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  body.mobile-view .chart-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 6px rgba(30,60,114,.04); }
+  body.mobile-view .chart-card h3 { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 12px; }
+  body.mobile-view canvas { max-height: 220px; width: 100% !important; }
+  body.mobile-view .dept-stats-table { width: 100%; border-collapse: collapse; }
+  body.mobile-view .dept-stats-table th { padding: 10px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,.9); background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
+  body.mobile-view .dept-stats-table th:first-child { border-radius: 10px 0 0 0; }
+  body.mobile-view .dept-stats-table th:last-child { border-radius: 0 10px 0 0; }
+  body.mobile-view .dept-stats-table td { padding: 10px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
 
-  /* ===== TOAST ===== */
-  #toast {
+  body.mobile-view #toast {
     position: fixed;
     bottom: calc(var(--tab-height) + var(--safe-bottom) + 16px);
     left: 16px; right: 16px;
@@ -570,21 +546,814 @@
     text-align: center;
     box-shadow: 0 8px 24px rgba(0,0,0,.2);
   }
-  #toast.show { opacity: 1; transform: translateY(0); }
+  body.mobile-view #toast.show { opacity: 1; transform: translateY(0); }
 
-  /* ===== CONFIRM ===== */
-  .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 300; display: none; align-items: center; justify-content: center; padding: 24px; }
-  .confirm-overlay.open { display: flex; }
-  .confirm-box { background: var(--surface); border-radius: 20px; padding: 28px 24px 20px; width: 100%; max-width: 320px; text-align: center; }
-  .confirm-box p { font-size: 15px; margin-bottom: 20px; color: var(--text); }
-  .confirm-btns { display: flex; gap: 10px; }
-  .confirm-btns .btn { flex: 1; }
+  body.mobile-view .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 300; display: none; align-items: center; justify-content: center; padding: 24px; }
+  body.mobile-view .confirm-overlay.open { display: flex; }
+  body.mobile-view .confirm-box { background: var(--surface); border-radius: 20px; padding: 28px 24px 20px; width: 100%; max-width: 320px; text-align: center; }
+  body.mobile-view .confirm-box p { font-size: 15px; margin-bottom: 20px; color: var(--text); }
+  body.mobile-view .confirm-btns { display: flex; gap: 10px; }
+  body.mobile-view .confirm-btns .btn { flex: 1; }
 
-  @media print { .tab-bar, .app-header, .fab, .no-print { display: none !important; } .page-area { padding-bottom: 0; } }
-  @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+  /* ============================================ */
+  /* ===== DESKTOP / 4K VIEW ===== */
+  /* ============================================ */
+  body.desktop-view #appContent { display: none !important; }
+  body.desktop-view #mobileFab, body.desktop-view #mobileTabBar { display: none !important; }
+  body.desktop-view #mobileSheets, body.desktop-view #mobileToast, body.desktop-view #mobileConfirm { display: none !important; }
+
+  body.desktop-view #desktopApp {
+    display: flex !important;
+    height: 100vh;
+    width: 100vw;
+    background: #f5f7fc;
+  }
+
+  /* Desktop Sidebar */
+  .desktop-sidebar {
+    width: var(--sidebar-width);
+    background: linear-gradient(180deg, #0f1f3d 0%, var(--navy) 50%, var(--navy-light) 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding: 28px 20px;
+    box-shadow: 4px 0 24px rgba(0,0,0,.08);
+  }
+  .desktop-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255,255,255,.1);
+  }
+  .desktop-logo-icon {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, #fff, #e8f0fe);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  }
+  .desktop-logo-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  .desktop-logo-text span { color: #ff8a7a; }
+
+  .desktop-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+  .desktop-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    color: rgba(255,255,255,.7);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: none;
+    text-align: left;
+    width: 100%;
+    transition: all .2s;
+    position: relative;
+  }
+  .desktop-nav-item:hover {
+    background: rgba(255,255,255,.08);
+    color: #fff;
+  }
+  .desktop-nav-item.active {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    font-weight: 600;
+  }
+  .desktop-nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 24px;
+    background: #ff8a7a;
+    border-radius: 0 4px 4px 0;
+  }
+  .desktop-nav-icon {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+  }
+  .desktop-nav-badge {
+    margin-left: auto;
+    background: var(--red);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    min-width: 24px;
+    text-align: center;
+  }
+
+  .desktop-sidebar-footer {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,.1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .desktop-sidebar-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: rgba(255,255,255,.8);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: none;
+    text-align: left;
+    width: 100%;
+    transition: background .2s;
+  }
+  .desktop-sidebar-btn:hover {
+    background: rgba(255,255,255,.08);
+    color: #fff;
+  }
+
+  /* Desktop Main */
+  .desktop-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .desktop-topbar {
+    background: #fff;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    gap: 20px;
+  }
+  .desktop-topbar-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .desktop-page-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .desktop-page-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .desktop-topbar-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .desktop-search {
+    padding: 10px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    background: #f8fafc;
+    outline: none;
+    width: 320px;
+    transition: border-color .2s;
+  }
+  .desktop-search:focus { border-color: var(--navy-light); background: #fff; }
+  .desktop-action-btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  .desktop-action-btn:active { transform: scale(.97); }
+  .desktop-action-btn.primary {
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(30,60,114,.25);
+  }
+  .desktop-action-btn.ghost {
+    background: #f1f5f9;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .desktop-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px;
+  }
+
+  .desktop-page { display: none; animation: pageIn .3s ease; }
+  .desktop-page.active { display: block; }
+
+  /* Desktop Labels - Table View */
+  .desktop-labels-table-wrap {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(30,60,114,.04);
+  }
+  .desktop-labels-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .desktop-labels-table thead th {
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: #fff;
+    padding: 14px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .desktop-labels-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background .15s;
+  }
+  .desktop-labels-table tbody tr:hover { background: #f8fafc; }
+  .desktop-labels-table tbody tr:last-child { border-bottom: none; }
+  .desktop-labels-table td {
+    padding: 14px 16px;
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  .desktop-labels-table .cell-name {
+    font-weight: 600;
+    color: var(--text);
+    max-width: 280px;
+  }
+  .desktop-labels-table .cell-size {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #fff7ed;
+    color: #c2410c;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .desktop-labels-table .cell-dept {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #eff6ff;
+    color: var(--navy-light);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .desktop-labels-table .cell-qty {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    min-width: 60px;
+    text-align: center;
+  }
+  .desktop-labels-table .cell-qty.low { color: var(--red); }
+  .desktop-labels-table .cell-cost {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .desktop-labels-table .cell-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: var(--green-dark);
+  }
+  .desktop-qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .desktop-qty-input {
+    width: 60px;
+    padding: 6px 8px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    text-align: center;
+    outline: none;
+    background: #fff;
+  }
+  .desktop-qty-input:focus { border-color: var(--navy-light); }
+  .desktop-user-input {
+    width: 110px;
+    padding: 6px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    background: #fff;
+  }
+  .desktop-user-input:focus { border-color: var(--navy-light); }
+  .desktop-qty-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: transform .12s;
+  }
+  .desktop-qty-btn:active { transform: scale(.94); }
+  .desktop-qty-btn.add { background: #e8f5e9; color: var(--green-dark); }
+  .desktop-qty-btn.deduct { background: #fce8e6; color: var(--red-dark); }
+  .desktop-cost-input {
+    width: 90px;
+    padding: 6px 8px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    background: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+  }
+  .desktop-cost-input:focus { border-color: var(--navy-light); }
+
+  /* Desktop History */
+  .desktop-history-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .desktop-filter-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  .desktop-filter-btn.active {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  .desktop-history-table-wrap {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(30,60,114,.04);
+  }
+  .desktop-history-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .desktop-history-table thead th {
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: #fff;
+    padding: 14px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .desktop-history-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background .15s;
+  }
+  .desktop-history-table tbody tr:hover { background: #f8fafc; }
+  .desktop-history-table tbody tr:last-child { border-bottom: none; }
+  .desktop-history-table td {
+    padding: 14px 16px;
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  .desktop-history-type {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .desktop-history-type.add {
+    background: #d1fae5;
+    color: var(--green-dark);
+  }
+  .desktop-history-type.deduct {
+    background: #fee2e2;
+    color: var(--red-dark);
+  }
+  .desktop-history-change {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .desktop-history-change.add { color: var(--green); }
+  .desktop-history-change.deduct { color: var(--red); }
+  .desktop-history-user {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: #eff6ff;
+    color: var(--navy-light);
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* Desktop Departments */
+  .desktop-dept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .desktop-dept-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(30,60,114,.04);
+    transition: all .2s;
+  }
+  .desktop-dept-card:hover {
+    box-shadow: 0 4px 16px rgba(30,60,114,.1);
+    transform: translateY(-2px);
+  }
+  .desktop-dept-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+  .desktop-dept-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .desktop-dept-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .desktop-dept-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .desktop-dept-del {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: #fce8e6;
+    color: var(--red-dark);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+    flex-shrink: 0;
+  }
+  .desktop-dept-del:hover { background: #fbd5d1; }
+
+  .desktop-dept-add-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px dashed var(--border);
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .desktop-dept-add-card input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    background: #f8fafc;
+    font-family: inherit;
+  }
+  .desktop-dept-add-card input:focus { border-color: var(--navy-light); background: #fff; }
+
+  /* Desktop Analytics */
+  .desktop-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .desktop-stat-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(30,60,114,.04);
+  }
+  .desktop-stat-icon {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .desktop-stat-icon.blue { background: linear-gradient(135deg, #eff6ff, #dbeafe); }
+  .desktop-stat-icon.green { background: linear-gradient(135deg, #ecfdf5, #d1fae5); }
+  .desktop-stat-icon.orange { background: linear-gradient(135deg, #fff7ed, #ffedd5); }
+  .desktop-stat-icon.red { background: linear-gradient(135deg, #fef2f2, #fee2e2); }
+  .desktop-stat-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .desktop-stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  .desktop-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .desktop-chart-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(30,60,114,.04);
+  }
+  .desktop-chart-card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 14px;
+  }
+  .desktop-chart-card canvas {
+    max-height: 320px;
+    width: 100% !important;
+  }
+
+  .desktop-dept-table-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(30,60,114,.04);
+  }
+  .desktop-dept-table-card .card-head {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .desktop-dept-stats-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .desktop-dept-stats-table thead th {
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: #fff;
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+  }
+  .desktop-dept-stats-table tbody td {
+    padding: 12px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .desktop-dept-stats-table tbody tr:last-child td { border-bottom: none; }
+  .desktop-dept-stats-table tbody tr:hover { background: #f8fafc; }
+
+  /* Desktop Modal */
+  .desktop-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,31,61,.5);
+    backdrop-filter: blur(4px);
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .desktop-modal-overlay.open { display: flex; }
+  .desktop-modal {
+    background: #fff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  }
+  .desktop-modal-header {
+    padding: 24px 28px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .desktop-modal-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .desktop-modal-close {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: none;
+    background: #f1f5f9;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+  }
+  .desktop-modal-body {
+    padding: 20px 28px 28px;
+  }
+  .desktop-form-group { margin-bottom: 16px; }
+  .desktop-form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+  .desktop-form-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    background: #f8fafc;
+    outline: none;
+    font-family: inherit;
+    transition: border-color .2s;
+  }
+  .desktop-form-input:focus { border-color: var(--navy-light); background: #fff; }
+  .desktop-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* Desktop Toast */
+  #desktopToast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: 12px;
+    z-index: 9999;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity .3s, transform .3s;
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    max-width: 400px;
+  }
+  #desktopToast.show { opacity: 1; transform: translateX(0); }
+
+  /* Desktop Confirm */
+  .desktop-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,31,61,.5);
+    backdrop-filter: blur(4px);
+    z-index: 600;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .desktop-confirm-overlay.open { display: flex; }
+  .desktop-confirm-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 28px 24px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  }
+  .desktop-confirm-box p {
+    font-size: 16px;
+    margin-bottom: 24px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .desktop-confirm-btns {
+    display: flex;
+    gap: 12px;
+  }
+  .desktop-confirm-btns .desktop-action-btn { flex: 1; justify-content: center; }
+
+  /* Desktop Empty */
+  .desktop-empty {
+    text-align: center;
+    padding: 80px 40px;
+    color: var(--text-muted);
+  }
+  .desktop-empty .empty-icon { font-size: 64px; margin-bottom: 16px; }
+  .desktop-empty p { font-size: 16px; }
+
+  /* Responsive tweaks for desktop */
+  @media (min-width: 1800px) {
+    :root { --sidebar-width: 300px; }
+    .desktop-page-title { font-size: 30px; }
+    .desktop-stat-value { font-size: 32px; }
+    .desktop-stat-icon { width: 64px; height: 64px; font-size: 30px; }
+    .desktop-content { padding: 36px 48px; }
+    .desktop-topbar { padding: 22px 48px; }
+    .desktop-search { width: 400px; }
+    .desktop-charts-grid { grid-template-columns: repeat(3, 1fr); }
+    .desktop-stats-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  }
+
+  @media (min-width: 2560px) {
+    :root { --sidebar-width: 340px; }
+    .desktop-page-title { font-size: 34px; }
+    .desktop-stat-value { font-size: 36px; }
+    .desktop-content { padding: 44px 64px; }
+    .desktop-topbar { padding: 26px 64px; }
+    .desktop-charts-grid { grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .desktop-labels-table td, .desktop-labels-table th { padding: 18px 20px; }
+    .desktop-history-table td, .desktop-history-table th { padding: 18px 20px; }
+  }
+
+  @media print { .desktop-sidebar, .desktop-topbar { display: none !important; } .desktop-content { padding: 0; } }
 </style>
 </head>
-<body>
+<body class="mobile-view">
 
 <!-- LOGIN -->
 <div id="loginScreen">
@@ -601,8 +1370,10 @@
   </div>
 </div>
 
-<!-- APP -->
-<div id="appContent" style="display:none">
+<!-- ============================================ -->
+<!-- ===== MOBILE APP ===== -->
+<!-- ============================================ -->
+<div id="appContent">
   <header class="app-header">
     <div class="header-row">
       <div>
@@ -617,7 +1388,6 @@
   </header>
 
   <div class="page-area">
-    <!-- LABELS -->
     <div id="page-labels" class="page active">
       <div class="search-bar no-print">
         <input type="text" id="searchBox" class="search-input" placeholder="Search labels..."/>
@@ -628,7 +1398,6 @@
       <div id="labelsList"></div>
     </div>
 
-    <!-- HISTORY -->
     <div id="page-history" class="page">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
         <div>
@@ -640,7 +1409,6 @@
       <div id="historyList"></div>
     </div>
 
-    <!-- DEPARTMENTS -->
     <div id="page-departments" class="page">
       <div class="page-title">Departments</div>
       <div class="page-desc">Organize labels by department</div>
@@ -655,7 +1423,6 @@
       </div>
     </div>
 
-    <!-- ANALYTICS -->
     <div id="page-stats" class="page">
       <div class="page-title">Analytics</div>
       <div class="page-desc">Size + description level insights</div>
@@ -680,9 +1447,9 @@
     </div>
   </div>
 
-  <button class="fab" id="fab" onclick="openAddSheet()">+</button>
+  <button class="fab" id="mobileFab" onclick="openAddSheet()">+</button>
 
-  <nav class="tab-bar">
+  <nav class="tab-bar" id="mobileTabBar">
     <button class="tab-item active" data-tab="labels">
       <span class="tab-icon">📋</span><span>Labels</span>
       <span class="tab-badge" id="labelsBadge" style="display:none">0</span>
@@ -701,72 +1468,65 @@
   </nav>
 </div>
 
-<!-- Add Label Sheet -->
-<div class="sheet-overlay" id="sheetOverlay" onclick="closeAddSheet()"></div>
-<div class="bottom-sheet" id="addSheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-header">
-    <h2>New Label</h2>
-    <button class="sheet-close" onclick="closeAddSheet()">✕</button>
-  </div>
-  <div class="sheet-body">
-    <form id="labelForm">
-      <div class="form-group">
-        <label>Item Description</label>
-        <input type="text" id="description" class="form-input" placeholder="e.g. Product Label A" required/>
-        <div class="chip-row" id="descSuggestions"></div>
-      </div>
-      <div class="form-group">
-        <label>Size</label>
-        <input type="text" id="size" class="form-input" placeholder="e.g. 50x30mm" required/>
-        <div class="chip-row">
-          <button type="button" class="suggestion-chip" onclick="fillField('size','50×30mm')">50×30mm</button>
-          <button type="button" class="suggestion-chip" onclick="fillField('size','100×50mm')">100×50mm</button>
-          <button type="button" class="suggestion-chip" onclick="fillField('size','75×25mm')">75×25mm</button>
-          <button type="button" class="suggestion-chip" onclick="fillField('size','150×75mm')">150×75mm</button>
+<!-- Mobile Add Sheet -->
+<div id="mobileSheets">
+  <div class="sheet-overlay" id="sheetOverlay" onclick="closeAddSheet()"></div>
+  <div class="bottom-sheet" id="addSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <h2>New Label</h2>
+      <button class="sheet-close" onclick="closeAddSheet()">✕</button>
+    </div>
+    <div class="sheet-body">
+      <form id="labelForm">
+        <div class="form-group">
+          <label>Item Description</label>
+          <input type="text" id="description" class="form-input" placeholder="e.g. Product Label A" required/>
+          <div class="chip-row" id="descSuggestions"></div>
         </div>
-      </div>
-      <div class="form-group">
-        <label>Cost (R)</label>
-        <input type="number" id="cost" class="form-input" step="0.01" placeholder="0.00" required/>
-      </div>
-      <div class="form-group">
-        <label>Department</label>
-        <select id="department" class="form-input" required><option value="">Select department</option></select>
-      </div>
-      <button type="submit" class="btn btn-primary">Create Label</button>
-    </form>
+        <div class="form-group">
+          <label>Size</label>
+          <input type="text" id="size" class="form-input" placeholder="e.g. 50x30mm" required/>
+          <div class="chip-row">
+            <button type="button" class="suggestion-chip" onclick="fillField('size','50×30mm')">50×30mm</button>
+            <button type="button" class="suggestion-chip" onclick="fillField('size','100×50mm')">100×50mm</button>
+            <button type="button" class="suggestion-chip" onclick="fillField('size','75×25mm')">75×25mm</button>
+            <button type="button" class="suggestion-chip" onclick="fillField('size','150×75mm')">150×75mm</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Cost (R)</label>
+          <input type="number" id="cost" class="form-input" step="0.01" placeholder="0.00" required/>
+        </div>
+        <div class="form-group">
+          <label>Department</label>
+          <select id="department" class="form-input" required><option value="">Select department</option></select>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Label</button>
+      </form>
+    </div>
   </div>
-</div>
 
-<!-- Export Menu Sheet -->
-<div class="sheet-overlay" id="exportOverlay" onclick="closeExportMenu()"></div>
-<div class="bottom-sheet" id="exportSheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-header">
-    <h2>Export Reports</h2>
-    <button class="sheet-close" onclick="closeExportMenu()">✕</button>
-  </div>
-  <div class="sheet-body">
-    <div style="display:flex; flex-direction:column; gap:12px;">
-      <button class="btn btn-primary" onclick="exportCurrentInventory()">
-        📦 Current Inventory Report
-      </button>
-      <button class="btn btn-success" onclick="exportLastWeek()">
-        📅 Last Week Movements
-      </button>
-      <button class="btn btn-success" onclick="exportLastMonth()">
-        📆 Last Month Movements
-      </button>
-      <button class="btn btn-ghost" onclick="exportAllHistory()">
-        📜 Complete History
-      </button>
+  <!-- Mobile Export Sheet -->
+  <div class="sheet-overlay" id="exportOverlay" onclick="closeExportMenu()"></div>
+  <div class="bottom-sheet" id="exportSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <h2>Export Reports</h2>
+      <button class="sheet-close" onclick="closeExportMenu()">✕</button>
+    </div>
+    <div class="sheet-body">
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <button class="btn btn-primary" onclick="exportCurrentInventory()">📦 Current Inventory</button>
+        <button class="btn btn-success" onclick="exportLastWeek()">📅 Last Week</button>
+        <button class="btn btn-success" onclick="exportLastMonth()">📆 Last Month</button>
+        <button class="btn btn-ghost" onclick="exportAllHistory()">📜 Complete History</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Confirm -->
-<div class="confirm-overlay" id="confirmOverlay">
+<div id="mobileConfirm" class="confirm-overlay">
   <div class="confirm-box">
     <p id="confirmMsg">Are you sure?</p>
     <div class="confirm-btns">
@@ -776,7 +1536,191 @@
   </div>
 </div>
 
-<div id="toast"></div>
+<div id="mobileToast"></div>
+
+<!-- ============================================ -->
+<!-- ===== DESKTOP / 4K APP ===== -->
+<!-- ============================================ -->
+<div id="desktopApp" style="display:none">
+  <aside class="desktop-sidebar">
+    <div class="desktop-logo">
+      <div class="desktop-logo-icon">🏷️</div>
+      <div class="desktop-logo-text">RAHA <span>LABELS</span></div>
+    </div>
+    <nav class="desktop-nav">
+      <button class="desktop-nav-item active" data-dtab="labels">
+        <span class="desktop-nav-icon">📋</span>
+        <span>Labels</span>
+        <span class="desktop-nav-badge" id="dLabelsBadge" style="display:none">0</span>
+      </button>
+      <button class="desktop-nav-item" data-dtab="history">
+        <span class="desktop-nav-icon">📜</span>
+        <span>Stock History</span>
+        <span class="desktop-nav-badge" id="dHistoryBadge" style="display:none">0</span>
+      </button>
+      <button class="desktop-nav-item" data-dtab="departments">
+        <span class="desktop-nav-icon">🏢</span>
+        <span>Departments</span>
+        <span class="desktop-nav-badge" id="dDeptBadge" style="display:none">0</span>
+      </button>
+      <button class="desktop-nav-item" data-dtab="stats">
+        <span class="desktop-nav-icon">📊</span>
+        <span>Analytics</span>
+      </button>
+    </nav>
+    <div class="desktop-sidebar-footer">
+      <button class="desktop-sidebar-btn" onclick="openDesktopExportModal()">
+        <span>📥</span><span>Export Reports</span>
+      </button>
+      <button class="desktop-sidebar-btn" onclick="logout()">
+        <span>🚪</span><span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="desktop-main">
+    <div class="desktop-topbar">
+      <div class="desktop-topbar-left">
+        <div class="desktop-page-title" id="dPageTitle">Labels</div>
+        <div class="desktop-page-subtitle" id="dPageSubtitle">Manage your inventory labels</div>
+      </div>
+      <div class="desktop-topbar-actions">
+        <input type="text" id="dSearchBox" class="desktop-search" placeholder="Search labels, sizes, departments..."/>
+        <button class="desktop-action-btn primary" onclick="openDesktopAddModal()">
+          <span>+</span><span>New Label</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="desktop-content">
+      <!-- Desktop Labels -->
+      <div id="dpage-labels" class="desktop-page active">
+        <div id="dLabelsContainer"></div>
+      </div>
+
+      <!-- Desktop History -->
+      <div id="dpage-history" class="desktop-page">
+        <div class="desktop-history-filters">
+          <button class="desktop-filter-btn active" data-hfilter="all" onclick="setHistoryFilter('all')">All Time</button>
+          <button class="desktop-filter-btn" data-hfilter="today" onclick="setHistoryFilter('today')">Today</button>
+          <button class="desktop-filter-btn" data-hfilter="week" onclick="setHistoryFilter('week')">Last 7 Days</button>
+          <button class="desktop-filter-btn" data-hfilter="month" onclick="setHistoryFilter('month')">Last 30 Days</button>
+          <button class="desktop-filter-btn" data-hfilter="add" onclick="setHistoryFilter('add')">Additions Only</button>
+          <button class="desktop-filter-btn" data-hfilter="deduct" onclick="setHistoryFilter('deduct')">Deductions Only</button>
+          <div style="margin-left:auto;">
+            <button class="desktop-action-btn ghost" onclick="clearHistoryConfirm()">🗑️ Clear All</button>
+          </div>
+        </div>
+        <div id="dHistoryContainer"></div>
+      </div>
+
+      <!-- Desktop Departments -->
+      <div id="dpage-departments" class="desktop-page">
+        <div class="desktop-dept-add-card" style="margin-bottom:20px;">
+          <input type="text" id="dDeptInput" placeholder="Enter new department name..."/>
+          <button class="desktop-action-btn primary" onclick="addDepartmentDesktop()">+ Add Department</button>
+        </div>
+        <div id="dDeptContainer" class="desktop-dept-grid"></div>
+      </div>
+
+      <!-- Desktop Analytics -->
+      <div id="dpage-stats" class="desktop-page">
+        <div class="desktop-stats-grid" id="dStatsGrid"></div>
+        <div class="desktop-charts-grid">
+          <div class="desktop-chart-card"><h3>Inventory Value by Department</h3><canvas id="dDeptValueChart"></canvas></div>
+          <div class="desktop-chart-card"><h3>Stock Quantity by Department</h3><canvas id="dDeptQuantityChart"></canvas></div>
+          <div class="desktop-chart-card"><h3>Top 5 Most Valuable Labels</h3><canvas id="dTopValueChart"></canvas></div>
+          <div class="desktop-chart-card"><h3>Low Stock Items (≤ 10)</h3><canvas id="dLowStockChart"></canvas></div>
+          <div class="desktop-chart-card"><h3>Stock Distribution by Size</h3><canvas id="dSizeDistributionChart"></canvas></div>
+          <div class="desktop-chart-card"><h3>Top Items by Quantity</h3><canvas id="dTopQuantityChart"></canvas></div>
+        </div>
+        <div class="desktop-dept-table-card">
+          <div class="card-head">Department Breakdown</div>
+          <table class="desktop-dept-stats-table">
+            <thead><tr><th>Department</th><th>Labels</th><th>Total Stock</th><th>Total Value</th><th>Avg Cost</th></tr></thead>
+            <tbody id="dDeptStatsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Desktop Add Label Modal -->
+<div class="desktop-modal-overlay" id="dAddModal">
+  <div class="desktop-modal">
+    <div class="desktop-modal-header">
+      <h2>Create New Label</h2>
+      <button class="desktop-modal-close" onclick="closeDesktopAddModal()">✕</button>
+    </div>
+    <div class="desktop-modal-body">
+      <form id="dLabelForm">
+        <div class="desktop-form-group">
+          <label>Item Description</label>
+          <input type="text" id="dDescription" class="desktop-form-input" placeholder="e.g. Product Label A" required/>
+          <div class="chip-row" id="dDescSuggestions" style="margin-top:8px;"></div>
+        </div>
+        <div class="desktop-form-row">
+          <div class="desktop-form-group">
+            <label>Size</label>
+            <input type="text" id="dSize" class="desktop-form-input" placeholder="e.g. 50x30mm" required/>
+          </div>
+          <div class="desktop-form-group">
+            <label>Cost (R)</label>
+            <input type="number" id="dCost" class="desktop-form-input" step="0.01" placeholder="0.00" required/>
+          </div>
+        </div>
+        <div class="desktop-form-group">
+          <label>Department</label>
+          <select id="dDepartment" class="desktop-form-input" required><option value="">Select department</option></select>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button type="button" class="desktop-action-btn ghost" onclick="closeDesktopAddModal()" style="flex:1; justify-content:center;">Cancel</button>
+          <button type="submit" class="desktop-action-btn primary" style="flex:1; justify-content:center;">Create Label</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Desktop Export Modal -->
+<div class="desktop-modal-overlay" id="dExportModal">
+  <div class="desktop-modal" style="max-width:480px;">
+    <div class="desktop-modal-header">
+      <h2>Export Reports</h2>
+      <button class="desktop-modal-close" onclick="closeDesktopExportModal()">✕</button>
+    </div>
+    <div class="desktop-modal-body">
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <button class="desktop-action-btn primary" onclick="exportCurrentInventory()" style="justify-content:flex-start; padding:16px 20px;">
+          <span>📦</span><span>Current Inventory Report</span>
+        </button>
+        <button class="desktop-action-btn primary" onclick="exportLastWeek()" style="justify-content:flex-start; padding:16px 20px; background:linear-gradient(135deg, var(--green-dark), var(--green));">
+          <span>📅</span><span>Last Week Movements</span>
+        </button>
+        <button class="desktop-action-btn primary" onclick="exportLastMonth()" style="justify-content:flex-start; padding:16px 20px; background:linear-gradient(135deg, var(--green-dark), var(--green));">
+          <span>📆</span><span>Last Month Movements</span>
+        </button>
+        <button class="desktop-action-btn ghost" onclick="exportAllHistory()" style="justify-content:flex-start; padding:16px 20px;">
+          <span>📜</span><span>Complete History</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Desktop Confirm -->
+<div class="desktop-confirm-overlay" id="dConfirmOverlay">
+  <div class="desktop-confirm-box">
+    <p id="dConfirmMsg">Are you sure?</p>
+    <div class="desktop-confirm-btns">
+      <button class="desktop-action-btn ghost" onclick="closeDesktopConfirm()">Cancel</button>
+      <button class="desktop-action-btn" style="background:linear-gradient(135deg, var(--red-dark), var(--red)); color:#fff;" id="dConfirmAction">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="desktopToast"></div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
@@ -793,15 +1737,10 @@
   };
 
   const app = initializeApp(firebaseConfig);
-
   try {
     const { isSupported, getAnalytics } = await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js");
-    if (typeof isSupported === 'function' && await isSupported()) {
-      getAnalytics(app);
-    }
-  } catch (e) {
-    console.warn('Firebase Analytics skipped:', e.message);
-  }
+    if (typeof isSupported === 'function' && await isSupported()) getAnalytics(app);
+  } catch (e) { console.warn('Firebase Analytics skipped:', e.message); }
 
   const db = getFirestore(app);
   let isAuthenticated = false;
@@ -809,7 +1748,41 @@
   let departmentsCache = [];
   let historyCache = [];
   let charts = {};
+  let desktopCharts = {};
   const CORRECT_PASSWORD = "Raha@123";
+  let currentHistoryFilter = 'all';
+  let currentView = 'mobile'; // 'mobile' or 'desktop'
+
+  /* ===== VIEW DETECTION ===== */
+  function detectView() {
+    const width = window.innerWidth;
+    const newView = width >= 1200 ? 'desktop' : 'mobile';
+    if (newView !== currentView) {
+      currentView = newView;
+      document.body.classList.remove('mobile-view', 'desktop-view');
+      document.body.classList.add(newView + '-view');
+      if (isAuthenticated) {
+        if (newView === 'desktop') {
+          document.getElementById('desktopApp').style.display = 'flex';
+          document.getElementById('appContent').style.display = 'none';
+        } else {
+          document.getElementById('desktopApp').style.display = 'none';
+          document.getElementById('appContent').style.display = 'flex';
+        }
+        // Re-render everything for the new view
+        renderLabelsList();
+        renderHistoryList();
+        renderDepartments();
+        if (currentView === 'desktop' && document.getElementById('dpage-stats').classList.contains('active')) {
+          renderDesktopAnalytics();
+        } else if (currentView === 'mobile' && document.querySelector('.tab-item.active')?.dataset.tab === 'stats') {
+          renderAnalytics();
+        }
+      }
+    }
+  }
+  window.addEventListener('resize', detectView);
+  detectView();
 
   /* ===== AUTH ===== */
   window.attemptLogin = function() {
@@ -818,7 +1791,11 @@
     if (input.value === CORRECT_PASSWORD) {
       isAuthenticated = true;
       document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('appContent').style.display = 'flex';
+      if (currentView === 'desktop') {
+        document.getElementById('desktopApp').style.display = 'flex';
+      } else {
+        document.getElementById('appContent').style.display = 'flex';
+      }
       initApp();
     } else {
       err.textContent = 'Incorrect password. Try again.';
@@ -831,18 +1808,19 @@
     if (e.key === 'Enter') window.attemptLogin();
   });
 
-  if (isAuthenticated) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('appContent').style.display = 'flex';
-    initApp();
-  }
-
   /* ===== HELPERS ===== */
   function toast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
+    if (currentView === 'desktop') {
+      const t = document.getElementById('desktopToast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    } else {
+      const t = document.getElementById('mobileToast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
   }
 
   function escapeHtml(str) {
@@ -853,11 +1831,8 @@
     return `${label.description || '?'} (${label.size || '?'})`;
   }
 
-  // Resolve size for a history entry: use stored labelSize first,
-  // then fall back to looking up the live label by ID, then empty.
   function resolveSize(h) {
     if (h.labelSize && h.labelSize.trim() !== '') return h.labelSize.trim();
-    // Try live cache lookup by labelId
     const liveLabel = labelsCache.find(l => l.id === h.labelId);
     if (liveLabel && liveLabel.size) return liveLabel.size;
     return '';
@@ -865,6 +1840,7 @@
 
   function updateBadge(id, count) {
     const el = document.getElementById(id);
+    if (!el) return;
     if (count > 0) {
       el.textContent = count > 99 ? '99+' : count;
       el.style.display = 'flex';
@@ -873,23 +1849,48 @@
     }
   }
 
-  /* ===== CONFIRM DIALOG ===== */
-  let confirmCallback = null;
+  function updateAllBadges() {
+    updateBadge('labelsBadge', labelsCache.length);
+    updateBadge('dLabelsBadge', labelsCache.length);
+    updateBadge('historyBadge', historyCache.length);
+    updateBadge('dHistoryBadge', historyCache.length);
+    updateBadge('deptBadge', departmentsCache.length);
+    updateBadge('dDeptBadge', departmentsCache.length);
+  }
+
+  /* ===== CONFIRM DIALOGS ===== */
+  let mobileConfirmCallback = null;
+  let desktopConfirmCallback = null;
+
   function showConfirm(msg, cb) {
-    document.getElementById('confirmMsg').textContent = msg;
-    confirmCallback = cb;
-    document.getElementById('confirmOverlay').classList.add('open');
+    if (currentView === 'desktop') {
+      document.getElementById('dConfirmMsg').textContent = msg;
+      desktopConfirmCallback = cb;
+      document.getElementById('dConfirmOverlay').classList.add('open');
+    } else {
+      document.getElementById('confirmMsg').textContent = msg;
+      mobileConfirmCallback = cb;
+      document.getElementById('mobileConfirm').classList.add('open');
+    }
   }
   window.closeConfirm = function() {
-    document.getElementById('confirmOverlay').classList.remove('open');
-    confirmCallback = null;
+    document.getElementById('mobileConfirm').classList.remove('open');
+    mobileConfirmCallback = null;
+  };
+  window.closeDesktopConfirm = function() {
+    document.getElementById('dConfirmOverlay').classList.remove('open');
+    desktopConfirmCallback = null;
   };
   document.getElementById('confirmAction').addEventListener('click', () => {
-    if (confirmCallback) confirmCallback();
+    if (mobileConfirmCallback) mobileConfirmCallback();
     closeConfirm();
   });
+  document.getElementById('dConfirmAction').addEventListener('click', () => {
+    if (desktopConfirmCallback) desktopConfirmCallback();
+    closeDesktopConfirm();
+  });
 
-  /* ===== BOTTOM SHEET ===== */
+  /* ===== MOBILE BOTTOM SHEETS ===== */
   window.openAddSheet = function() {
     document.getElementById('sheetOverlay').classList.add('open');
     document.getElementById('addSheet').classList.add('open');
@@ -898,8 +1899,6 @@
     document.getElementById('sheetOverlay').classList.remove('open');
     document.getElementById('addSheet').classList.remove('open');
   };
-
-  /* ===== EXPORT MENU ===== */
   window.openExportMenu = function() {
     document.getElementById('exportOverlay').classList.add('open');
     document.getElementById('exportSheet').classList.add('open');
@@ -909,7 +1908,23 @@
     document.getElementById('exportSheet').classList.remove('open');
   };
 
-  /* ===== TABS ===== */
+  /* ===== DESKTOP MODALS ===== */
+  window.openDesktopAddModal = function() {
+    document.getElementById('dAddModal').classList.add('open');
+    updateDesktopDescSuggestions();
+  };
+  window.closeDesktopAddModal = function() {
+    document.getElementById('dAddModal').classList.remove('open');
+    document.getElementById('dLabelForm').reset();
+  };
+  window.openDesktopExportModal = function() {
+    document.getElementById('dExportModal').classList.add('open');
+  };
+  window.closeDesktopExportModal = function() {
+    document.getElementById('dExportModal').classList.remove('open');
+  };
+
+  /* ===== MOBILE TABS ===== */
   const subtitles = {
     labels: 'Track size + description + operator',
     history: 'Stock movement log',
@@ -925,15 +1940,46 @@
       const tab = btn.dataset.tab;
       document.getElementById('page-' + tab).classList.add('active');
       document.getElementById('headerSubtitle').textContent = subtitles[tab] || '';
-      document.getElementById('fab').classList.toggle('hidden', tab !== 'labels');
+      document.getElementById('mobileFab').classList.toggle('hidden', tab !== 'labels');
       if (tab === 'stats') renderAnalytics();
+    });
+  });
+
+  /* ===== DESKTOP NAV ===== */
+  const desktopSubtitles = {
+    labels: 'Manage your inventory labels',
+    history: 'Complete stock movement log',
+    departments: 'Organize labels by department',
+    stats: 'Inventory insights & analytics'
+  };
+  const desktopTitles = {
+    labels: 'Labels',
+    history: 'Stock History',
+    departments: 'Departments',
+    stats: 'Analytics'
+  };
+
+  document.querySelectorAll('.desktop-nav-item[data-dtab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.desktop-nav-item').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.desktop-page').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const tab = btn.dataset.dtab;
+      document.getElementById('dpage-' + tab).classList.add('active');
+      document.getElementById('dPageTitle').textContent = desktopTitles[tab] || '';
+      document.getElementById('dPageSubtitle').textContent = desktopSubtitles[tab] || '';
+      // Show/hide search box based on tab
+      document.getElementById('dSearchBox').style.display = (tab === 'labels') ? 'block' : 'none';
+      if (tab === 'stats') renderDesktopAnalytics();
+      if (tab === 'history') renderDesktopHistory();
+      if (tab === 'departments') renderDepartments();
+      if (tab === 'labels') renderLabelsList();
     });
   });
 
   /* ===== STOCK MOVEMENT LOG ===== */
   async function logStockMovement(labelId, labelName, labelSize, changeAmount, newQuantity, operatorName, operationType, department) {
     if (!operatorName?.trim()) operatorName = 'System';
-    // Ensure size is always a clean string
     const sizeToStore = (labelSize || '').trim();
     await addDoc(collection(db, 'stockHistory'), {
       labelId,
@@ -949,19 +1995,18 @@
     });
   }
 
-  /* ===== LOAD HISTORY ===== */
+  /* ===== MOBILE HISTORY RENDER ===== */
   function renderHistoryList() {
     const container = document.getElementById('historyList');
+    if (!container) return;
     if (!historyCache.length) {
       container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No movements yet</p></div>';
       return;
     }
     container.innerHTML = historyCache.map(h => {
-      // Cleanly resolve size — stored field first, then live label lookup
       const labelSize = resolveSize(h);
       const labelName = h.labelName || 'Unknown';
       const department = h.department || '';
-
       return `
       <div class="history-entry">
         <div class="history-header">
@@ -992,16 +2037,91 @@
           <span class="history-user">👤 ${escapeHtml(h.operatorName)}</span>
           <span class="history-date">🕒 ${escapeHtml(h.dateStr)}</span>
         </div>
-      </div>
-      `;
+      </div>`;
     }).join('');
+  }
+
+  /* ===== DESKTOP HISTORY RENDER ===== */
+  function getFilteredHistory() {
+    const now = Date.now();
+    let filtered = historyCache;
+    if (currentHistoryFilter === 'today') {
+      const startOfDay = new Date();
+      startOfDay.setHours(0,0,0,0);
+      filtered = filtered.filter(h => h.timestamp >= startOfDay.getTime());
+    } else if (currentHistoryFilter === 'week') {
+      filtered = filtered.filter(h => h.timestamp >= now - 7*24*60*60*1000);
+    } else if (currentHistoryFilter === 'month') {
+      filtered = filtered.filter(h => h.timestamp >= now - 30*24*60*60*1000);
+    } else if (currentHistoryFilter === 'add') {
+      filtered = filtered.filter(h => h.operationType === 'add');
+    } else if (currentHistoryFilter === 'deduct') {
+      filtered = filtered.filter(h => h.operationType === 'deduct');
+    }
+    return filtered;
+  }
+
+  window.setHistoryFilter = function(filter) {
+    currentHistoryFilter = filter;
+    document.querySelectorAll('.desktop-filter-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.hfilter === filter);
+    });
+    renderDesktopHistory();
+  };
+
+  function renderDesktopHistory() {
+    const container = document.getElementById('dHistoryContainer');
+    if (!container) return;
+    const filtered = getFilteredHistory();
+    if (!filtered.length) {
+      container.innerHTML = '<div class="desktop-empty"><div class="empty-icon">📭</div><p>No history entries match this filter</p></div>';
+      return;
+    }
+    const rows = filtered.map(h => {
+      const labelSize = resolveSize(h);
+      const label = labelsCache.find(l => l.id === h.labelId);
+      const unitCost = label ? (label.cost || 0) : 0;
+      const valueImpact = unitCost * Math.abs(h.changeAmount);
+      return `
+      <tr>
+        <td style="font-size:12px; color:var(--text-muted); white-space:nowrap;">${escapeHtml(h.dateStr)}</td>
+        <td><strong>${escapeHtml(h.labelName)}</strong></td>
+        <td><span class="cell-size">${escapeHtml(labelSize)}</span></td>
+        <td><span class="cell-dept">${escapeHtml(h.department || '-')}</span></td>
+        <td><span class="desktop-history-type ${h.operationType}">${h.operationType === 'add' ? '↑ ADDED' : '↓ DEDUCTED'}</span></td>
+        <td><span class="desktop-history-change ${h.operationType}">${h.operationType === 'add' ? '+' : '-'}${Math.abs(h.changeAmount)}</span></td>
+        <td><strong>${h.newQuantity}</strong></td>
+        <td>R ${valueImpact.toFixed(2)}</td>
+        <td><span class="desktop-history-user">👤 ${escapeHtml(h.operatorName)}</span></td>
+      </tr>`;
+    }).join('');
+    container.innerHTML = `
+      <div class="desktop-history-table-wrap">
+        <table class="desktop-history-table">
+          <thead>
+            <tr>
+              <th>Date/Time</th>
+              <th>Label</th>
+              <th>Size</th>
+              <th>Department</th>
+              <th>Type</th>
+              <th>Change</th>
+              <th>Balance</th>
+              <th>Value Impact</th>
+              <th>Operator</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
   }
 
   async function loadHistory() {
     onSnapshot(query(collection(db, 'stockHistory'), orderBy('timestamp', 'desc')), snap => {
       historyCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderHistoryList();
-      updateBadge('historyBadge', historyCache.length);
+      renderDesktopHistory();
+      updateAllBadges();
     });
   }
 
@@ -1016,12 +2136,14 @@
   };
 
   /* ===== DEPARTMENTS ===== */
-  async function loadDepartments() {
-    onSnapshot(collection(db, 'departments'), snap => {
-      departmentsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      const sel = document.getElementById('department');
+  function renderDepartments() {
+    // Mobile
+    const sel = document.getElementById('department');
+    if (sel) {
       sel.innerHTML = '<option value="">Select department</option>' + departmentsCache.map(d => `<option value="${escapeHtml(d.name)}">${escapeHtml(d.name)}</option>`).join('');
-      const deptList = document.getElementById('deptList');
+    }
+    const deptList = document.getElementById('deptList');
+    if (deptList) {
       if (!departmentsCache.length) {
         deptList.innerHTML = '<div class="empty-state" style="padding:20px;"><p>No departments yet</p></div>';
       } else {
@@ -1032,7 +2154,40 @@
           </span>
         `).join('');
       }
-      updateBadge('deptBadge', departmentsCache.length);
+    }
+    // Desktop
+    const dDeptContainer = document.getElementById('dDeptContainer');
+    if (dDeptContainer) {
+      const dSel = document.getElementById('dDepartment');
+      if (dSel) {
+        dSel.innerHTML = '<option value="">Select department</option>' + departmentsCache.map(d => `<option value="${escapeHtml(d.name)}">${escapeHtml(d.name)}</option>`).join('');
+      }
+      if (!departmentsCache.length) {
+        dDeptContainer.innerHTML = '<div class="desktop-empty" style="grid-column:1/-1;"><div class="empty-icon">🏢</div><p>No departments yet. Add one above.</p></div>';
+      } else {
+        dDeptContainer.innerHTML = departmentsCache.map(d => {
+          const count = labelsCache.filter(l => l.department === d.name).length;
+          return `
+          <div class="desktop-dept-card">
+            <div class="desktop-dept-info">
+              <div class="desktop-dept-icon">🏢</div>
+              <div>
+                <div class="desktop-dept-name">${escapeHtml(d.name)}</div>
+                <div class="desktop-dept-count">${count} label${count !== 1 ? 's' : ''}</div>
+              </div>
+            </div>
+            <button class="desktop-dept-del" onclick="deleteDepartment('${d.id}')">&times;</button>
+          </div>`;
+        }).join('');
+      }
+    }
+    updateAllBadges();
+  }
+
+  async function loadDepartments() {
+    onSnapshot(collection(db, 'departments'), snap => {
+      departmentsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderDepartments();
     });
   }
 
@@ -1042,6 +2197,15 @@
     if (departmentsCache.some(d => d.name.toLowerCase() === name.toLowerCase())) return toast('Department already exists');
     await addDoc(collection(db, 'departments'), { name, createdAt: Date.now() });
     document.getElementById('deptInput').value = '';
+    toast('Department added');
+  };
+
+  window.addDepartmentDesktop = async function() {
+    const name = document.getElementById('dDeptInput').value.trim();
+    if (!name) return toast('Enter a department name');
+    if (departmentsCache.some(d => d.name.toLowerCase() === name.toLowerCase())) return toast('Department already exists');
+    await addDoc(collection(db, 'departments'), { name, createdAt: Date.now() });
+    document.getElementById('dDeptInput').value = '';
     toast('Department added');
   };
 
@@ -1058,56 +2222,114 @@
       labelsCache = snap.docs.map(d => ({ id: d.id, ...d.data(), quantity: d.data().quantity ?? 0 }));
       renderLabelsList();
       updateDescSuggestions();
-      updateBadge('labelsBadge', labelsCache.length);
-      // Re-render history with updated cache so live lookups are fresh
-      if (historyCache.length) renderHistoryList();
-      if (document.querySelector('.tab-item.active')?.dataset.tab === 'stats') renderAnalytics();
+      updateDesktopDescSuggestions();
+      updateAllBadges();
+      if (historyCache.length) {
+        renderHistoryList();
+        renderDesktopHistory();
+      }
+      if (currentView === 'desktop' && document.getElementById('dpage-stats').classList.contains('active')) {
+        renderDesktopAnalytics();
+      } else if (currentView === 'mobile' && document.querySelector('.tab-item.active')?.dataset.tab === 'stats') {
+        renderAnalytics();
+      }
+      renderDepartments();
     });
   }
 
   function renderLabelsList() {
-    const search = document.getElementById('searchBox')?.value.toLowerCase() || '';
-    const filtered = labelsCache.filter(l =>
-      !search || l.description?.toLowerCase().includes(search) || l.size?.toLowerCase().includes(search) || l.department?.toLowerCase().includes(search)
-    );
-    const container = document.getElementById('labelsList');
-
-    if (!filtered.length) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-icon">🏷️</div>
-          <p>${search ? 'No matching labels found' : 'No labels yet. Tap + to create one.'}</p>
-        </div>`;
-      return;
+    // Mobile
+    const mContainer = document.getElementById('labelsList');
+    if (mContainer) {
+      const search = document.getElementById('searchBox')?.value.toLowerCase() || '';
+      const filtered = labelsCache.filter(l =>
+        !search || l.description?.toLowerCase().includes(search) || l.size?.toLowerCase().includes(search) || l.department?.toLowerCase().includes(search)
+      );
+      if (!filtered.length) {
+        mContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">🏷️</div><p>${search ? 'No matching labels found' : 'No labels yet. Tap + to create one.'}</p></div>`;
+      } else {
+        mContainer.innerHTML = filtered.map(l => {
+          const isLow = (l.quantity || 0) <= 10;
+          return `
+          <div class="label-card">
+            <div class="label-top">
+              <div class="label-name">${escapeHtml(l.description)}</div>
+              <span class="label-dept">${escapeHtml(l.department)}</span>
+            </div>
+            <div class="label-meta">
+              <span class="size-tag">${escapeHtml(l.size)}</span>
+              <span class="cost-tag">Cost: <b>R ${parseFloat(l.cost || 0).toFixed(2)}</b></span>
+            </div>
+            <div class="label-qty-row">
+              <div class="qty-display ${isLow ? 'low' : ''}">${l.quantity || 0}</div>
+              <div class="qty-controls">
+                <input type="number" id="adj_${l.id}" class="qty-input-mini" value="1" min="1"/>
+                <input type="text" id="user_${l.id}" class="qty-user-mini" placeholder="Name"/>
+                <button class="qty-btn qty-btn-add" onclick="processAdjust('${l.id}','add')">+</button>
+                <button class="qty-btn qty-btn-deduct" onclick="processAdjust('${l.id}','deduct')">&minus;</button>
+              </div>
+            </div>
+            <div class="label-cost-edit">
+              <span>Cost R</span>
+              <input type="number" step="0.01" class="cost-edit-input" value="${l.cost || 0}" onchange="updateCost('${l.id}', this.value)"/>
+            </div>
+          </div>`;
+        }).join('');
+      }
     }
 
-    container.innerHTML = filtered.map(l => {
-      const isLow = (l.quantity || 0) <= 10;
-      return `
-      <div class="label-card">
-        <div class="label-top">
-          <div class="label-name">${escapeHtml(l.description)}</div>
-          <span class="label-dept">${escapeHtml(l.department)}</span>
-        </div>
-        <div class="label-meta">
-          <span class="size-tag">${escapeHtml(l.size)}</span>
-          <span class="cost-tag">Cost: <b>R ${parseFloat(l.cost || 0).toFixed(2)}</b></span>
-        </div>
-        <div class="label-qty-row">
-          <div class="qty-display ${isLow ? 'low' : ''}">${l.quantity || 0}</div>
-          <div class="qty-controls">
-            <input type="number" id="adj_${l.id}" class="qty-input-mini" value="1" min="1"/>
-            <input type="text" id="user_${l.id}" class="qty-user-mini" placeholder="Name"/>
-            <button class="qty-btn qty-btn-add" onclick="processAdjust('${l.id}','add')">+</button>
-            <button class="qty-btn qty-btn-deduct" onclick="processAdjust('${l.id}','deduct')">&minus;</button>
-          </div>
-        </div>
-        <div class="label-cost-edit">
-          <span>Cost R</span>
-          <input type="number" step="0.01" class="cost-edit-input" value="${l.cost || 0}" onchange="updateCost('${l.id}', this.value)"/>
-        </div>
-      </div>`;
-    }).join('');
+    // Desktop
+    const dContainer = document.getElementById('dLabelsContainer');
+    if (dContainer) {
+      const search = document.getElementById('dSearchBox')?.value.toLowerCase() || '';
+      const filtered = labelsCache.filter(l =>
+        !search || l.description?.toLowerCase().includes(search) || l.size?.toLowerCase().includes(search) || l.department?.toLowerCase().includes(search)
+      );
+      if (!filtered.length) {
+        dContainer.innerHTML = `<div class="desktop-empty"><div class="empty-icon">🏷️</div><p>${search ? 'No matching labels found' : 'No labels yet. Click "New Label" to create one.'}</p></div>`;
+      } else {
+        const rows = filtered.map(l => {
+          const isLow = (l.quantity || 0) <= 10;
+          const totalValue = (l.quantity || 0) * (l.cost || 0);
+          return `
+          <tr>
+            <td class="cell-name">${escapeHtml(l.description)}</td>
+            <td><span class="cell-size">${escapeHtml(l.size)}</span></td>
+            <td><span class="cell-dept">${escapeHtml(l.department)}</span></td>
+            <td class="cell-qty ${isLow ? 'low' : ''}">${l.quantity || 0}</td>
+            <td>
+              <div class="desktop-qty-controls">
+                <input type="number" id="dadj_${l.id}" class="desktop-qty-input" value="1" min="1"/>
+                <input type="text" id="duser_${l.id}" class="desktop-user-input" placeholder="Operator"/>
+                <button class="desktop-qty-btn add" onclick="processAdjustDesktop('${l.id}','add')">+</button>
+                <button class="desktop-qty-btn deduct" onclick="processAdjustDesktop('${l.id}','deduct')">&minus;</button>
+              </div>
+            </td>
+            <td>
+              <input type="number" step="0.01" class="desktop-cost-input" value="${l.cost || 0}" onchange="updateCost('${l.id}', this.value)"/>
+            </td>
+            <td class="cell-value">R ${totalValue.toFixed(2)}</td>
+          </tr>`;
+        }).join('');
+        dContainer.innerHTML = `
+          <div class="desktop-labels-table-wrap">
+            <table class="desktop-labels-table">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Size</th>
+                  <th>Department</th>
+                  <th>Qty</th>
+                  <th>Adjust Stock</th>
+                  <th>Unit Cost</th>
+                  <th>Total Value</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>`;
+      }
+    }
   }
 
   window.processAdjust = async function(labelId, mode) {
@@ -1120,9 +2342,22 @@
     let newQty = label.quantity + (mode === 'add' ? delta : -delta);
     if (newQty < 0) return toast('Insufficient stock (' + label.quantity + ')');
     await updateDoc(doc(db, 'labels', labelId), { quantity: newQty });
-    // Pass label.size explicitly so it is always stored in the history record
     await logStockMovement(labelId, label.description, label.size, delta, newQty, operator, mode, label.department);
     toast(mode === 'add' ? 'Added ' + delta + ' → ' + newQty : 'Deducted ' + delta + ' → ' + newQty);
+  };
+
+  window.processAdjustDesktop = async function(labelId, mode) {
+    const delta = parseInt(document.getElementById('dadj_' + labelId).value, 10);
+    const operator = document.getElementById('duser_' + labelId).value.trim();
+    if (isNaN(delta) || delta <= 0) return toast('Enter a positive number');
+    if (!operator) return toast('Enter operator name');
+    const label = labelsCache.find(l => l.id === labelId);
+    if (!label) return;
+    let newQty = label.quantity + (mode === 'add' ? delta : -delta);
+    if (newQty < 0) return toast('Insufficient stock (' + label.quantity + ')');
+    await updateDoc(doc(db, 'labels', labelId), { quantity: newQty });
+    await logStockMovement(labelId, label.description, label.size, delta, newQty, operator, mode, label.department);
+    toast(mode === 'add' ? `Added ${delta} → ${newQty}` : `Deducted ${delta} → ${newQty}`);
   };
 
   window.updateCost = async function(id, val) {
@@ -1130,6 +2365,7 @@
     toast('Cost updated');
   };
 
+  // Mobile form submit
   document.getElementById('labelForm')?.addEventListener('submit', async e => {
     e.preventDefault();
     const description = document.getElementById('description').value.trim();
@@ -1145,21 +2381,50 @@
     closeAddSheet();
   });
 
+  // Desktop form submit
+  document.getElementById('dLabelForm')?.addEventListener('submit', async e => {
+    e.preventDefault();
+    const description = document.getElementById('dDescription').value.trim();
+    const size = document.getElementById('dSize').value.trim();
+    const cost = parseFloat(document.getElementById('dCost').value);
+    const department = document.getElementById('dDepartment').value;
+    if (!department) return toast('Select a department');
+    await addDoc(collection(db, 'labels'), {
+      description, size, cost, department, quantity: 0, createdAt: Date.now()
+    });
+    toast('Label created');
+    e.target.reset();
+    closeDesktopAddModal();
+  });
+
   document.getElementById('searchBox')?.addEventListener('input', () => renderLabelsList());
+  document.getElementById('dSearchBox')?.addEventListener('input', () => renderLabelsList());
 
   function updateDescSuggestions() {
     const recent = [...new Set(labelsCache.map(l => l.description))].slice(0, 5);
     const container = document.getElementById('descSuggestions');
-    container.innerHTML = recent.length ? recent.map(d =>
-      `<button type="button" class="suggestion-chip" onclick="fillField('description','${escapeHtml(d)}')">${escapeHtml(d)}</button>`
-    ).join('') : '';
+    if (container) {
+      container.innerHTML = recent.length ? recent.map(d =>
+        `<button type="button" class="suggestion-chip" onclick="fillField('description','${escapeHtml(d)}')">${escapeHtml(d)}</button>`
+      ).join('') : '';
+    }
+  }
+
+  function updateDesktopDescSuggestions() {
+    const recent = [...new Set(labelsCache.map(l => l.description))].slice(0, 8);
+    const container = document.getElementById('dDescSuggestions');
+    if (container) {
+      container.innerHTML = recent.length ? recent.map(d =>
+        `<button type="button" class="suggestion-chip" onclick="fillField('dDescription','${escapeHtml(d)}')">${escapeHtml(d)}</button>`
+      ).join('') : '';
+    }
   }
 
   window.fillField = function(id, val) {
     document.getElementById(id).value = val;
   };
 
-  /* ===== ANALYTICS ===== */
+  /* ===== MOBILE ANALYTICS ===== */
   function renderAnalytics() {
     const totalItems = labelsCache.length;
     const totalStock = labelsCache.reduce((s, l) => s + (l.quantity || 0), 0);
@@ -1250,6 +2515,125 @@
     `).join('');
   }
 
+  /* ===== DESKTOP ANALYTICS ===== */
+  function renderDesktopAnalytics() {
+    const totalItems = labelsCache.length;
+    const totalStock = labelsCache.reduce((s, l) => s + (l.quantity || 0), 0);
+    const totalValue = labelsCache.reduce((s, l) => s + ((l.quantity || 0) * (l.cost || 0)), 0);
+    const lowStockItems = labelsCache.filter(l => (l.quantity || 0) <= 10).length;
+
+    document.getElementById('dStatsGrid').innerHTML = `
+      <div class="desktop-stat-card">
+        <div class="desktop-stat-icon blue">🏷️</div>
+        <div>
+          <div class="desktop-stat-value">${totalItems}</div>
+          <div class="desktop-stat-label">Total Labels</div>
+        </div>
+      </div>
+      <div class="desktop-stat-card">
+        <div class="desktop-stat-icon green">📦</div>
+        <div>
+          <div class="desktop-stat-value">${totalStock}</div>
+          <div class="desktop-stat-label">Total Units</div>
+        </div>
+      </div>
+      <div class="desktop-stat-card">
+        <div class="desktop-stat-icon orange">💰</div>
+        <div>
+          <div class="desktop-stat-value">R ${totalValue.toFixed(0)}</div>
+          <div class="desktop-stat-label">Inventory Value</div>
+        </div>
+      </div>
+      <div class="desktop-stat-card">
+        <div class="desktop-stat-icon red">⚠️</div>
+        <div>
+          <div class="desktop-stat-value">${lowStockItems}</div>
+          <div class="desktop-stat-label">Low Stock Items</div>
+        </div>
+      </div>
+    `;
+
+    const deptMap = new Map();
+    labelsCache.forEach(l => {
+      const d = l.department || 'Unassigned';
+      if (!deptMap.has(d)) deptMap.set(d, { totalValue: 0, totalQty: 0, count: 0, totalCost: 0 });
+      const entry = deptMap.get(d);
+      entry.totalValue += (l.quantity || 0) * (l.cost || 0);
+      entry.totalQty += (l.quantity || 0);
+      entry.totalCost += (l.cost || 0);
+      entry.count++;
+    });
+
+    const depts = Array.from(deptMap.keys());
+    const deptValues = depts.map(d => deptMap.get(d).totalValue);
+    const deptQtys = depts.map(d => deptMap.get(d).totalQty);
+    const palette = ['#1e3c72','#2a5298','#e74c3c','#27ae60','#f39c12','#8e44ad','#16a085','#d35400'];
+
+    if (desktopCharts.deptValue) desktopCharts.deptValue.destroy();
+    desktopCharts.deptValue = new Chart(document.getElementById('dDeptValueChart'), {
+      type: 'bar',
+      data: { labels: depts, datasets: [{ label: 'Value (R)', data: deptValues, backgroundColor: palette }] },
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+    });
+
+    if (desktopCharts.deptQuantity) desktopCharts.deptQuantity.destroy();
+    desktopCharts.deptQuantity = new Chart(document.getElementById('dDeptQuantityChart'), {
+      type: 'doughnut',
+      data: { labels: depts, datasets: [{ data: deptQtys, backgroundColor: palette }] },
+      options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 14, font: { size: 12 } } } } }
+    });
+
+    const topByValue = [...labelsCache].sort((a, b) => ((b.quantity || 0) * (b.cost || 0)) - ((a.quantity || 0) * (a.cost || 0))).slice(0, 5);
+    if (desktopCharts.topValue) desktopCharts.topValue.destroy();
+    desktopCharts.topValue = new Chart(document.getElementById('dTopValueChart'), {
+      type: 'bar',
+      data: { labels: topByValue.map(l => getLabelDisplayName(l)), datasets: [{ label: 'Value (R)', data: topByValue.map(l => (l.quantity || 0) * (l.cost || 0)), backgroundColor: '#27ae60' }] },
+      options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } } }
+    });
+
+    const lowStock = labelsCache.filter(l => (l.quantity || 0) <= 10);
+    if (desktopCharts.lowStock) desktopCharts.lowStock.destroy();
+    desktopCharts.lowStock = new Chart(document.getElementById('dLowStockChart'), {
+      type: 'doughnut',
+      data: { labels: lowStock.map(l => getLabelDisplayName(l)), datasets: [{ data: lowStock.map(l => l.quantity || 0), backgroundColor: palette }] },
+      options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 14, font: { size: 12 } } } } }
+    });
+
+    const sizeMap = new Map();
+    labelsCache.forEach(l => {
+      const sz = l.size || 'unknown';
+      sizeMap.set(sz, (sizeMap.get(sz) || 0) + (l.quantity || 0));
+    });
+    const sizes = Array.from(sizeMap.keys());
+    const sizeQtys = sizes.map(s => sizeMap.get(s));
+    if (desktopCharts.sizeDistribution) desktopCharts.sizeDistribution.destroy();
+    desktopCharts.sizeDistribution = new Chart(document.getElementById('dSizeDistributionChart'), {
+      type: 'bar',
+      data: { labels: sizes, datasets: [{ label: 'Units', data: sizeQtys, backgroundColor: '#3a6fd8' }] },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    const topByQty = [...labelsCache].sort((a, b) => (b.quantity || 0) - (a.quantity || 0)).slice(0, 5);
+    if (desktopCharts.topQuantity) desktopCharts.topQuantity.destroy();
+    desktopCharts.topQuantity = new Chart(document.getElementById('dTopQuantityChart'), {
+      type: 'bar',
+      data: { labels: topByQty.map(l => getLabelDisplayName(l)), datasets: [{ label: 'Qty', data: topByQty.map(l => l.quantity || 0), backgroundColor: '#f39c12' }] },
+      options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } } }
+    });
+
+    document.getElementById('dDeptStatsBody').innerHTML = Array.from(deptMap.entries()).map(([d, data]) => {
+      const avgCost = data.count > 0 ? data.totalCost / data.count : 0;
+      return `
+      <tr>
+        <td><span class="cell-dept">${escapeHtml(d)}</span></td>
+        <td><strong>${data.count}</strong></td>
+        <td>${data.totalQty}</td>
+        <td><strong style="color:var(--green-dark);">R ${data.totalValue.toFixed(2)}</strong></td>
+        <td>R ${avgCost.toFixed(2)}</td>
+      </tr>`;
+    }).join('');
+  }
+
   /* ===== EXPORT FUNCTIONS ===== */
   function downloadCSV(filename, csvContent) {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1261,150 +2645,62 @@
 
   window.exportCurrentInventory = function() {
     if (!labelsCache.length) return toast('No inventory data to export');
-    
-    const headers = [
-      'Description',
-      'Size',
-      'Unit Cost (R)',
-      'Current Quantity',
-      'Total Value (R)',
-      'Department',
-      'Created Date',
-      'Label ID'
-    ];
-    
+    const headers = ['Description','Size','Unit Cost (R)','Current Quantity','Total Value (R)','Department','Created Date','Label ID'];
     const rows = labelsCache.map(l => {
       const totalValue = (l.quantity || 0) * (l.cost || 0);
       const createdDate = l.createdAt ? new Date(l.createdAt).toLocaleString('en-ZA') : 'N/A';
-      return [
-        `"${l.description || ''}"`,
-        `"${l.size || ''}"`,
-        (l.cost || 0).toFixed(2),
-        l.quantity || 0,
-        totalValue.toFixed(2),
-        `"${l.department || ''}"`,
-        `"${createdDate}"`,
-        l.id
-      ].join(',');
+      return [`"${l.description || ''}"`,`"${l.size || ''}`,(l.cost || 0).toFixed(2),l.quantity || 0,totalValue.toFixed(2),`"${l.department || ''}"`,`"${createdDate}"`,l.id].join(',');
     });
-    
     const csv = headers.join(',') + '\n' + rows.join('\n');
     downloadCSV(`raha-current-inventory-${new Date().toISOString().split('T')[0]}.csv`, csv);
     closeExportMenu();
+    closeDesktopExportModal();
     toast('Current inventory exported');
   };
 
   window.exportLastWeek = function() {
     const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
     const recentHistory = historyCache.filter(h => h.timestamp >= oneWeekAgo);
-    
     if (!recentHistory.length) return toast('No movements in the last week');
-    
-    const headers = [
-      'Date/Time',
-      'Label Description',
-      'Size',
-      'Operation Type',
-      'Change Amount',
-      'New Balance',
-      'Operator Name',
-      'Department',
-      'Label ID'
-    ];
-    
+    const headers = ['Date/Time','Label Description','Size','Operation Type','Change Amount','New Balance','Operator Name','Department','Label ID'];
     const rows = recentHistory.map(h => {
       const labelSize = resolveSize(h);
-      return [
-        `"${h.dateStr || ''}"`,
-        `"${h.labelName || ''}"`,
-        `"${labelSize}"`,
-        h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',
-        (h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),
-        h.newQuantity,
-        `"${h.operatorName || ''}"`,
-        `"${h.department || ''}"`,
-        h.labelId
-      ].join(',');
+      return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,h.labelId].join(',');
     });
-    
     const csv = headers.join(',') + '\n' + rows.join('\n');
     downloadCSV(`raha-last-week-${new Date().toISOString().split('T')[0]}.csv`, csv);
     closeExportMenu();
+    closeDesktopExportModal();
     toast('Last week movements exported');
   };
 
   window.exportLastMonth = function() {
     const oneMonthAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
     const recentHistory = historyCache.filter(h => h.timestamp >= oneMonthAgo);
-    
     if (!recentHistory.length) return toast('No movements in the last month');
-    
-    const headers = [
-      'Date/Time',
-      'Label Description',
-      'Size',
-      'Operation Type',
-      'Change Amount',
-      'New Balance',
-      'Operator Name',
-      'Department',
-      'Label ID'
-    ];
-    
+    const headers = ['Date/Time','Label Description','Size','Operation Type','Change Amount','New Balance','Operator Name','Department','Label ID'];
     const rows = recentHistory.map(h => {
       const labelSize = resolveSize(h);
-      return [
-        `"${h.dateStr || ''}"`,
-        `"${h.labelName || ''}"`,
-        `"${labelSize}"`,
-        h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',
-        (h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),
-        h.newQuantity,
-        `"${h.operatorName || ''}"`,
-        `"${h.department || ''}"`,
-        h.labelId
-      ].join(',');
+      return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,h.labelId].join(',');
     });
-    
     const csv = headers.join(',') + '\n' + rows.join('\n');
     downloadCSV(`raha-last-month-${new Date().toISOString().split('T')[0]}.csv`, csv);
     closeExportMenu();
+    closeDesktopExportModal();
     toast('Last month movements exported');
   };
 
   window.exportAllHistory = function() {
     if (!historyCache.length) return toast('No history data to export');
-    
-    const headers = [
-      'Date/Time',
-      'Label Description',
-      'Size',
-      'Operation Type',
-      'Change Amount',
-      'New Balance',
-      'Operator Name',
-      'Department',
-      'Label ID'
-    ];
-    
+    const headers = ['Date/Time','Label Description','Size','Operation Type','Change Amount','New Balance','Operator Name','Department','Label ID'];
     const rows = historyCache.map(h => {
       const labelSize = resolveSize(h);
-      return [
-        `"${h.dateStr || ''}"`,
-        `"${h.labelName || ''}"`,
-        `"${labelSize}"`,
-        h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',
-        (h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),
-        h.newQuantity,
-        `"${h.operatorName || ''}"`,
-        `"${h.department || ''}"`,
-        h.labelId
-      ].join(',');
+      return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,h.labelId].join(',');
     });
-    
     const csv = headers.join(',') + '\n' + rows.join('\n');
     downloadCSV(`raha-complete-history-${new Date().toISOString().split('T')[0]}.csv`, csv);
     closeExportMenu();
+    closeDesktopExportModal();
     toast('Complete history exported');
   };
 
@@ -1421,6 +2717,7 @@
     showConfirm('Sign out of RAHA LABELS?', () => {
       isAuthenticated = false;
       document.getElementById('appContent').style.display = 'none';
+      document.getElementById('desktopApp').style.display = 'none';
       document.getElementById('loginScreen').style.display = 'flex';
       document.getElementById('passwordInput').value = '';
       document.getElementById('loginError').textContent = '';
