@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+enhanced_html = '''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -504,6 +505,198 @@
     font-weight: 500;
   }
 
+  /* ===== MOBILE HISTORY ENHANCEMENTS ===== */
+  body.mobile-view .history-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  body.mobile-view .history-summary-card {
+    background: var(--surface);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 14px;
+    text-align: center;
+    box-shadow: 0 1px 6px rgba(30,60,114,.04);
+  }
+  body.mobile-view .history-summary-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  body.mobile-view .history-summary-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+  body.mobile-view .history-summary-value.add { color: var(--green); }
+  body.mobile-view .history-summary-value.deduct { color: var(--red); }
+  body.mobile-view .history-summary-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-weight: 600;
+  }
+
+  body.mobile-view .history-filters-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  body.mobile-view .history-filters-bar::-webkit-scrollbar { display: none; }
+  body.mobile-view .history-filter-btn {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  body.mobile-view .history-filter-btn.active {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  body.mobile-view .history-filter-btn:active { transform: scale(.95); }
+
+  body.mobile-view .history-search-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  body.mobile-view .history-search-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-size: 14px;
+    background: #f8fafc;
+    outline: none;
+    font-family: inherit;
+  }
+  body.mobile-view .history-search-input:focus { border-color: var(--navy-light); background: #fff; }
+  body.mobile-view .history-filter-toggle {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--navy);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  body.mobile-view .history-filter-toggle.active {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+
+  body.mobile-view .history-advanced-filters {
+    display: none;
+    background: var(--surface);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(30,60,114,.04);
+  }
+  body.mobile-view .history-advanced-filters.open { display: block; }
+
+  body.mobile-view .filter-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    margin-top: 12px;
+  }
+  body.mobile-view .filter-section-title:first-child { margin-top: 0; }
+
+  body.mobile-view .filter-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  body.mobile-view .filter-chip {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: #f8fafc;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  body.mobile-view .filter-chip.active {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  body.mobile-view .filter-chip:active { transform: scale(.95); }
+
+  body.mobile-view .filter-select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    background: #f8fafc;
+    outline: none;
+    font-family: inherit;
+    color: var(--text);
+  }
+  body.mobile-view .filter-select:focus { border-color: var(--navy-light); background: #fff; }
+
+  body.mobile-view .active-filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  body.mobile-view .active-filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #e8f0fe;
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  body.mobile-view .active-filter-tag:active { background: #d0defa; }
+
+  body.mobile-view .history-results-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
   body.mobile-view .dept-add-row { display: flex; gap: 8px; margin-bottom: 16px; }
   body.mobile-view .dept-add-row input { flex: 1; }
   body.mobile-view .dept-chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -904,15 +1097,95 @@
   }
   .desktop-cost-input:focus { border-color: var(--navy-light); }
 
-  /* Desktop History */
-  .desktop-history-filters {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    align-items: center;
+  /* ===== DESKTOP HISTORY ENHANCEMENTS ===== */
+  .desktop-history-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
   }
-  .desktop-filter-btn {
+  .desktop-history-summary-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(30,60,114,.04);
+  }
+  .desktop-history-summary-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .desktop-history-summary-icon.blue { background: linear-gradient(135deg, #eff6ff, #dbeafe); }
+  .desktop-history-summary-icon.green { background: linear-gradient(135deg, #ecfdf5, #d1fae5); }
+  .desktop-history-summary-icon.red { background: linear-gradient(135deg, #fef2f2, #fee2e2); }
+  .desktop-history-summary-icon.orange { background: linear-gradient(135deg, #fff7ed, #ffedd5); }
+  .desktop-history-summary-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .desktop-history-summary-value.add { color: var(--green); }
+  .desktop-history-summary-value.deduct { color: var(--red); }
+  .desktop-history-summary-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  .desktop-history-controls {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(30,60,114,.04);
+  }
+  .desktop-history-controls-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .desktop-history-controls-row:last-child { margin-bottom: 0; }
+  .desktop-history-search {
+    flex: 1;
+    min-width: 240px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    background: #f8fafc;
+    outline: none;
+    font-family: inherit;
+    transition: border-color .2s;
+  }
+  .desktop-history-search:focus { border-color: var(--navy-light); background: #fff; }
+  .desktop-history-filter-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .desktop-history-filter-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .desktop-history-filter-btn {
     padding: 8px 16px;
     border-radius: 20px;
     border: 1.5px solid var(--border);
@@ -924,11 +1197,71 @@
     transition: all .15s;
     font-family: inherit;
   }
-  .desktop-filter-btn.active {
+  .desktop-history-filter-btn.active {
     background: var(--navy);
     color: #fff;
     border-color: var(--navy);
   }
+  .desktop-history-filter-btn:hover:not(.active) { background: #f8fafc; }
+  .desktop-history-filter-select {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: #f8fafc;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    min-width: 160px;
+  }
+  .desktop-history-filter-select:focus { border-color: var(--navy-light); background: #fff; }
+
+  .desktop-active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .desktop-active-filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #e8f0fe;
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s;
+  }
+  .desktop-active-filter-tag:hover { background: #d0defa; }
+  .desktop-clear-filters-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .15s;
+  }
+  .desktop-clear-filters-btn:hover { background: #fef2f2; }
+
+  .desktop-history-results-count {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  /* Desktop History Table */
   .desktop-history-table-wrap {
     background: #fff;
     border-radius: 16px;
@@ -994,6 +1327,17 @@
     background: #eff6ff;
     color: var(--navy-light);
     border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .desktop-history-size-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: #fff7ed;
+    color: #c2410c;
+    border-radius: 8px;
     font-size: 12px;
     font-weight: 600;
   }
@@ -1337,6 +1681,7 @@
     .desktop-search { width: 400px; }
     .desktop-charts-grid { grid-template-columns: repeat(3, 1fr); }
     .desktop-stats-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .desktop-history-summary-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
   }
 
   @media (min-width: 2560px) {
@@ -1399,13 +1744,63 @@
     </div>
 
     <div id="page-history" class="page">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
         <div>
           <div class="page-title">Stock History</div>
           <div class="page-desc">Every adjustment logged with user & timestamp</div>
         </div>
         <button class="btn btn-ghost btn-sm no-print" onclick="clearHistoryConfirm()">Clear</button>
       </div>
+
+      <!-- Mobile History Summary -->
+      <div class="history-summary-grid" id="historySummaryGrid"></div>
+
+      <!-- Mobile History Search & Filters -->
+      <div class="history-search-row">
+        <input type="text" id="historySearchInput" class="history-search-input" placeholder="Search transactions..." oninput="renderHistoryList()"/>
+        <button class="history-filter-toggle" id="historyFilterToggle" onclick="toggleHistoryFilters()">
+          🔍 Filters
+        </button>
+      </div>
+
+      <!-- Mobile Active Filters -->
+      <div class="active-filters-row" id="activeFiltersRow"></div>
+
+      <!-- Mobile Advanced Filters -->
+      <div class="history-advanced-filters" id="historyAdvancedFilters">
+        <div class="filter-section-title">Date Range</div>
+        <div class="filter-chip-group" id="dateFilterChips">
+          <button class="filter-chip active" data-filter="date" data-value="all" onclick="setHistoryFilter('date','all')">All Time</button>
+          <button class="filter-chip" data-filter="date" data-value="today" onclick="setHistoryFilter('date','today')">Today</button>
+          <button class="filter-chip" data-filter="date" data-value="yesterday" onclick="setHistoryFilter('date','yesterday')">Yesterday</button>
+          <button class="filter-chip" data-filter="date" data-value="week" onclick="setHistoryFilter('date','week')">Last 7 Days</button>
+          <button class="filter-chip" data-filter="date" data-value="month" onclick="setHistoryFilter('date','month')">Last 30 Days</button>
+        </div>
+
+        <div class="filter-section-title">Transaction Type</div>
+        <div class="filter-chip-group" id="typeFilterChips">
+          <button class="filter-chip active" data-filter="type" data-value="all" onclick="setHistoryFilter('type','all')">All</button>
+          <button class="filter-chip" data-filter="type" data-value="add" onclick="setHistoryFilter('type','add')">Additions</button>
+          <button class="filter-chip" data-filter="type" data-value="deduct" onclick="setHistoryFilter('type','deduct')">Deductions</button>
+        </div>
+
+        <div class="filter-section-title">Size</div>
+        <div class="filter-chip-group" id="sizeFilterChips">
+          <button class="filter-chip active" data-filter="size" data-value="all" onclick="setHistoryFilter('size','all')">All Sizes</button>
+        </div>
+
+        <div class="filter-section-title">Department</div>
+        <div class="filter-chip-group" id="deptFilterChips">
+          <button class="filter-chip active" data-filter="dept" data-value="all" onclick="setHistoryFilter('dept','all')">All Depts</button>
+        </div>
+
+        <div class="filter-section-title">Operator</div>
+        <select class="filter-select" id="operatorFilterSelect" onchange="setHistoryFilter('operator',this.value)">
+          <option value="all">All Operators</option>
+        </select>
+      </div>
+
+      <div class="history-results-count" id="historyResultsCount"></div>
       <div id="historyList"></div>
     </div>
 
@@ -1600,17 +1995,57 @@
 
       <!-- Desktop History -->
       <div id="dpage-history" class="desktop-page">
-        <div class="desktop-history-filters">
-          <button class="desktop-filter-btn active" data-hfilter="all" onclick="setHistoryFilter('all')">All Time</button>
-          <button class="desktop-filter-btn" data-hfilter="today" onclick="setHistoryFilter('today')">Today</button>
-          <button class="desktop-filter-btn" data-hfilter="week" onclick="setHistoryFilter('week')">Last 7 Days</button>
-          <button class="desktop-filter-btn" data-hfilter="month" onclick="setHistoryFilter('month')">Last 30 Days</button>
-          <button class="desktop-filter-btn" data-hfilter="add" onclick="setHistoryFilter('add')">Additions Only</button>
-          <button class="desktop-filter-btn" data-hfilter="deduct" onclick="setHistoryFilter('deduct')">Deductions Only</button>
-          <div style="margin-left:auto;">
+        <!-- Desktop History Summary -->
+        <div class="desktop-history-summary-grid" id="dHistorySummaryGrid"></div>
+
+        <!-- Desktop History Controls -->
+        <div class="desktop-history-controls">
+          <div class="desktop-history-controls-row">
+            <input type="text" id="dHistorySearchInput" class="desktop-history-search" placeholder="Search transactions by label, size, operator, department..." oninput="renderDesktopHistory()"/>
             <button class="desktop-action-btn ghost" onclick="clearHistoryConfirm()">🗑️ Clear All</button>
           </div>
+          <div class="desktop-history-controls-row">
+            <div class="desktop-history-filter-group">
+              <span class="desktop-history-filter-label">Date:</span>
+              <button class="desktop-history-filter-btn active" data-dfilter="date" data-value="all" onclick="setDesktopHistoryFilter('date','all')">All Time</button>
+              <button class="desktop-history-filter-btn" data-dfilter="date" data-value="today" onclick="setDesktopHistoryFilter('date','today')">Today</button>
+              <button class="desktop-history-filter-btn" data-dfilter="date" data-value="yesterday" onclick="setDesktopHistoryFilter('date','yesterday')">Yesterday</button>
+              <button class="desktop-history-filter-btn" data-dfilter="date" data-value="week" onclick="setDesktopHistoryFilter('date','week')">7 Days</button>
+              <button class="desktop-history-filter-btn" data-dfilter="date" data-value="month" onclick="setDesktopHistoryFilter('date','month')">30 Days</button>
+            </div>
+          </div>
+          <div class="desktop-history-controls-row">
+            <div class="desktop-history-filter-group">
+              <span class="desktop-history-filter-label">Type:</span>
+              <button class="desktop-history-filter-btn active" data-dfilter="type" data-value="all" onclick="setDesktopHistoryFilter('type','all')">All</button>
+              <button class="desktop-history-filter-btn" data-dfilter="type" data-value="add" onclick="setDesktopHistoryFilter('type','add')">Additions</button>
+              <button class="desktop-history-filter-btn" data-dfilter="type" data-value="deduct" onclick="setDesktopHistoryFilter('type','deduct')">Deductions</button>
+            </div>
+            <div class="desktop-history-filter-group">
+              <span class="desktop-history-filter-label">Size:</span>
+              <select class="desktop-history-filter-select" id="dSizeFilterSelect" onchange="setDesktopHistoryFilter('size',this.value)">
+                <option value="all">All Sizes</option>
+              </select>
+            </div>
+            <div class="desktop-history-filter-group">
+              <span class="desktop-history-filter-label">Dept:</span>
+              <select class="desktop-history-filter-select" id="dDeptFilterSelect" onchange="setDesktopHistoryFilter('dept',this.value)">
+                <option value="all">All Departments</option>
+              </select>
+            </div>
+            <div class="desktop-history-filter-group">
+              <span class="desktop-history-filter-label">Operator:</span>
+              <select class="desktop-history-filter-select" id="dOperatorFilterSelect" onchange="setDesktopHistoryFilter('operator',this.value)">
+                <option value="all">All Operators</option>
+              </select>
+            </div>
+          </div>
+          <div class="desktop-history-controls-row">
+            <div class="desktop-active-filters" id="dActiveFiltersRow"></div>
+          </div>
         </div>
+
+        <div class="desktop-history-results-count" id="dHistoryResultsCount"></div>
         <div id="dHistoryContainer"></div>
       </div>
 
@@ -1750,8 +2185,26 @@
   let charts = {};
   let desktopCharts = {};
   const CORRECT_PASSWORD = "Raha@123";
-  let currentHistoryFilter = 'all';
-  let currentView = 'mobile'; // 'mobile' or 'desktop'
+  let currentView = 'mobile';
+
+  /* ===== HISTORY FILTER STATE ===== */
+  let mobileHistoryFilters = {
+    date: 'all',
+    type: 'all',
+    size: 'all',
+    dept: 'all',
+    operator: 'all',
+    search: ''
+  };
+  let desktopHistoryFilters = {
+    date: 'all',
+    type: 'all',
+    size: 'all',
+    dept: 'all',
+    operator: 'all',
+    search: ''
+  };
+  let mobileFiltersOpen = false;
 
   /* ===== VIEW DETECTION ===== */
   function detectView() {
@@ -1769,9 +2222,9 @@
           document.getElementById('desktopApp').style.display = 'none';
           document.getElementById('appContent').style.display = 'flex';
         }
-        // Re-render everything for the new view
         renderLabelsList();
         renderHistoryList();
+        renderDesktopHistory();
         renderDepartments();
         if (currentView === 'desktop' && document.getElementById('dpage-stats').classList.contains('active')) {
           renderDesktopAnalytics();
@@ -1942,6 +2395,7 @@
       document.getElementById('headerSubtitle').textContent = subtitles[tab] || '';
       document.getElementById('mobileFab').classList.toggle('hidden', tab !== 'labels');
       if (tab === 'stats') renderAnalytics();
+      if (tab === 'history') renderHistoryList();
     });
   });
 
@@ -1968,7 +2422,6 @@
       document.getElementById('dpage-' + tab).classList.add('active');
       document.getElementById('dPageTitle').textContent = desktopTitles[tab] || '';
       document.getElementById('dPageSubtitle').textContent = desktopSubtitles[tab] || '';
-      // Show/hide search box based on tab
       document.getElementById('dSearchBox').style.display = (tab === 'labels') ? 'block' : 'none';
       if (tab === 'stats') renderDesktopAnalytics();
       if (tab === 'history') renderDesktopHistory();
@@ -1995,15 +2448,297 @@
     });
   }
 
+  /* ===== HISTORY FILTER HELPERS ===== */
+  function passesHistoryFilters(h, filters) {
+    const now = Date.now();
+    const today = new Date(); today.setHours(0,0,0,0);
+    const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+
+    // Date filter
+    if (filters.date === 'today' && h.timestamp < today.getTime()) return false;
+    if (filters.date === 'yesterday' && (h.timestamp < yesterday.getTime() || h.timestamp >= today.getTime())) return false;
+    if (filters.date === 'week' && h.timestamp < now - 7*24*60*60*1000) return false;
+    if (filters.date === 'month' && h.timestamp < now - 30*24*60*60*1000) return false;
+
+    // Type filter
+    if (filters.type !== 'all' && h.operationType !== filters.type) return false;
+
+    // Size filter
+    const size = resolveSize(h);
+    if (filters.size !== 'all' && size !== filters.size) return false;
+
+    // Dept filter
+    if (filters.dept !== 'all' && h.department !== filters.dept) return false;
+
+    // Operator filter
+    if (filters.operator !== 'all' && h.operatorName !== filters.operator) return false;
+
+    // Search filter
+    if (filters.search) {
+      const q = filters.search.toLowerCase();
+      const labelName = (h.labelName || '').toLowerCase();
+      const sizeStr = (resolveSize(h) || '').toLowerCase();
+      const deptStr = (h.department || '').toLowerCase();
+      const opStr = (h.operatorName || '').toLowerCase();
+      if (!labelName.includes(q) && !sizeStr.includes(q) && !deptStr.includes(q) && !opStr.includes(q)) return false;
+    }
+
+    return true;
+  }
+
+  function getHistorySummary(filtered) {
+    const total = filtered.length;
+    const additions = filtered.filter(h => h.operationType === 'add');
+    const deductions = filtered.filter(h => h.operationType === 'deduct');
+    const totalAdded = additions.reduce((s, h) => s + Math.abs(h.changeAmount), 0);
+    const totalDeducted = deductions.reduce((s, h) => s + Math.abs(h.changeAmount), 0);
+    const netChange = totalAdded - totalDeducted;
+
+    // Most active operator
+    const opCounts = {};
+    filtered.forEach(h => { opCounts[h.operatorName] = (opCounts[h.operatorName] || 0) + 1; });
+    const mostActive = Object.entries(opCounts).sort((a,b) => b[1] - a[1])[0];
+
+    return { total, totalAdded, totalDeducted, netChange, mostActiveOperator: mostActive ? mostActive[0] : '-' };
+  }
+
+  function updateHistoryFilterOptions() {
+    // Get unique sizes from history (resolved)
+    const sizes = [...new Set(historyCache.map(h => resolveSize(h)).filter(s => s))].sort();
+    const operators = [...new Set(historyCache.map(h => h.operatorName).filter(o => o))].sort();
+    const depts = [...new Set(historyCache.map(h => h.department).filter(d => d))].sort();
+
+    // Mobile size chips
+    const sizeContainer = document.getElementById('sizeFilterChips');
+    if (sizeContainer) {
+      sizeContainer.innerHTML = '<button class="filter-chip active" data-filter="size" data-value="all" onclick="setHistoryFilter(\'size\',\'all\')">All Sizes</button>' +
+        sizes.map(s => `<button class="filter-chip" data-filter="size" data-value="${escapeHtml(s)}" onclick="setHistoryFilter('size','${escapeHtml(s)}')">${escapeHtml(s)}</button>`).join('');
+    }
+
+    // Mobile dept chips
+    const deptContainer = document.getElementById('deptFilterChips');
+    if (deptContainer) {
+      deptContainer.innerHTML = '<button class="filter-chip active" data-filter="dept" data-value="all" onclick="setHistoryFilter(\'dept\',\'all\')">All Depts</button>' +
+        depts.map(d => `<button class="filter-chip" data-filter="dept" data-value="${escapeHtml(d)}" onclick="setHistoryFilter('dept','${escapeHtml(d)}')">${escapeHtml(d)}</button>`).join('');
+    }
+
+    // Mobile operator select
+    const opSelect = document.getElementById('operatorFilterSelect');
+    if (opSelect) {
+      opSelect.innerHTML = '<option value="all">All Operators</option>' +
+        operators.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
+    }
+
+    // Desktop size select
+    const dSizeSelect = document.getElementById('dSizeFilterSelect');
+    if (dSizeSelect) {
+      dSizeSelect.innerHTML = '<option value="all">All Sizes</option>' +
+        sizes.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+      dSizeSelect.value = desktopHistoryFilters.size;
+    }
+
+    // Desktop dept select
+    const dDeptSelect = document.getElementById('dDeptFilterSelect');
+    if (dDeptSelect) {
+      dDeptSelect.innerHTML = '<option value="all">All Departments</option>' +
+        depts.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+      dDeptSelect.value = desktopHistoryFilters.dept;
+    }
+
+    // Desktop operator select
+    const dOpSelect = document.getElementById('dOperatorFilterSelect');
+    if (dOpSelect) {
+      dOpSelect.innerHTML = '<option value="all">All Operators</option>' +
+        operators.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
+      dOpSelect.value = desktopHistoryFilters.operator;
+    }
+  }
+
+  function renderMobileActiveFilters() {
+    const container = document.getElementById('activeFiltersRow');
+    if (!container) return;
+    const tags = [];
+    if (mobileHistoryFilters.date !== 'all') tags.push({ key: 'date', label: dateLabel(mobileHistoryFilters.date), value: mobileHistoryFilters.date });
+    if (mobileHistoryFilters.type !== 'all') tags.push({ key: 'type', label: typeLabel(mobileHistoryFilters.type), value: mobileHistoryFilters.type });
+    if (mobileHistoryFilters.size !== 'all') tags.push({ key: 'size', label: mobileHistoryFilters.size, value: mobileHistoryFilters.size });
+    if (mobileHistoryFilters.dept !== 'all') tags.push({ key: 'dept', label: mobileHistoryFilters.dept, value: mobileHistoryFilters.dept });
+    if (mobileHistoryFilters.operator !== 'all') tags.push({ key: 'operator', label: mobileHistoryFilters.operator, value: mobileHistoryFilters.operator });
+    if (mobileHistoryFilters.search) tags.push({ key: 'search', label: `Search: "${mobileHistoryFilters.search}"`, value: '' });
+
+    if (!tags.length) {
+      container.innerHTML = '';
+      return;
+    }
+
+    container.innerHTML = tags.map(t =>
+      `<button class="active-filter-tag" onclick="clearHistoryFilter('${t.key}')">${escapeHtml(t.label)} ✕</button>`
+    ).join('');
+  }
+
+  function renderDesktopActiveFilters() {
+    const container = document.getElementById('dActiveFiltersRow');
+    if (!container) return;
+    const tags = [];
+    if (desktopHistoryFilters.date !== 'all') tags.push({ key: 'date', label: dateLabel(desktopHistoryFilters.date), value: desktopHistoryFilters.date });
+    if (desktopHistoryFilters.type !== 'all') tags.push({ key: 'type', label: typeLabel(desktopHistoryFilters.type), value: desktopHistoryFilters.type });
+    if (desktopHistoryFilters.size !== 'all') tags.push({ key: 'size', label: desktopHistoryFilters.size, value: desktopHistoryFilters.size });
+    if (desktopHistoryFilters.dept !== 'all') tags.push({ key: 'dept', label: desktopHistoryFilters.dept, value: desktopHistoryFilters.dept });
+    if (desktopHistoryFilters.operator !== 'all') tags.push({ key: 'operator', label: desktopHistoryFilters.operator, value: desktopHistoryFilters.operator });
+    if (desktopHistoryFilters.search) tags.push({ key: 'search', label: `Search: "${desktopHistoryFilters.search}"`, value: '' });
+
+    if (!tags.length) {
+      container.innerHTML = '';
+      return;
+    }
+
+    container.innerHTML = tags.map(t =>
+      `<button class="desktop-active-filter-tag" onclick="clearDesktopHistoryFilter('${t.key}')">${escapeHtml(t.label)} ✕</button>`
+    ).join('') + `<button class="desktop-clear-filters-btn" onclick="clearAllDesktopHistoryFilters()">Clear All</button>`;
+  }
+
+  function dateLabel(val) {
+    return { all: 'All Time', today: 'Today', yesterday: 'Yesterday', week: 'Last 7 Days', month: 'Last 30 Days' }[val] || val;
+  }
+  function typeLabel(val) {
+    return { all: 'All', add: 'Additions', deduct: 'Deductions' }[val] || val;
+  }
+
+  window.toggleHistoryFilters = function() {
+    mobileFiltersOpen = !mobileFiltersOpen;
+    const el = document.getElementById('historyAdvancedFilters');
+    const btn = document.getElementById('historyFilterToggle');
+    if (mobileFiltersOpen) {
+      el.classList.add('open');
+      btn.classList.add('active');
+      btn.textContent = '🔍 Hide Filters';
+    } else {
+      el.classList.remove('open');
+      btn.classList.remove('active');
+      btn.textContent = '🔍 Filters';
+    }
+  };
+
+  window.setHistoryFilter = function(key, value) {
+    mobileHistoryFilters[key] = value;
+    // Update chip UI
+    document.querySelectorAll(`#historyAdvancedFilters .filter-chip[data-filter="${key}"]`).forEach(chip => {
+      chip.classList.toggle('active', chip.dataset.value === value);
+    });
+    renderHistoryList();
+  };
+
+  window.clearHistoryFilter = function(key) {
+    if (key === 'search') {
+      mobileHistoryFilters.search = '';
+      document.getElementById('historySearchInput').value = '';
+    } else {
+      mobileHistoryFilters[key] = 'all';
+    }
+    renderHistoryList();
+  };
+
+  window.setDesktopHistoryFilter = function(key, value) {
+    desktopHistoryFilters[key] = value;
+    // Update button UI
+    if (key === 'date' || key === 'type') {
+      document.querySelectorAll(`.desktop-history-filter-btn[data-dfilter="${key}"]`).forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === value);
+      });
+    }
+    renderDesktopHistory();
+  };
+
+  window.clearDesktopHistoryFilter = function(key) {
+    if (key === 'search') {
+      desktopHistoryFilters.search = '';
+      document.getElementById('dHistorySearchInput').value = '';
+    } else {
+      desktopHistoryFilters[key] = 'all';
+      // Reset select elements
+      if (key === 'size') document.getElementById('dSizeFilterSelect').value = 'all';
+      if (key === 'dept') document.getElementById('dDeptFilterSelect').value = 'all';
+      if (key === 'operator') document.getElementById('dOperatorFilterSelect').value = 'all';
+      // Reset button UI
+      if (key === 'date' || key === 'type') {
+        document.querySelectorAll(`.desktop-history-filter-btn[data-dfilter="${key}"]`).forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.value === 'all');
+        });
+      }
+    }
+    renderDesktopHistory();
+  };
+
+  window.clearAllDesktopHistoryFilters = function() {
+    desktopHistoryFilters = { date: 'all', type: 'all', size: 'all', dept: 'all', operator: 'all', search: '' };
+    document.getElementById('dHistorySearchInput').value = '';
+    document.getElementById('dSizeFilterSelect').value = 'all';
+    document.getElementById('dDeptFilterSelect').value = 'all';
+    document.getElementById('dOperatorFilterSelect').value = 'all';
+    document.querySelectorAll('.desktop-history-filter-btn[data-dfilter="date"]').forEach(btn => btn.classList.toggle('active', btn.dataset.value === 'all'));
+    document.querySelectorAll('.desktop-history-filter-btn[data-dfilter="type"]').forEach(btn => btn.classList.toggle('active', btn.dataset.value === 'all'));
+    renderDesktopHistory();
+  };
+
   /* ===== MOBILE HISTORY RENDER ===== */
   function renderHistoryList() {
     const container = document.getElementById('historyList');
     if (!container) return;
-    if (!historyCache.length) {
-      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No movements yet</p></div>';
+
+    // Update search from input
+    mobileHistoryFilters.search = document.getElementById('historySearchInput')?.value || '';
+
+    const filtered = historyCache.filter(h => passesHistoryFilters(h, mobileHistoryFilters));
+    const summary = getHistorySummary(filtered);
+
+    // Render summary
+    const summaryGrid = document.getElementById('historySummaryGrid');
+    if (summaryGrid) {
+      summaryGrid.innerHTML = `
+        <div class="history-summary-card">
+          <div class="history-summary-icon">📋</div>
+          <div>
+            <div class="history-summary-value">${summary.total}</div>
+            <div class="history-summary-label">Transactions</div>
+          </div>
+        </div>
+        <div class="history-summary-card">
+          <div class="history-summary-icon">📈</div>
+          <div>
+            <div class="history-summary-value add">+${summary.totalAdded}</div>
+            <div class="history-summary-label">Total Added</div>
+          </div>
+        </div>
+        <div class="history-summary-card">
+          <div class="history-summary-icon">📉</div>
+          <div>
+            <div class="history-summary-value deduct">-${summary.totalDeducted}</div>
+            <div class="history-summary-label">Total Deducted</div>
+          </div>
+        </div>
+        <div class="history-summary-card">
+          <div class="history-summary-icon">👤</div>
+          <div>
+            <div class="history-summary-value" style="font-size:14px; margin-top:4px;">${escapeHtml(summary.mostActiveOperator)}</div>
+            <div class="history-summary-label">Most Active</div>
+          </div>
+        </div>
+      `;
+    }
+
+    renderMobileActiveFilters();
+
+    // Results count
+    const countEl = document.getElementById('historyResultsCount');
+    if (countEl) {
+      countEl.textContent = `${filtered.length} transaction${filtered.length !== 1 ? 's' : ''} found`;
+    }
+
+    if (!filtered.length) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No transactions match your filters</p></div>';
       return;
     }
-    container.innerHTML = historyCache.map(h => {
+
+    container.innerHTML = filtered.map(h => {
       const labelSize = resolveSize(h);
       const labelName = h.labelName || 'Unknown';
       const department = h.department || '';
@@ -2042,41 +2777,64 @@
   }
 
   /* ===== DESKTOP HISTORY RENDER ===== */
-  function getFilteredHistory() {
-    const now = Date.now();
-    let filtered = historyCache;
-    if (currentHistoryFilter === 'today') {
-      const startOfDay = new Date();
-      startOfDay.setHours(0,0,0,0);
-      filtered = filtered.filter(h => h.timestamp >= startOfDay.getTime());
-    } else if (currentHistoryFilter === 'week') {
-      filtered = filtered.filter(h => h.timestamp >= now - 7*24*60*60*1000);
-    } else if (currentHistoryFilter === 'month') {
-      filtered = filtered.filter(h => h.timestamp >= now - 30*24*60*60*1000);
-    } else if (currentHistoryFilter === 'add') {
-      filtered = filtered.filter(h => h.operationType === 'add');
-    } else if (currentHistoryFilter === 'deduct') {
-      filtered = filtered.filter(h => h.operationType === 'deduct');
-    }
-    return filtered;
-  }
-
-  window.setHistoryFilter = function(filter) {
-    currentHistoryFilter = filter;
-    document.querySelectorAll('.desktop-filter-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.hfilter === filter);
-    });
-    renderDesktopHistory();
-  };
-
   function renderDesktopHistory() {
     const container = document.getElementById('dHistoryContainer');
     if (!container) return;
-    const filtered = getFilteredHistory();
+
+    // Update search from input
+    desktopHistoryFilters.search = document.getElementById('dHistorySearchInput')?.value || '';
+
+    const filtered = historyCache.filter(h => passesHistoryFilters(h, desktopHistoryFilters));
+    const summary = getHistorySummary(filtered);
+
+    // Render summary
+    const summaryGrid = document.getElementById('dHistorySummaryGrid');
+    if (summaryGrid) {
+      summaryGrid.innerHTML = `
+        <div class="desktop-history-summary-card">
+          <div class="desktop-history-summary-icon blue">📋</div>
+          <div>
+            <div class="desktop-history-summary-value">${summary.total}</div>
+            <div class="desktop-history-summary-label">Transactions</div>
+          </div>
+        </div>
+        <div class="desktop-history-summary-card">
+          <div class="desktop-history-summary-icon green">📈</div>
+          <div>
+            <div class="desktop-history-summary-value add">+${summary.totalAdded}</div>
+            <div class="desktop-history-summary-label">Total Added</div>
+          </div>
+        </div>
+        <div class="desktop-history-summary-card">
+          <div class="desktop-history-summary-icon red">📉</div>
+          <div>
+            <div class="desktop-history-summary-value deduct">-${summary.totalDeducted}</div>
+            <div class="desktop-history-summary-label">Total Deducted</div>
+          </div>
+        </div>
+        <div class="desktop-history-summary-card">
+          <div class="desktop-history-summary-icon orange">👤</div>
+          <div>
+            <div class="desktop-history-summary-value" style="font-size:18px; margin-top:2px;">${escapeHtml(summary.mostActiveOperator)}</div>
+            <div class="desktop-history-summary-label">Most Active Operator</div>
+          </div>
+        </div>
+      `;
+    }
+
+    renderDesktopActiveFilters();
+
+    // Results count
+    const countEl = document.getElementById('dHistoryResultsCount');
+    if (countEl) {
+      countEl.textContent = `${filtered.length} transaction${filtered.length !== 1 ? 's' : ''} found`;
+    }
+
     if (!filtered.length) {
-      container.innerHTML = '<div class="desktop-empty"><div class="empty-icon">📭</div><p>No history entries match this filter</p></div>';
+      container.innerHTML = '<div class="desktop-empty"><div class="empty-icon">📭</div><p>No transactions match your filters</p></div>';
       return;
     }
+
     const rows = filtered.map(h => {
       const labelSize = resolveSize(h);
       const label = labelsCache.find(l => l.id === h.labelId);
@@ -2086,7 +2844,7 @@
       <tr>
         <td style="font-size:12px; color:var(--text-muted); white-space:nowrap;">${escapeHtml(h.dateStr)}</td>
         <td><strong>${escapeHtml(h.labelName)}</strong></td>
-        <td><span class="cell-size">${escapeHtml(labelSize)}</span></td>
+        <td><span class="desktop-history-size-cell">📏 ${escapeHtml(labelSize)}</span></td>
         <td><span class="cell-dept">${escapeHtml(h.department || '-')}</span></td>
         <td><span class="desktop-history-type ${h.operationType}">${h.operationType === 'add' ? '↑ ADDED' : '↓ DEDUCTED'}</span></td>
         <td><span class="desktop-history-change ${h.operationType}">${h.operationType === 'add' ? '+' : '-'}${Math.abs(h.changeAmount)}</span></td>
@@ -2119,6 +2877,7 @@
   async function loadHistory() {
     onSnapshot(query(collection(db, 'stockHistory'), orderBy('timestamp', 'desc')), snap => {
       historyCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      updateHistoryFilterOptions();
       renderHistoryList();
       renderDesktopHistory();
       updateAllBadges();
@@ -2651,7 +3410,7 @@
       const createdDate = l.createdAt ? new Date(l.createdAt).toLocaleString('en-ZA') : 'N/A';
       return [`"${l.description || ''}"`,`"${l.size || ''}`,(l.cost || 0).toFixed(2),l.quantity || 0,totalValue.toFixed(2),`"${l.department || ''}"`,`"${createdDate}"`,l.id].join(',');
     });
-    const csv = headers.join(',') + '\n' + rows.join('\n');
+    const csv = headers.join(',') + '\\n' + rows.join('\\n');
     downloadCSV(`raha-current-inventory-${new Date().toISOString().split('T')[0]}.csv`, csv);
     closeExportMenu();
     closeDesktopExportModal();
@@ -2667,7 +3426,7 @@
       const labelSize = resolveSize(h);
       return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,h.labelId].join(',');
     });
-    const csv = headers.join(',') + '\n' + rows.join('\n');
+    const csv = headers.join(',') + '\\n' + rows.join('\\n');
     downloadCSV(`raha-last-week-${new Date().toISOString().split('T')[0]}.csv`, csv);
     closeExportMenu();
     closeDesktopExportModal();
@@ -2683,7 +3442,7 @@
       const labelSize = resolveSize(h);
       return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,h.labelId].join(',');
     });
-    const csv = headers.join(',') + '\n' + rows.join('\n');
+    const csv = headers.join(',') + '\\n' + rows.join('\\n');
     downloadCSV(`raha-last-month-${new Date().toISOString().split('T')[0]}.csv`, csv);
     closeExportMenu();
     closeDesktopExportModal();
@@ -2697,7 +3456,7 @@
       const labelSize = resolveSize(h);
       return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,h.labelId].join(',');
     });
-    const csv = headers.join(',') + '\n' + rows.join('\n');
+    const csv = headers.join(',') + '\\n' + rows.join('\\n');
     downloadCSV(`raha-complete-history-${new Date().toISOString().split('T')[0]}.csv`, csv);
     closeExportMenu();
     closeDesktopExportModal();
@@ -2725,4 +3484,11 @@
   };
 </script>
 </body>
-</html>
+</html>'''
+
+# Save to output
+with open('/mnt/agents/output/raha-labels-enhanced.html', 'w', encoding='utf-8') as f:
+    f.write(enhanced_html)
+
+print("Enhanced file saved successfully!")
+print("File size:", len(enhanced_html), "characters")
