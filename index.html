@@ -1,5 +1,4 @@
-
-enhanced_html = '''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -290,6 +289,7 @@ enhanced_html = '''<!DOCTYPE html>
     border-radius: 12px;
     padding: 10px 12px;
     gap: 8px;
+    flex-wrap: wrap;
   }
   body.mobile-view .qty-display {
     font-family: 'Space Grotesk', sans-serif;
@@ -302,6 +302,8 @@ enhanced_html = '''<!DOCTYPE html>
   body.mobile-view .qty-input-mini:focus { border-color: var(--navy-light); }
   body.mobile-view .qty-user-mini { width: 90px; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; background: #fff; }
   body.mobile-view .qty-user-mini:focus { border-color: var(--navy-light); }
+  body.mobile-view .qty-reason-mini { width: 100px; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; background: #fff; }
+  body.mobile-view .qty-reason-mini:focus { border-color: var(--navy-light); }
   body.mobile-view .qty-btn { padding: 8px 14px; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; transition: transform .12s; }
   body.mobile-view .qty-btn:active { transform: scale(.94); }
   body.mobile-view .qty-btn-add { background: #e8f5e9; color: var(--green-dark); }
@@ -487,6 +489,13 @@ enhanced_html = '''<!DOCTYPE html>
     flex-wrap: wrap;
     padding-top: 12px;
     border-top: 1px solid #f1f5f9;
+  }
+  body.mobile-view .history-reason {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+    font-style: italic;
+    padding: 4px 0;
   }
   body.mobile-view .history-user {
     display: flex;
@@ -1072,6 +1081,16 @@ enhanced_html = '''<!DOCTYPE html>
     background: #fff;
   }
   .desktop-user-input:focus { border-color: var(--navy-light); }
+  .desktop-reason-input {
+    width: 110px;
+    padding: 6px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    background: #fff;
+  }
+  .desktop-reason-input:focus { border-color: var(--navy-light); }
   .desktop-qty-btn {
     padding: 6px 12px;
     border: none;
@@ -2431,7 +2450,7 @@ enhanced_html = '''<!DOCTYPE html>
   });
 
   /* ===== STOCK MOVEMENT LOG ===== */
-  async function logStockMovement(labelId, labelName, labelSize, changeAmount, newQuantity, operatorName, operationType, department) {
+  async function logStockMovement(labelId, labelName, labelSize, changeAmount, newQuantity, operatorName, operationType, department, reason = '') {
     if (!operatorName?.trim()) operatorName = 'System';
     const sizeToStore = (labelSize || '').trim();
     await addDoc(collection(db, 'stockHistory'), {
@@ -2443,6 +2462,7 @@ enhanced_html = '''<!DOCTYPE html>
       newQuantity,
       operatorName: operatorName.trim(),
       operationType,
+      reason: reason.trim(),
       timestamp: Date.now(),
       dateStr: new Date().toLocaleString('en-ZA')
     });
@@ -2454,26 +2474,20 @@ enhanced_html = '''<!DOCTYPE html>
     const today = new Date(); today.setHours(0,0,0,0);
     const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
 
-    // Date filter
     if (filters.date === 'today' && h.timestamp < today.getTime()) return false;
     if (filters.date === 'yesterday' && (h.timestamp < yesterday.getTime() || h.timestamp >= today.getTime())) return false;
     if (filters.date === 'week' && h.timestamp < now - 7*24*60*60*1000) return false;
     if (filters.date === 'month' && h.timestamp < now - 30*24*60*60*1000) return false;
 
-    // Type filter
     if (filters.type !== 'all' && h.operationType !== filters.type) return false;
 
-    // Size filter
     const size = resolveSize(h);
     if (filters.size !== 'all' && size !== filters.size) return false;
 
-    // Dept filter
     if (filters.dept !== 'all' && h.department !== filters.dept) return false;
 
-    // Operator filter
     if (filters.operator !== 'all' && h.operatorName !== filters.operator) return false;
 
-    // Search filter
     if (filters.search) {
       const q = filters.search.toLowerCase();
       const labelName = (h.labelName || '').toLowerCase();
@@ -2494,7 +2508,6 @@ enhanced_html = '''<!DOCTYPE html>
     const totalDeducted = deductions.reduce((s, h) => s + Math.abs(h.changeAmount), 0);
     const netChange = totalAdded - totalDeducted;
 
-    // Most active operator
     const opCounts = {};
     filtered.forEach(h => { opCounts[h.operatorName] = (opCounts[h.operatorName] || 0) + 1; });
     const mostActive = Object.entries(opCounts).sort((a,b) => b[1] - a[1])[0];
@@ -2503,33 +2516,28 @@ enhanced_html = '''<!DOCTYPE html>
   }
 
   function updateHistoryFilterOptions() {
-    // Get unique sizes from history (resolved)
     const sizes = [...new Set(historyCache.map(h => resolveSize(h)).filter(s => s))].sort();
     const operators = [...new Set(historyCache.map(h => h.operatorName).filter(o => o))].sort();
     const depts = [...new Set(historyCache.map(h => h.department).filter(d => d))].sort();
 
-    // Mobile size chips
     const sizeContainer = document.getElementById('sizeFilterChips');
     if (sizeContainer) {
       sizeContainer.innerHTML = '<button class="filter-chip active" data-filter="size" data-value="all" onclick="setHistoryFilter(\'size\',\'all\')">All Sizes</button>' +
         sizes.map(s => `<button class="filter-chip" data-filter="size" data-value="${escapeHtml(s)}" onclick="setHistoryFilter('size','${escapeHtml(s)}')">${escapeHtml(s)}</button>`).join('');
     }
 
-    // Mobile dept chips
     const deptContainer = document.getElementById('deptFilterChips');
     if (deptContainer) {
       deptContainer.innerHTML = '<button class="filter-chip active" data-filter="dept" data-value="all" onclick="setHistoryFilter(\'dept\',\'all\')">All Depts</button>' +
         depts.map(d => `<button class="filter-chip" data-filter="dept" data-value="${escapeHtml(d)}" onclick="setHistoryFilter('dept','${escapeHtml(d)}')">${escapeHtml(d)}</button>`).join('');
     }
 
-    // Mobile operator select
     const opSelect = document.getElementById('operatorFilterSelect');
     if (opSelect) {
       opSelect.innerHTML = '<option value="all">All Operators</option>' +
         operators.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
     }
 
-    // Desktop size select
     const dSizeSelect = document.getElementById('dSizeFilterSelect');
     if (dSizeSelect) {
       dSizeSelect.innerHTML = '<option value="all">All Sizes</option>' +
@@ -2537,7 +2545,6 @@ enhanced_html = '''<!DOCTYPE html>
       dSizeSelect.value = desktopHistoryFilters.size;
     }
 
-    // Desktop dept select
     const dDeptSelect = document.getElementById('dDeptFilterSelect');
     if (dDeptSelect) {
       dDeptSelect.innerHTML = '<option value="all">All Departments</option>' +
@@ -2545,7 +2552,6 @@ enhanced_html = '''<!DOCTYPE html>
       dDeptSelect.value = desktopHistoryFilters.dept;
     }
 
-    // Desktop operator select
     const dOpSelect = document.getElementById('dOperatorFilterSelect');
     if (dOpSelect) {
       dOpSelect.innerHTML = '<option value="all">All Operators</option>' +
@@ -2620,7 +2626,6 @@ enhanced_html = '''<!DOCTYPE html>
 
   window.setHistoryFilter = function(key, value) {
     mobileHistoryFilters[key] = value;
-    // Update chip UI
     document.querySelectorAll(`#historyAdvancedFilters .filter-chip[data-filter="${key}"]`).forEach(chip => {
       chip.classList.toggle('active', chip.dataset.value === value);
     });
@@ -2639,7 +2644,6 @@ enhanced_html = '''<!DOCTYPE html>
 
   window.setDesktopHistoryFilter = function(key, value) {
     desktopHistoryFilters[key] = value;
-    // Update button UI
     if (key === 'date' || key === 'type') {
       document.querySelectorAll(`.desktop-history-filter-btn[data-dfilter="${key}"]`).forEach(btn => {
         btn.classList.toggle('active', btn.dataset.value === value);
@@ -2654,11 +2658,9 @@ enhanced_html = '''<!DOCTYPE html>
       document.getElementById('dHistorySearchInput').value = '';
     } else {
       desktopHistoryFilters[key] = 'all';
-      // Reset select elements
       if (key === 'size') document.getElementById('dSizeFilterSelect').value = 'all';
       if (key === 'dept') document.getElementById('dDeptFilterSelect').value = 'all';
       if (key === 'operator') document.getElementById('dOperatorFilterSelect').value = 'all';
-      // Reset button UI
       if (key === 'date' || key === 'type') {
         document.querySelectorAll(`.desktop-history-filter-btn[data-dfilter="${key}"]`).forEach(btn => {
           btn.classList.toggle('active', btn.dataset.value === 'all');
@@ -2684,13 +2686,11 @@ enhanced_html = '''<!DOCTYPE html>
     const container = document.getElementById('historyList');
     if (!container) return;
 
-    // Update search from input
     mobileHistoryFilters.search = document.getElementById('historySearchInput')?.value || '';
 
     const filtered = historyCache.filter(h => passesHistoryFilters(h, mobileHistoryFilters));
     const summary = getHistorySummary(filtered);
 
-    // Render summary
     const summaryGrid = document.getElementById('historySummaryGrid');
     if (summaryGrid) {
       summaryGrid.innerHTML = `
@@ -2727,7 +2727,6 @@ enhanced_html = '''<!DOCTYPE html>
 
     renderMobileActiveFilters();
 
-    // Results count
     const countEl = document.getElementById('historyResultsCount');
     if (countEl) {
       countEl.textContent = `${filtered.length} transaction${filtered.length !== 1 ? 's' : ''} found`;
@@ -2772,6 +2771,7 @@ enhanced_html = '''<!DOCTYPE html>
           <span class="history-user">👤 ${escapeHtml(h.operatorName)}</span>
           <span class="history-date">🕒 ${escapeHtml(h.dateStr)}</span>
         </div>
+        ${h.reason ? `<div class="history-reason">📝 ${escapeHtml(h.reason)}</div>` : ''}
       </div>`;
     }).join('');
   }
@@ -2781,13 +2781,11 @@ enhanced_html = '''<!DOCTYPE html>
     const container = document.getElementById('dHistoryContainer');
     if (!container) return;
 
-    // Update search from input
     desktopHistoryFilters.search = document.getElementById('dHistorySearchInput')?.value || '';
 
     const filtered = historyCache.filter(h => passesHistoryFilters(h, desktopHistoryFilters));
     const summary = getHistorySummary(filtered);
 
-    // Render summary
     const summaryGrid = document.getElementById('dHistorySummaryGrid');
     if (summaryGrid) {
       summaryGrid.innerHTML = `
@@ -2824,7 +2822,6 @@ enhanced_html = '''<!DOCTYPE html>
 
     renderDesktopActiveFilters();
 
-    // Results count
     const countEl = document.getElementById('dHistoryResultsCount');
     if (countEl) {
       countEl.textContent = `${filtered.length} transaction${filtered.length !== 1 ? 's' : ''} found`;
@@ -2851,6 +2848,7 @@ enhanced_html = '''<!DOCTYPE html>
         <td><strong>${h.newQuantity}</strong></td>
         <td>R ${valueImpact.toFixed(2)}</td>
         <td><span class="desktop-history-user">👤 ${escapeHtml(h.operatorName)}</span></td>
+        <td style="font-size:13px; color:var(--text-muted);">${escapeHtml(h.reason || '-')}</td>
       </tr>`;
     }).join('');
     container.innerHTML = `
@@ -2867,6 +2865,7 @@ enhanced_html = '''<!DOCTYPE html>
               <th>Balance</th>
               <th>Value Impact</th>
               <th>Operator</th>
+              <th>Reason</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -2896,7 +2895,6 @@ enhanced_html = '''<!DOCTYPE html>
 
   /* ===== DEPARTMENTS ===== */
   function renderDepartments() {
-    // Mobile
     const sel = document.getElementById('department');
     if (sel) {
       sel.innerHTML = '<option value="">Select department</option>' + departmentsCache.map(d => `<option value="${escapeHtml(d.name)}">${escapeHtml(d.name)}</option>`).join('');
@@ -2914,7 +2912,6 @@ enhanced_html = '''<!DOCTYPE html>
         `).join('');
       }
     }
-    // Desktop
     const dDeptContainer = document.getElementById('dDeptContainer');
     if (dDeptContainer) {
       const dSel = document.getElementById('dDepartment');
@@ -2997,7 +2994,6 @@ enhanced_html = '''<!DOCTYPE html>
   }
 
   function renderLabelsList() {
-    // Mobile
     const mContainer = document.getElementById('labelsList');
     if (mContainer) {
       const search = document.getElementById('searchBox')?.value.toLowerCase() || '';
@@ -3024,6 +3020,7 @@ enhanced_html = '''<!DOCTYPE html>
               <div class="qty-controls">
                 <input type="number" id="adj_${l.id}" class="qty-input-mini" value="1" min="1"/>
                 <input type="text" id="user_${l.id}" class="qty-user-mini" placeholder="Name"/>
+                <input type="text" id="reason_${l.id}" class="qty-reason-mini" placeholder="Reason"/>
                 <button class="qty-btn qty-btn-add" onclick="processAdjust('${l.id}','add')">+</button>
                 <button class="qty-btn qty-btn-deduct" onclick="processAdjust('${l.id}','deduct')">&minus;</button>
               </div>
@@ -3037,7 +3034,6 @@ enhanced_html = '''<!DOCTYPE html>
       }
     }
 
-    // Desktop
     const dContainer = document.getElementById('dLabelsContainer');
     if (dContainer) {
       const search = document.getElementById('dSearchBox')?.value.toLowerCase() || '';
@@ -3060,6 +3056,7 @@ enhanced_html = '''<!DOCTYPE html>
               <div class="desktop-qty-controls">
                 <input type="number" id="dadj_${l.id}" class="desktop-qty-input" value="1" min="1"/>
                 <input type="text" id="duser_${l.id}" class="desktop-user-input" placeholder="Operator"/>
+                <input type="text" id="dreason_${l.id}" class="desktop-reason-input" placeholder="Reason"/>
                 <button class="desktop-qty-btn add" onclick="processAdjustDesktop('${l.id}','add')">+</button>
                 <button class="desktop-qty-btn deduct" onclick="processAdjustDesktop('${l.id}','deduct')">&minus;</button>
               </div>
@@ -3094,6 +3091,7 @@ enhanced_html = '''<!DOCTYPE html>
   window.processAdjust = async function(labelId, mode) {
     const delta = parseInt(document.getElementById('adj_' + labelId).value, 10);
     const operator = document.getElementById('user_' + labelId).value.trim();
+    const reason = document.getElementById('reason_' + labelId).value.trim() || '';
     if (isNaN(delta) || delta <= 0) return toast('Enter a positive number');
     if (!operator) return toast('Enter your name');
     const label = labelsCache.find(l => l.id === labelId);
@@ -3101,13 +3099,14 @@ enhanced_html = '''<!DOCTYPE html>
     let newQty = label.quantity + (mode === 'add' ? delta : -delta);
     if (newQty < 0) return toast('Insufficient stock (' + label.quantity + ')');
     await updateDoc(doc(db, 'labels', labelId), { quantity: newQty });
-    await logStockMovement(labelId, label.description, label.size, delta, newQty, operator, mode, label.department);
+    await logStockMovement(labelId, label.description, label.size, delta, newQty, operator, mode, label.department, reason);
     toast(mode === 'add' ? 'Added ' + delta + ' → ' + newQty : 'Deducted ' + delta + ' → ' + newQty);
   };
 
   window.processAdjustDesktop = async function(labelId, mode) {
     const delta = parseInt(document.getElementById('dadj_' + labelId).value, 10);
     const operator = document.getElementById('duser_' + labelId).value.trim();
+    const reason = document.getElementById('dreason_' + labelId).value.trim() || '';
     if (isNaN(delta) || delta <= 0) return toast('Enter a positive number');
     if (!operator) return toast('Enter operator name');
     const label = labelsCache.find(l => l.id === labelId);
@@ -3115,7 +3114,7 @@ enhanced_html = '''<!DOCTYPE html>
     let newQty = label.quantity + (mode === 'add' ? delta : -delta);
     if (newQty < 0) return toast('Insufficient stock (' + label.quantity + ')');
     await updateDoc(doc(db, 'labels', labelId), { quantity: newQty });
-    await logStockMovement(labelId, label.description, label.size, delta, newQty, operator, mode, label.department);
+    await logStockMovement(labelId, label.description, label.size, delta, newQty, operator, mode, label.department, reason);
     toast(mode === 'add' ? `Added ${delta} → ${newQty}` : `Deducted ${delta} → ${newQty}`);
   };
 
@@ -3124,7 +3123,6 @@ enhanced_html = '''<!DOCTYPE html>
     toast('Cost updated');
   };
 
-  // Mobile form submit
   document.getElementById('labelForm')?.addEventListener('submit', async e => {
     e.preventDefault();
     const description = document.getElementById('description').value.trim();
@@ -3140,7 +3138,6 @@ enhanced_html = '''<!DOCTYPE html>
     closeAddSheet();
   });
 
-  // Desktop form submit
   document.getElementById('dLabelForm')?.addEventListener('submit', async e => {
     e.preventDefault();
     const description = document.getElementById('dDescription').value.trim();
@@ -3408,7 +3405,7 @@ enhanced_html = '''<!DOCTYPE html>
     const rows = labelsCache.map(l => {
       const totalValue = (l.quantity || 0) * (l.cost || 0);
       const createdDate = l.createdAt ? new Date(l.createdAt).toLocaleString('en-ZA') : 'N/A';
-      return [`"${l.description || ''}"`,`"${l.size || ''}`,(l.cost || 0).toFixed(2),l.quantity || 0,totalValue.toFixed(2),`"${l.department || ''}"`,`"${createdDate}"`,l.id].join(',');
+      return [`"${l.description || ''}"`,`"${l.size || ''}"`,(l.cost || 0).toFixed(2),l.quantity || 0,totalValue.toFixed(2),`"${l.department || ''}"`,`"${createdDate}"`,l.id].join(',');
     });
     const csv = headers.join(',') + '\\n' + rows.join('\\n');
     downloadCSV(`raha-current-inventory-${new Date().toISOString().split('T')[0]}.csv`, csv);
@@ -3421,10 +3418,10 @@ enhanced_html = '''<!DOCTYPE html>
     const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
     const recentHistory = historyCache.filter(h => h.timestamp >= oneWeekAgo);
     if (!recentHistory.length) return toast('No movements in the last week');
-    const headers = ['Date/Time','Label Description','Size','Operation Type','Change Amount','New Balance','Operator Name','Department','Label ID'];
+    const headers = ['Date/Time','Label Description','Size','Operation Type','Change Amount','New Balance','Operator Name','Department','Reason','Label ID'];
     const rows = recentHistory.map(h => {
       const labelSize = resolveSize(h);
-      return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,h.labelId].join(',');
+      return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,`"${h.reason || ''}"`,h.labelId].join(',');
     });
     const csv = headers.join(',') + '\\n' + rows.join('\\n');
     downloadCSV(`raha-last-week-${new Date().toISOString().split('T')[0]}.csv`, csv);
@@ -3437,10 +3434,10 @@ enhanced_html = '''<!DOCTYPE html>
     const oneMonthAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
     const recentHistory = historyCache.filter(h => h.timestamp >= oneMonthAgo);
     if (!recentHistory.length) return toast('No movements in the last month');
-    const headers = ['Date/Time','Label Description','Size','Operation Type','Change Amount','New Balance','Operator Name','Department','Label ID'];
+    const headers = ['Date/Time','Label Description','Size','Operation Type','Change Amount','New Balance','Operator Name','Department','Reason','Label ID'];
     const rows = recentHistory.map(h => {
       const labelSize = resolveSize(h);
-      return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,h.labelId].join(',');
+      return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,`"${h.reason || ''}"`,h.labelId].join(',');
     });
     const csv = headers.join(',') + '\\n' + rows.join('\\n');
     downloadCSV(`raha-last-month-${new Date().toISOString().split('T')[0]}.csv`, csv);
@@ -3451,10 +3448,10 @@ enhanced_html = '''<!DOCTYPE html>
 
   window.exportAllHistory = function() {
     if (!historyCache.length) return toast('No history data to export');
-    const headers = ['Date/Time','Label Description','Size','Operation Type','Change Amount','New Balance','Operator Name','Department','Label ID'];
+    const headers = ['Date/Time','Label Description','Size','Operation Type','Change Amount','New Balance','Operator Name','Department','Reason','Label ID'];
     const rows = historyCache.map(h => {
       const labelSize = resolveSize(h);
-      return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,h.labelId].join(',');
+      return [`"${h.dateStr || ''}"`,`"${h.labelName || ''}"`,`"${labelSize}"`,h.operationType === 'add' ? 'ADDED' : 'DEDUCTED',(h.operationType === 'add' ? '+' : '-') + Math.abs(h.changeAmount),h.newQuantity,`"${h.operatorName || ''}"`,`"${h.department || ''}"`,`"${h.reason || ''}"`,h.labelId].join(',');
     });
     const csv = headers.join(',') + '\\n' + rows.join('\\n');
     downloadCSV(`raha-complete-history-${new Date().toISOString().split('T')[0]}.csv`, csv);
@@ -3484,11 +3481,4 @@ enhanced_html = '''<!DOCTYPE html>
   };
 </script>
 </body>
-</html>'''
-
-# Save to output
-with open('/mnt/agents/output/raha-labels-enhanced.html', 'w', encoding='utf-8') as f:
-    f.write(enhanced_html)
-
-print("Enhanced file saved successfully!")
-print("File size:", len(enhanced_html), "characters")
+</html>
