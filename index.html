@@ -3021,6 +3021,8 @@
                 <input type="number" id="adj_${l.id}" class="qty-input-mini" value="1" min="1"/>
                 <input type="text" id="user_${l.id}" class="qty-user-mini" placeholder="Name"/>
                 <input type="text" id="reason_${l.id}" class="qty-reason-mini" placeholder="Reason"/>
+                <input type="number" id="setqty_${l.id}" class="qty-input-mini" placeholder="Set Qty" min="0"/>
+                <button class="qty-btn" style="background:#e8f0fe; color:var(--navy)" onclick="processSetQuantity('${l.id}')">Set</button>
                 <button class="qty-btn qty-btn-add" onclick="processAdjust('${l.id}','add')">+</button>
                 <button class="qty-btn qty-btn-deduct" onclick="processAdjust('${l.id}','deduct')">&minus;</button>
               </div>
@@ -3057,6 +3059,8 @@
                 <input type="number" id="dadj_${l.id}" class="desktop-qty-input" value="1" min="1"/>
                 <input type="text" id="duser_${l.id}" class="desktop-user-input" placeholder="Operator"/>
                 <input type="text" id="dreason_${l.id}" class="desktop-reason-input" placeholder="Reason"/>
+                <input type="number" id="dsetqty_${l.id}" class="desktop-qty-input" placeholder="New Qty" min="0"/>
+                <button class="desktop-qty-btn" style="background:#e8f0fe; color:var(--navy)" onclick="processSetQuantityDesktop('${l.id}')">Set</button>
                 <button class="desktop-qty-btn add" onclick="processAdjustDesktop('${l.id}','add')">+</button>
                 <button class="desktop-qty-btn deduct" onclick="processAdjustDesktop('${l.id}','deduct')">&minus;</button>
               </div>
@@ -3116,6 +3120,49 @@
     await updateDoc(doc(db, 'labels', labelId), { quantity: newQty });
     await logStockMovement(labelId, label.description, label.size, delta, newQty, operator, mode, label.department, reason);
     toast(mode === 'add' ? `Added ${delta} → ${newQty}` : `Deducted ${delta} → ${newQty}`);
+  };
+
+  // ===== NEW: Set Quantity Functions =====
+  window.processSetQuantity = async function(labelId) {
+    const newQtyInput = document.getElementById('setqty_' + labelId);
+    const userInput = document.getElementById('user_' + labelId);
+    const reasonInput = document.getElementById('reason_' + labelId);
+    if (!newQtyInput || !userInput) return;
+    const newQty = parseInt(newQtyInput.value, 10);
+    const operator = userInput.value.trim();
+    const reason = reasonInput.value.trim() || '';
+    if (isNaN(newQty) || newQty < 0) return toast('Enter a valid quantity (0 or more)');
+    if (!operator) return toast('Enter your name');
+    const label = labelsCache.find(l => l.id === labelId);
+    if (!label) return;
+    const oldQty = label.quantity || 0;
+    if (newQty === oldQty) return toast('Quantity unchanged');
+    const changeAmount = Math.abs(newQty - oldQty);
+    const operationType = newQty > oldQty ? 'add' : 'deduct';
+    await updateDoc(doc(db, 'labels', labelId), { quantity: newQty });
+    await logStockMovement(labelId, label.description, label.size, changeAmount, newQty, operator, operationType, label.department, reason);
+    toast(`Set ${label.description} to ${newQty} (${operationType === 'add' ? '+' : '-'}${changeAmount})`);
+  };
+
+  window.processSetQuantityDesktop = async function(labelId) {
+    const newQtyInput = document.getElementById('dsetqty_' + labelId);
+    const userInput = document.getElementById('duser_' + labelId);
+    const reasonInput = document.getElementById('dreason_' + labelId);
+    if (!newQtyInput || !userInput) return;
+    const newQty = parseInt(newQtyInput.value, 10);
+    const operator = userInput.value.trim();
+    const reason = reasonInput.value.trim() || '';
+    if (isNaN(newQty) || newQty < 0) return toast('Enter a valid quantity (0 or more)');
+    if (!operator) return toast('Enter operator name');
+    const label = labelsCache.find(l => l.id === labelId);
+    if (!label) return;
+    const oldQty = label.quantity || 0;
+    if (newQty === oldQty) return toast('Quantity unchanged');
+    const changeAmount = Math.abs(newQty - oldQty);
+    const operationType = newQty > oldQty ? 'add' : 'deduct';
+    await updateDoc(doc(db, 'labels', labelId), { quantity: newQty });
+    await logStockMovement(labelId, label.description, label.size, changeAmount, newQty, operator, operationType, label.department, reason);
+    toast(`Set ${label.description} to ${newQty} (${operationType === 'add' ? '+' : '-'}${changeAmount})`);
   };
 
   window.updateCost = async function(id, val) {
